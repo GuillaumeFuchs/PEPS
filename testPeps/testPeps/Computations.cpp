@@ -38,7 +38,7 @@ int main(){
 	double coeff[size] = {1.};// , .2, .2, .2, .2};
 	int N = 5;
 	int samples = 50000;
-	double t = .1;
+	double t = .4;
 
 	int H = 10;
 
@@ -48,9 +48,7 @@ int main(){
 	Basket opt(strike, coeff, T, N, size);
 	MonteCarlo mc(&bs, &opt, rng, 0.1, samples);
 
-	bs.simul_market(past, H, T, rng);
-	pnl_mat_print(past);
-	system("pause");
+	bs.simul_market(past, H, t, rng);
 	mc.price(past, t, prix, ic);
 	cout << "Prix: " << prix << " Ic: " << ic << endl;
 	system("pause");

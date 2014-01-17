@@ -244,13 +244,8 @@ void Bs::asset(PnlMat *path, double t, int N, double T, PnlRng *rng, const PnlMa
 			pnl_mat_get_row(Gi_, G, i);
 			//Calcul de la différence de pas
 			diff = pnl_vect_get(grid, i+1)-pnl_vect_get(grid,i);
-			//Si calcul du temps après t
-			//alors on selectionne la valeur du sous-jacent à t dans la matrice past
-			//sinon on sélectionne à la valeur du sous-jacent à t_{i} dans path
-			if (i==0)
-				s = pnl_mat_get(past, d, past->n-1);
-			else
-				s = pnl_mat_get(path, d, i+taille);
+
+			s = pnl_mat_get(path, d, i+taille);
 			//Calcul de l'évolution du sous-jacent à l'aide de la formule du modèle de Bs
 			s = s*exp((r_-pow(pnl_vect_get(sigma_, d),2.0)/2)*diff + pnl_vect_get(sigma_, d) * sqrt(diff) * pnl_vect_scalar_prod(Ld_, Gi_));
 			//Ajout du résultat dans path

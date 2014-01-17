@@ -207,47 +207,26 @@ void MonteCarlo::price(const PnlMat *past, double t, double &prix, double &ic){
 	double temps = T/timeStep;
 	//extract: vecteur de taille size servant à extraire de la matrice past les colonnes pour les insérer dans path
 	PnlVect *extract = pnl_vect_create(size);
-
 	
-	/*Ajout*/
 	int H = past->n - 1;
-	int stepExtract = H/timeStep;
-	int pastTimeStep = T/H;
+	double pastTimeStep = t/H;
+	int indice = temps/pastTimeStep;
+	int taille = H/indice;
+	for (int i = 0; i < taille+1; i++){
+		pnl_mat_get_col(extract, past, i*indice);
+		pnl_mat_set_col(path, extract, i);
+	}
 
-	
-	/*Fin Ajout*/
-
-
-
-
-	//taille: entier servant à déterminer le nombre de d'évolution du sous jacent (timeStep-taille termes à simuler pour chaque actif)
-	//Si t est un pas d'incrémentation du temps alors s_{t_i} et s_t sont confondus donc l'indice i est égal à past->n-1
-	//Sinon i=past->n-2
-	int taille;
-	if (fabs(t-temps*(past->n-1))<0.00001)
-		taille = past->n-1;
-	else
-		taille = past->n-2;
 	//G: matrice de dimension (N-taille)*d pour générer une suite iid selon la loi normale centrée réduite
 	PnlMat *G = pnl_mat_create(timeStep-taille, size);
 	//Grid: vecteur de taille N-taille+1 pour générer la grille de temps (t, t_{i+1}, ..., t_{N})
 	PnlVect *grid = pnl_vect_create(timeStep-taille+1);
-//	pnl_vect_set(grid, 0, t);
 
 	//Calcul de chaque date de constatation;
-	for (int i=1; i<timeStep-taille+1; i++){
+	for (int i=0; i<timeStep-taille+1; i++){
 		pnl_vect_set(grid, i, temps*(i+taille));
 	}
 
-	//Ajout de la trajectoire du modèle dans path
-	//Ajout des prix constaté jusqu'à la date t dans les taille+1 premières colonnes (cela correspond en fait au nombre de colonne de past)
-	for (int i=0; i<taille+1; i++){
-		//Extraction des colonnes de past dans extract pour les insérer dans path
-		pnl_mat_get_col(extract, past, i);
-		pnl_mat_set_col(path, extract, i);
-	}
-	pnl_mat_print(path);
-	system("pause");
 
 	for (int j=0; j<samples_; j++){
 		//Si on travaille à maturité
