@@ -227,7 +227,6 @@ void MonteCarlo::price(const PnlMat *past, double t, double &prix, double &ic){
 		pnl_vect_set(grid, i, temps*(i+taille));
 	}
 
-
 	for (int j=0; j<samples_; j++){
 		//Si on travaille à maturité
 		//alors on clone la matrice past dans path

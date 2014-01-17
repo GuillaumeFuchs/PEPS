@@ -28,7 +28,6 @@ int main(){
 	PnlRng *rng = pnl_rng_create(PNL_RNG_MERSENNE);
 	pnl_rng_sseed(rng, time(NULL));
 	
-	//Call: prix 10.41
 	int const size = 1;
 	double strike = 100;
 	double spot[size] = {100};//, 80, 100, 120, 110};
@@ -38,9 +37,9 @@ int main(){
 	double coeff[size] = {1.};// , .2, .2, .2, .2};
 	int N = 5;
 	int samples = 50000;
-	double t = .4;
+	double t = .8;
 
-	int H = 10;
+	int H = 8;
 
 	PnlMat *past = pnl_mat_create(size, H+1);
 
@@ -49,6 +48,7 @@ int main(){
 	MonteCarlo mc(&bs, &opt, rng, 0.1, samples);
 
 	bs.simul_market(past, H, t, rng);
+	pnl_mat_print(past);
 	mc.price(past, t, prix, ic);
 	cout << "Prix: " << prix << " Ic: " << ic << endl;
 	system("pause");
