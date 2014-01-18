@@ -282,8 +282,6 @@ void MonteCarlo::delta (const PnlMat *past, double t, PnlVect *delta, PnlVect *i
 		pnl_mat_get_col(extract, past, i*indice);
 		pnl_mat_set_col(path, extract, i);
 	}
-	pnl_mat_print(past);
-	pnl_mat_print(path);
 	//G: matrice de dimension (N-taille)*d pour générer une suite iid selon la loi normale centrée réduite
 	PnlMat *G = pnl_mat_create(timeStep-taille, size);
 	//Grid: vecteur de taille N-taille+1 pour générer la grille de temps (t, t_{i+1}, ..., t_{N})
