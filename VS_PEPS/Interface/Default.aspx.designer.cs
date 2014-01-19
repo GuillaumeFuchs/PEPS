@@ -7,7 +7,7 @@
 // </généré automatiquement>
 //------------------------------------------------------------------------------
 
-namespace Interface {
+namespace WebApp {
     
     
     public partial class _Default {

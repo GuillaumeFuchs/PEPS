@@ -98,12 +98,14 @@ void MonteCarlo::price(double &prix, double &ic){
 
   //Ajout du prix spot dans la première colonne de path
   pnl_mat_set_col(path, mod_->get_spot(), 0);
+
   for (int j=0; j<samples_; j++){
 	//Génération de la trajectoire du modèle de Black Scholes
 	mod_->asset(path, T, TimeSteps, rng, G, grid);
 	//Ajout du payoff dans tirages
 	pnl_vect_set(tirages, j, opt_->payoff(path));
   }
+
   //Calcul du prix à l'aide de la formule de MC
   prix = exp(-r*T)*(1/(double)samples_)*pnl_vect_sum(tirages);
   //Calcul de la variance de l'estimateur pour avoir l'intervalle de confiance
@@ -185,24 +187,11 @@ void MonteCarlo::price(double &prix, double &ic){
 */
 void MonteCarlo::price(const PnlMat *past, double t, double &prix, double &ic){
 	double T = opt_->get_T();
-	//Cas où on price à maturité
-	//Toutes les informations sont déjà déterminés à l'aide de past
-	//donc on a besoin d'aucune simulation
-	//et l'intervalle de confiance est de 0 car on est dans un calcul du prix déterministe
-	if (t == T){
-		prix = opt_->payoff(past);
-		//Calcul de la variance
-		ic = 0;
-		return;
-	}
-
 	int size = opt_->get_size();
 	int timeStep = opt_->get_timeStep();
 	double r = mod_->get_r();
 	//Initialisation de path comme une matrice de dimension d x (N+1)
 	PnlMat *path = pnl_mat_create(size, timeStep+1);
-	//tirages: vecteur de taille samples_ contenant la valeur des payoff de l'option
-	PnlVect *tirages = pnl_vect_create(samples_);
 	//temps: incrémentation pour chaque date de constatation
 	double temps = T/timeStep;
 	//extract: vecteur de taille size servant à extraire de la matrice past les colonnes pour les insérer dans path
@@ -217,6 +206,22 @@ void MonteCarlo::price(const PnlMat *past, double t, double &prix, double &ic){
 		pnl_mat_set_col(path, extract, i);
 	}
 
+	//Cas où on price à maturité
+	//Toutes les informations sont déjà déterminés à l'aide de past
+	//donc on a besoin d'aucune simulation
+	//et l'intervalle de confiance est de 0 car on est dans un calcul du prix déterministe
+	if (t == T){
+		prix = opt_->payoff(path);
+		//Calcul de la variance
+		ic = 0;
+		pnl_mat_free(&path);
+		pnl_vect_free(&extract);
+		return;
+	}
+
+	//tirages: vecteur de taille samples_ contenant la valeur des payoff de l'option
+	PnlVect *tirages = pnl_vect_create(samples_);
+
 	//G: matrice de dimension (N-taille)*d pour générer une suite iid selon la loi normale centrée réduite
 	PnlMat *G = pnl_mat_create(timeStep-taille, size);
 	//Grid: vecteur de taille N-taille+1 pour générer la grille de temps (t, t_{i+1}, ..., t_{N})
@@ -228,16 +233,12 @@ void MonteCarlo::price(const PnlMat *past, double t, double &prix, double &ic){
 	}
 
 	for (int j=0; j<samples_; j++){
-		//Si on travaille à maturité
-		//alors on clone la matrice past dans path
-		//sinon on génère l'évolution du sous-jacent par le modèle de Bs
-		if (t==T)
-			pnl_mat_clone(path,past);
-		else  
-			mod_->asset(path, t, timeStep , T, rng, past, taille, G, grid);
+		//Génération de l'évolution du sous-jacent par le modèle de Bs
+		mod_->asset(path, t, timeStep , T, rng, past, taille, G, grid);
 		//Ajout dans tirages
 		pnl_vect_set(tirages, j, opt_->payoff(path));
 	}
+
 	//Calcul du prix
 	prix = exp(-r*(T-t))*(1/(double)samples_)*pnl_vect_sum(tirages);
 	//Calcul de la variance
@@ -250,63 +251,53 @@ void MonteCarlo::price(const PnlMat *past, double t, double &prix, double &ic){
 	pnl_vect_free(&grid);
 }
 
-
 void MonteCarlo::delta (const PnlMat *past, double t, PnlVect *delta, PnlVect *ic){
-	int size = opt_->get_size();
-	int timeStep = opt_->get_timeStep();
-	double r = mod_->get_r();
-	double T = opt_->get_T();
 	double temps1 = 0;
 	double temps2 = 0;
 	double sum, sum2;
 	double facteur;
 	double result, resultic;
-	//Temps: incrémentation pour chaque date de constatation
+
+	double T = opt_->get_T();
+	int size = opt_->get_size();
+	int timeStep = opt_->get_timeStep();
+	double r = mod_->get_r();
+
+	//Initialisation de path comme une matrice de dimension d x (N+1)
+	PnlMat *path = pnl_mat_create(size, timeStep+1);
+	//temps: incrémentation pour chaque date de constatation
 	double temps = T/timeStep;
-	//Extract: vecteur de taille size servant à extraire de la matrice past les colonnes pour les insérer dans path
+	//extract: vecteur de taille size servant à extraire de la matrice past les colonnes pour les insérer dans path
 	PnlVect *extract = pnl_vect_create(size);
-	//On initialise path, _shift_path_plus et _shift_path_moins comme des matrices de dimension d x (N+1)
-	PnlMat *path = pnl_mat_create(size, timeStep+1);  
 	PnlMat *_shift_path_plus = pnl_mat_create(size, timeStep+1);
 	PnlMat *_shift_path_moins = pnl_mat_create(size, timeStep+1);
 	PnlVect *tirages = pnl_vect_create(samples_);
 	PnlVect *tirages2 =  pnl_vect_create(samples_);
 
-	//Taille: entier servant à déterminer le nombre de d'évolution du sous jacent (timeStep-taille termes à simuler pour chaque actif)
-	//Si t est un pas d'incrémentation du temps alors s_{t_i} et s_t sont confondus donc l'indice i est égal à past->n-1
-	//Sinon i=past->n-2
-	int taille;
-	if (fabs(t-temps*(past->n-1))<0.00001)
-		taille = past->n-1;
-	else
-		taille = past->n-2;
-
+	int H = past->n - 1;
+	double pastTimeStep = t/H;
+	int indice = temps/pastTimeStep;
+	int taille = H/indice;
+	for (int i = 0; i < taille+1; i++){
+		pnl_mat_get_col(extract, past, i*indice);
+		pnl_mat_set_col(path, extract, i);
+	}
+	pnl_mat_print(past);
+	pnl_mat_print(path);
 	//G: matrice de dimension (N-taille)*d pour générer une suite iid selon la loi normale centrée réduite
 	PnlMat *G = pnl_mat_create(timeStep-taille, size);
 	//Grid: vecteur de taille N-taille+1 pour générer la grille de temps (t, t_{i+1}, ..., t_{N})
 	PnlVect *grid = pnl_vect_create(timeStep-taille+1);
-	pnl_vect_set(grid, 0, t);
-	for (int i=1; i<timeStep-taille+1; i++){
-		//On calcule chaque date de constatation;
+	
+	//Calcul de chaque date de constatation;
+	for (int i=0; i<timeStep-taille+1; i++){
 		pnl_vect_set(grid, i, temps*(i+taille));
 	}
 
-	//On met la trajectoire du modèle dans path
-	//On met les prix constaté jusqu'à la date t dans les taille+2 premières colonnes (cela correspond en fait au nombre de colonne de past)
-	for (int i=0; i<taille+1; i++){
-		//Extraction des colonnes de past dans extract pour les insérer dans path
-		pnl_mat_get_col(extract, past, i);
-		pnl_mat_set_col(path, extract, i);
-	}
-
 	for (int d=0; d<size; d++){
-		//printf("%d/%d\n",d, size-1);
 		for (int j=0; j<samples_; j++){
-			if (t==T)
-				pnl_mat_clone(path,past);
-			else {
-				mod_->asset(path, t, timeStep, T, rng, past, taille, G, grid);
-			}
+			
+			mod_->asset(path, t, timeStep, T, rng, past, taille, G, grid);
 			// On récupère la trajectoire shiftée
 			mod_->shift_asset(_shift_path_plus, path, d, h_, t,timeStep);
 			mod_->shift_asset (_shift_path_moins, path, d, -h_, t,timeStep);

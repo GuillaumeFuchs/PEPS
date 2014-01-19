@@ -265,6 +265,11 @@ void Bs:: shift_asset (PnlMat *_shift_path, const PnlMat *path,
 }
 
 void Bs:: simul_market (PnlMat* past, int H, double T, PnlRng *rng){
+	if (T == 0){
+		pnl_mat_resize(past, past->m, 1);
+		pnl_mat_set_col(past, spot_, 0);
+		return;
+	}
 	//Temps: incrémentation pour chaque date de constation
 	double temps = T/H;
 	//s: valeur du sous-jacent à la date t_{i+1}

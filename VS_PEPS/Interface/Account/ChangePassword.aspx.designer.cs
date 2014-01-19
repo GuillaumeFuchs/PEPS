@@ -7,7 +7,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace Interface.Account
+namespace WebApp.Account
 {
 
 
