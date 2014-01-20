@@ -156,11 +156,11 @@ for (int d=0; d<size_; d++){
 pnl_mat_get_row(Ld_, Cho_, d);
 
 //Calcul de la différence de pas de temps
-diff = pnl_vect_get(grid, i+1)-pnl_vect_get(grid, i);
+diff = GET(grid, i+1)-GET(grid, i);
 //Calcul de l'évolution du sous-jacent à l'aide de la formule du modèle de Bs
 s = MGET(path, d, i) * 
-exp((r_-pow(pnl_vect_get(sigma_, d),2.0)/2)*diff +
-pnl_vect_get(sigma_, d)*sqrt(diff)*pnl_vect_scalar_prod(Ld_, Gi_));
+exp((r_-pow(GET(sigma_, d),2.0)/2)*diff +
+GET(sigma_, d)*sqrt(diff)*pnl_vect_scalar_prod(Ld_, Gi_));
 
 //Ajout du résultat dans path
 MLET(path, d, i+1) = s;
@@ -187,11 +187,11 @@ for (int d=0; d<size_; d++){
 pnl_mat_get_row(Ld_, Cho_, d);
 
 //Calcul de la différence de pas de temps
-diff = pnl_vect_get(grid, i+1)-pnl_vect_get(grid, i);
+diff = GET(grid, i+1)-GET(grid, i);
 //Calcul de l'évolution du sous-jacent à l'aide de la formule du modèle de Bs
 s = MGET(path, d, i)*
-exp((r_-pow(pnl_vect_get(sigma_, d),2.0)/2)*diff +
-pnl_vect_get(sigma_, d)*sqrt(diff)*pnl_vect_scalar_prod(Ld_, Gi_));
+exp((r_-pow(GET(sigma_, d),2.0)/2)*diff +
+GET(sigma_, d)*sqrt(diff)*pnl_vect_scalar_prod(Ld_, Gi_));
 //Ajout du résultat dans path
 MLET(path, d, i+1) = s;
 }
@@ -216,18 +216,18 @@ void Bs::asset(PnlMat *path, double T, int N, PnlRng *rng, PnlMat* G, PnlVect* g
 			//Sélection de la ligne de la matrice de vecteurs gaussiens associé au temps sur lequel on travaille
 			pnl_mat_get_row(Gi_, G, i);
 			//Calcul de la différence de pas de temps
-			diff = pnl_vect_get(grid, i+1)-pnl_vect_get(grid, i);
+			diff = GET(grid, i+1)-GET(grid, i);
 			//Calcul de l'évolution du sous-jacent à l'aide de la formule du modèle de BS
-			s = pnl_mat_get(path, d, i)*
-				exp((r_-pow(pnl_vect_get(sigma_, d),2.0)/2)*diff +
-				pnl_vect_get(sigma_, d)*sqrt(diff)*pnl_vect_scalar_prod(Ld_, Gi_));
+			s = MGET(path, d, i)*
+				exp((r_-pow(GET(sigma_, d),2.0)/2)*diff +
+				GET(sigma_, d)*sqrt(diff)*pnl_vect_scalar_prod(Ld_, Gi_));
 			//Ajout du résultat dans path
-			pnl_mat_set(path, d, i+1, s);
+			MLET(path, d, i+1) = s;
 		}
 	}
 }
 
-void Bs::asset(PnlMat *path, double t, int N, double T, PnlRng *rng, const PnlMat *past, int taille, PnlMat* G, PnlVect* grid){
+void Bs::asset(PnlMat *path, double t, int N, double T, PnlRng *rng, const PnlVect *pastT, int taille, PnlMat* G, PnlVect* grid){
 	//s: double pour la valeur du sous-jacent à la date t_{i+1}
 	double s;
 	//diff: double t_{i+1}-t_{i}
@@ -243,13 +243,17 @@ void Bs::asset(PnlMat *path, double t, int N, double T, PnlRng *rng, const PnlMa
 			//Sélection de la ligne de la matrice de vecteurs gaussiens associé au temps sur lequel on travaille
 			pnl_mat_get_row(Gi_, G, i);
 			//Calcul de la différence de pas
-			diff = pnl_vect_get(grid, i+1)-pnl_vect_get(grid,i);
+			diff = GET(grid, i+1)-GET(grid,i);
 
-			s = pnl_mat_get(path, d, i+taille);
+			if (i == 0){
+				s = GET(pastT, d);
+			} else {
+				s = MGET(path, d, i+taille);
+			}
 			//Calcul de l'évolution du sous-jacent à l'aide de la formule du modèle de Bs
-			s = s*exp((r_-pow(pnl_vect_get(sigma_, d),2.0)/2)*diff + pnl_vect_get(sigma_, d) * sqrt(diff) * pnl_vect_scalar_prod(Ld_, Gi_));
+			s = s*exp((r_-pow(GET(sigma_, d),2.0)/2)*diff + GET(sigma_, d) * sqrt(diff) * pnl_vect_scalar_prod(Ld_, Gi_));
 			//Ajout du résultat dans path
-			pnl_mat_set(path, d, i+taille+1, s);
+			MLET(path, d, i+taille+1) =  s;
 		}
 	}
 }
@@ -259,7 +263,7 @@ void Bs:: shift_asset (PnlMat *_shift_path, const PnlMat *path,
 		pnl_mat_clone(_shift_path, path);
 		for (int i=0; i<timestep+1; i++){
 			if (i>t){
-				pnl_mat_set(_shift_path, d,i, (1+h)*pnl_mat_get(path, d,i));
+				MLET(_shift_path, d,i) =  (1+h)*MGET(path, d,i);
 			}
 		}
 }
@@ -283,7 +287,7 @@ void Bs:: simul_market (PnlMat* past, int H, double T, PnlRng *rng){
 
 	//Calcul des dates de constatation;
 	for (int t=0; t<H+1; t++){
-		pnl_vect_set(grid, t, temps*t);
+		LET(grid, t) = temps*t;
 	}
 	//Ajout de la trajectoire du modèle dans past
 	//Ajout du prix spot dans la première colonne de path
@@ -297,11 +301,11 @@ void Bs:: simul_market (PnlMat* past, int H, double T, PnlRng *rng){
 		for (int i=0; i<H; i++){
 			pnl_mat_get_row(Ld_, Cho_, d);
 			pnl_mat_get_row(Gi_, G, i);
-			diff = pnl_vect_get(grid, i+1)-pnl_vect_get(grid, i);
-			s = pnl_mat_get(past, d, i)*
-				exp((pnl_vect_get(trend_, d)-pow(pnl_vect_get(sigma_, d),2.0)/2)*diff +
-				pnl_vect_get(sigma_, d)*sqrt(diff)*pnl_vect_scalar_prod(Ld_, Gi_));
-			pnl_mat_set(past, d, i+1, s);
+			diff = GET(grid, i+1)-GET(grid, i);
+			s = MGET(past, d, i)*
+				exp((GET(trend_, d)-pow(GET(sigma_, d),2.0)/2)*diff +
+				GET(sigma_, d)*sqrt(diff)*pnl_vect_scalar_prod(Ld_, Gi_));
+			MLET(past, d, i+1) = s;
 		}
 	}
 

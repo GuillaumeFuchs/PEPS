@@ -220,12 +220,12 @@ class Bs {
 	 * \param N nombre de pas de constatation
 	 * \param T date jusqu'a laquelle on simule la trajectoire (maturite)
 	 * \param rng pointeur sur le generateur de nombre aleatoire
-	 * \param past trajectoire realisee jusqu'a la date t
+	 * \param past trajectoire realisee a la date t
 	 * \param taille contient le nombre d'evolution du sous-jacent jusqu'a la date t
 	 * \param G contient N-taille vecteurs gaussiens centrés de matrice de covariance identite
 	 * \param grid contient les indices de temps utilises pour l'evolution du sous-jacent
 	 */
-	void asset(PnlMat *path, double t, int N, double T, PnlRng *rng, const PnlMat *past, int taille, PnlMat* G, PnlVect* grid);
+	void asset(PnlMat *path, double t, int N, double T, PnlRng *rng, const PnlVect *pastT, int taille, PnlMat* G, PnlVect* grid);
 
 	/*!
 	 * \brief Shift d’une trajectoire du sous-jacent
