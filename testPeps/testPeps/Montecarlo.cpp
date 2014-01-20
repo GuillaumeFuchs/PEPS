@@ -372,7 +372,8 @@ void MonteCarlo::delta (const PnlMat *past, double t, PnlVect *delta, PnlVect *i
 	pnl_vect_free(&grid);
 }
 
-double delta_theoriqu(double sigma, double T, double S, double K, double r){
+
+double delta_theoriqu(double S, double K, double r, double T, double sigma){
 	double q, bound;
 	int status;
 	int which = 1;
@@ -384,6 +385,7 @@ double delta_theoriqu(double sigma, double T, double S, double K, double r){
 	pnl_cdf_nor(&which, &p, &q, &d, &mean, &sd, &status, &bound);
 	return p;
 }
+
 double prix_theoriqu(double S, double K, double r, double T, double sigma){
 	double q, bound;
 	int status;
@@ -399,6 +401,7 @@ double prix_theoriqu(double S, double K, double r, double T, double sigma){
 
 	return S*p1 - K*exp(-r*T)*p2;
 }
+
 void MonteCarlo::couv(PnlMat *past, double &pl, double &plTheorique, int H, double T)
 {
 	//Simulation du modèle sous la probabilité historique
@@ -435,9 +438,12 @@ void MonteCarlo::couv(PnlMat *past, double &pl, double &plTheorique, int H, doub
 	pnl_mat_set_col(past_sub, S, 0);
 
 	delta(past_sub, 0, delta1, ic_vect);
-	delta_t = delta_theoriqu(.2, 1., 100, 100, .05);
+	delta_t = delta_theoriqu(100, 100, .05, 1., .2);
 	LET(pF, 0) = prix - pnl_vect_scalar_prod(delta1, S);
 	LET(pFT, 0) = prix_t - delta_t*100;
+	printf("%f\n%f\n", prix, prix_t);
+	pnl_vect_print(delta1);
+	printf("%f\n\n", delta_t);
 	//delta2: vecteur contenant le delta à une date de constation précédente de delta1
 	for (int i=1; i<H+1; i++)
 	{
@@ -454,7 +460,11 @@ void MonteCarlo::couv(PnlMat *past, double &pl, double &plTheorique, int H, doub
 		delta(past_sub, timeH*i, delta1, ic_vect);
 		price(past_sub, timeH*i, prix, ic);
 		prix_t = prix_theoriqu(GET(S, 0), 100, .05, 1.- timeH*i, .2);
-		delta_t = delta_theoriqu(.2, 1. - timeH*i, GET(S, 0), 100, .05);
+		delta_t = delta_theoriqu(GET(S, 0), 100, .05, 1.- timeH*i, .2);
+
+		printf("%f\n%f\n", prix, prix_t);
+		pnl_vect_print(delta1);
+		printf("%f\n\n", delta_t);
 
 		result = pnl_vect_copy(delta1);
 		pnl_vect_minus_vect(result, delta2);

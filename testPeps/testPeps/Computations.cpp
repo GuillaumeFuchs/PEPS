@@ -22,7 +22,7 @@
 #include <fstream>
 using namespace std;
 
-double delta_theorique(double sigma, double T, double S, double K, double r){
+double delta_theorique(double S, double K, double r, double T, double sigma){
 	double q, bound;
 	int status;
 	int which = 1;
@@ -62,16 +62,16 @@ int main(){
 	pnl_rng_sseed(rng, time(NULL));
 	
 	int const size = 1;
-	double strike = 50;
-	double spot[size] = {50};//, 80, 100, 120, 110};
+	double strike = 100;
+	double spot[size] = {100};//, 80, 100, 120, 110};
 	double T = 1;
 	double sigma[size] = {0.2};//, 0.2, 0.2, 0.15, 0.15};	
 	double r = .05;
 	double coeff[size] = {1.};// , .2, .2, .2, .2};
 	int N = 5;
 	int samples = 50000;
-	double t = .3;
-	int H = 30;
+	double t = 0;
+	int H = 500;
 
 	PnlMat *past = pnl_mat_create(size, H+1);    
 	PnlVect *delta = pnl_vect_create(size);
@@ -84,26 +84,22 @@ int main(){
 	Basket opt(strike, coeff, T, N, size);
 	MonteCarlo mc(&bs, &opt, rng, 0.01, samples);
 
-	/*Calcul Prix t*/
+	/*Calcul Prix t
 	bs.simul_market(past, H, t, rng);
-	pnl_mat_print(past);
 	mc.price(past, t, prix, ic);
-	double prix_th = prix_theorique(MGET(past, 0, H), strike, r, T-t, sigma[0]);
-	printf("Prix(%f): %f \nIc: %f\nPrix theorique: %f\n\n", t, prix, ic, prix_th);
+	prix_th = prix_theorique(MGET(past, 0, H), strike, r, T-t, sigma[0]);
+	printf("Prix(%f): %f \nPrix theorique: %f\n\n", t, prix, prix_th);
 
-	/*Calcul Delta*/
+	/*Calcul Delta
 	bs.simul_market(past, H, t, rng);
 	mc.delta(past, t, delta, ic_delta);
 	printf("Delta(%f)\n", t);
 	pnl_vect_print(delta);
-	pnl_vect_print(ic_delta);
-	double delta_th = delta_theorique(sigma[0], T-t, MGET(past, 0, H), strike, r);
+	double delta_th = delta_theorique(MGET(past, 0, H), strike, r, T-t, sigma[0]);
 	printf("Delta théorique: %f\n", delta_th);
-	/*Couverture
-	while (true){
-	mc.couv(past, pl , H, T);
-	printf("%f ", pl);
-	}*/
+	*/
+
+	/*Couverture*/
 	//ofstream fichier1("couv_simulation.txt", ios::out | ios::trunc);  // ouverture en écriture avec effacement du fichier ouvert
 	//ofstream fichier2("couv_theorique.txt", ios::out | ios::trunc);
 	//if(fichier1 && fichier2)
