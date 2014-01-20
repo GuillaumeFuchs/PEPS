@@ -7,7 +7,7 @@ using System.Web.UI.WebControls;
 using System.Runtime;
 using Wrapper;
 
-namespace Interface
+namespace WebApp
 {
     public partial class _Default : System.Web.UI.Page
     {

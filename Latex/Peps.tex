@@ -14,6 +14,7 @@
 \usepackage{pstricks,pstricks-add,pst-plot,pst-tree}
 \usepackage{enumerate}
 \usepackage{textcomp}
+\usepackage{lscape}
 \usepackage{setspace}
 \usepackage{lettrine}
 \usepackage{lscape}
@@ -754,12 +755,12 @@ Le gestionnaire doit également avoir la possibilité de choisir le modèle d'é
 \indent \\
 \indent Enfin le gestionnaire doit avoir la possibilité de voir la composition de son portefeuille et notamment la répartition en pourcentage ou bien en quantité de chacun de ces investissements. Il pourra ainsi avoir la valeur liquidative de chacune de ses parts. Il pourra également avoir accès à la valeur liquidative en faisant un backtest en utilisant la méthode de couverture proposée.\\
 \indent \\
-\indent Plus précisemment le gestionnaire ne devra pas avoir la possibilité de modifier le modèle en cours de simulation par soucis de cohérence. De plus le gestionnaire devra avoir la possibilité d'indiquer ses propres dates de rebalancement. De plus lorsque celui ci affiche l'évolution des indices, il ne doit avoir la possibilité que de les afficher entre le début du produit moins un an et la fin du produit.\\
+\indent Plus précisemment le gestionnaire ne devra pas avoir la possibilité de modifier le modèle en cours de simulation par soucis de cohérence. De plus le gestionnaire devra avoir la possibilité d'indiquer ses propres dates de rebalancement. Lorsque celui ci affiche l'évolution des indices, il ne doit avoir la possibilité que de les afficher entre le début du produit moins un an et la fin du produit.\\
 On laissera la possibilité au gestionnaire de se couvrir différemment de ce qui est préconisé, ce qui implique que celui-ci aura la possibilité de relancer une simulation à partir de la composition de portefeuille qu'il a choisi. Il poura donc entrer la composition de son portefeuille.
 \indent \\
-\indent Chaque jour la simulation devra être refaite puisque nos graphiques intégrerons automatiquement les nouveaux cours des indices au jour le jour.
+\indent Chaque jour la simulation devra être refaite puisque nos graphiques intégreront automatiquement les nouveaux cours des indices au jour le jour.
 
-\subsection{Architecture logiciel}
+\subsection{Architecture logiciel globale}
 
 Voici une première schématisation de l'architecture de notre produit.
 
@@ -774,6 +775,53 @@ Voici une première schématisation de l'architecture de notre produit.
 \noindent Ainsi on constate que l'architecture que nous avons adopté se base sur les cours disponibles sur des sites spécialisés tels que \lstinline!yahoo finance!, ainsi à partir d'un extracteur de données, nous récupérerons les données de ce site concernant les indices voulus, ce qui alimentera notre base de données. Les données seront alors traitées par le moteur de calcul notamment pour connaître la performance actuelle du fonds, avoir diverses modélisations de l'évolution des indices. Il vient alors l'interface qui à l'aide des sorties du moteur de calcul peut afficher l'évolution des différents indices ainsi que la performance du fonds.\\
 On constate également la présence d'un lien entre l'interface et la base de données en effet, lorsque l'utilisateur sélectionne de nouvelles dates pour voir l'évolution des différents indices, il n'est pas nécessaire de faire appel au moteur de calcul.
 
+Si l'on rentre un peu plus dans le détails, on peut modéliser l'architecture de la façon suivante :
+
+
+\begin{center}
+\caption{Architecture globale}
+\end{center}
+
+\begin{center}
+\includegraphics[scale=0.8]{GloabalDiag.png}
+\end{center}
+
+On constate dans cette architecture que l'intégralité de la partie calcul s'effectuera en C++ grâce à l'utilisation de deux modules C++/CLI. C'est pourquoi, on aura deux packages de traitement de la base de données, en effet le premier \lstinline!DBPrinting! sera directement relié à l'application web pour afficher notamment le cours actuel des indices. L'autre \lstinline!DBAccess! permettra de transmettre le nécessaire au calcul des paramètres et donc au calibrage de notre modèle. Les différents paramètres étant calculés, \lstinline!Engine! interviendra pour réaliser les différentes simulations, et donc calculer le prix ainsi que le vecteur associé à la couverture ainsi que le P\&L. Les relations sont dans les deux sens entre \lstinline!WebApp! et le \lstinline!Wrapper! ainsi que entre le \lstinline!Wrapper! et \lstinline!Engine! car comme précisé précédemment le gestionnaire à par exemple la possibilité de donner la composition de son portefeuille, les informations relatives doivent donc redescendre jusqu'à \lstinline!Engine! pour que cela soit pris en compte.
+
+\subsection{Architecture détaillée}
+
+De façon plus précise, l'architecture précédente peut être explicité comme suit :
+
+\newpage
+
+\begin{landscape}
+\begin{figure}[h!]
+  \caption{Architecture détaillée.}
+  \centering
+    \includegraphics[height=14cm, width = 20cm]{DiagClasse.jpg}
+\end{figure}
+\end{landscape}
+
+On peut ainsi voir dans cette structure les différents packages présentés précédemment, nous avons de plus choisi d'utiliser de nombreuses classes abstraites, l'objectif étant de modéliser par exemple les différents modèles de taux que le gestionnaire peut choisir, les différentes évolutions du sous-jacents ou bien encore le type d'évolution de la volatilité. De plus par soucis d'efficacité et de cohérence, nous avons choisi de réaliser l'intégralité des calculs en C++, que ce soit pour obtenir les valeurs de la volatilité ou bien calculer le vecteur de couverture. De plus nous ne passons pas par cette voie pour afficher directement des données extraites de la base de données, dans ce cas particulier, la classe C\# \lstinline!DBPrinting! communiquera directement avec l'interface. La base de données associées sera la suivante :
+
+\begin{figure}[h!]
+  \caption{Base de données}
+  \centering
+    \includegraphics[scale=1]{BD.jpg}
+\end{figure}
+
+La base de données ne sera en effet pas plus compliquée puisque nous aurons besoin du cours des indices à tout moment ainsi que sotcker les différentes valeurs liquidatives et compositions de la couverture. Les deux tables précédentes sont donc suffisantes.
+
+%\begin{center}
+%\caption{Architecture Détaillée}
+%\end{center}
+%\begin{landscape}
+%\begin{center}
+%\includegraphics[scale=0.4]{DiagClasse.jpg}
+%\end{center}
+%\end{landscape}
+
+
 \subsection{Spécifications}
 
 Nous allons dans un premier temps expliciter ce qui se cache derrière la fonctionnalité couverture énuméré dans le cahier des charges.\\
@@ -781,6 +829,7 @@ La question de la couverture pose différents problèmes, en effet dans un premi
 Ainsi dans un premier temps, il nous faut pricer l'option que nous proposons. Cela implique  de devoir fixer le modèle que nous allons utiliser pour modéliser l'évolution des sous jacents. Ainsi nous avons choisi dans un premier temps d'implémenter le modèle de Black& Scholes. Se pose alors la question des différents paramètres du modèle, nous avons dans un premier temps choisi de déterminer la variance à l'aide d'un backtest sur les valeurs des différents indices au cours des trois derniers mois, nous ferons de mêmes pour déterminer la matrice des corrélations. En ce qui concerne les autres paramètres tels que le taux sans risque ou bien la probabilité historique, nous prendrons des valeurs arbitraire en essayant de coller au maximum avec les valeurs dont nous disposons.\\
 Disposant alors d'un modèle, il nous faut définir les paramètres caractérisant notre option, aux vues des propriétés de celle ci énoncé précedemment, on lui attribuera une maturité fixée par défaut à 6, un nombre de date de constatation ainsi que la taille du modèle.
 Enfin on considère un modèle de MonteCarlo pour obtenir le prix de notre option.\\
+Par la suite, nous considérerons des modèles plus compliqués, c'est pourquoi nous avons choisi d'implémenter des classes abstraites pour que différents modèles puissent être ajouté.
 C'est ainsi que nous obtenons le diagramme de classe suivant :\\  
 
 \begin{center}

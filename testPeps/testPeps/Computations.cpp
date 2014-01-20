@@ -1,4 +1,3 @@
-/* Option librairies */
 #include "Asian.h"
 #include "Barrier.h"
 #include "Barrier_l.h"
@@ -18,6 +17,7 @@
 #include <cstdio>
 #include <ctime>
 #include <iostream>
+#include <fstream>
 #include <omp.h>
 #include <fstream>
 using namespace std;
@@ -62,8 +62,8 @@ int main(){
 	pnl_rng_sseed(rng, time(NULL));
 	
 	int const size = 1;
-	double strike = 100;
-	double spot[size] = {100};//, 80, 100, 120, 110};
+	double strike = 50;
+	double spot[size] = {50};//, 80, 100, 120, 110};
 	double T = 1;
 	double sigma[size] = {0.2};//, 0.2, 0.2, 0.15, 0.15};	
 	double r = .05;
@@ -71,25 +71,27 @@ int main(){
 	int N = 5;
 	int samples = 50000;
 	double t = .3;
-	int H = 50;
+	int H = 30;
 
 	PnlMat *past = pnl_mat_create(size, H+1);    
 	PnlVect *delta = pnl_vect_create(size);
 	PnlVect *ic_delta = pnl_vect_create(size);
 
+
+	
+
 	Bs bs(size, r, NULL, sigma, spot, NULL);
 	Basket opt(strike, coeff, T, N, size);
 	MonteCarlo mc(&bs, &opt, rng, 0.01, samples);
 
-	/*Calcul Prix t
+	/*Calcul Prix t*/
 	bs.simul_market(past, H, t, rng);
 	pnl_mat_print(past);
 	mc.price(past, t, prix, ic);
 	double prix_th = prix_theorique(MGET(past, 0, H), strike, r, T-t, sigma[0]);
 	printf("Prix(%f): %f \nIc: %f\nPrix theorique: %f\n\n", t, prix, ic, prix_th);
-	*/
 
-	/*Calcul Delta
+	/*Calcul Delta*/
 	bs.simul_market(past, H, t, rng);
 	mc.delta(past, t, delta, ic_delta);
 	printf("Delta(%f)\n", t);
@@ -97,32 +99,30 @@ int main(){
 	pnl_vect_print(ic_delta);
 	double delta_th = delta_theorique(sigma[0], T-t, MGET(past, 0, H), strike, r);
 	printf("Delta théorique: %f\n", delta_th);
-	*/
 	/*Couverture
 	while (true){
 	mc.couv(past, pl , H, T);
 	printf("%f ", pl);
 	}*/
-	ofstream fichier1("couv_simulation.txt", ios::out | ios::trunc);  // ouverture en écriture avec effacement du fichier ouvert
-	ofstream fichier2("couv_theorique.txt", ios::out | ios::trunc);
-	if(fichier1 && fichier2)
-	{
-		for (int i = 0; i < 500; i++){
+	//ofstream fichier1("couv_simulation.txt", ios::out | ios::trunc);  // ouverture en écriture avec effacement du fichier ouvert
+	//ofstream fichier2("couv_theorique.txt", ios::out | ios::trunc);
+	//if(fichier1 && fichier2)
+	//{
+	//	for (int i = 0; i < 500; i++){
 			mc.couv(past, pl, plTheorique, H, T);
 			cout << pl << endl;
 			cout << plTheorique << endl;
 			cout << endl;
 			
-			fichier1 << pl << endl;
-			fichier2 << plTheorique << endl;
-		}
-		fichier1.close();
-		fichier2.close();
-	}
-	else
-		cerr << "Impossible d'ouvrir le fichier !" << endl;
+	//		fichier1 << pl << endl;
+	//		fichier2 << plTheorique << endl;
+	//	}
+	//	fichier1.close();
+	//	fichier2.close();
+	//}
+	//else
+	//	cerr << "Impossible d'ouvrir le fichier !" << endl;
 
 	system("pause");
 	return 0;
 }
-
