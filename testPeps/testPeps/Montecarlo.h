@@ -184,7 +184,7 @@ class MonteCarlo {
 	 * \param H nombre de date dans la simulation
 	 * \param T maturite du portefeuille
 	 */
-	void couv (PnlMat *past, double &pl, int H, double T);
+	void couv (PnlMat *past, double &pl, double &plTheorique, int H, double T);
 
 };
 #endif

@@ -76,7 +76,7 @@ double Barrier :: payoff (const PnlMat *path) const{
   //Si on en trouve une alors le prix de l'option est de 0
   for (int i=0; i<timeStep_+1; i++){
 	for (int d=0; d<size_; d++){
-	  if ((pnl_mat_get(path,d,i) < pnl_vect_get(Bl_,d)) || (pnl_mat_get(path,d,i) > pnl_vect_get(Bu_, d))){
+	  if ((MGET(path,d,i) < pnl_vect_get(Bl_,d)) || (MGET(path,d,i) > pnl_vect_get(Bu_, d))){
 		pnl_vect_free(&final);
 		return 0;
 	  }
