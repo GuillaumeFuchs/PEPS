@@ -68,10 +68,10 @@ int main(){
 	double sigma[size] = {0.2};//, 0.2, 0.2, 0.15, 0.15};	
 	double r = .05;
 	double coeff[size] = {1.};// , .2, .2, .2, .2};
-	int N = 5;
-	int samples = 50000;
-	double t = 0;
-	int H = 500;
+	int N = 1;
+	int samples = 20000;
+	double t = 1.;
+	int H = 365;
 
 	PnlMat *past = pnl_mat_create(size, H+1);    
 	PnlVect *delta = pnl_vect_create(size);
@@ -91,6 +91,7 @@ int main(){
 	printf("Prix(%f): %f \nPrix theorique: %f\n\n", t, prix, prix_th);
 
 	/*Calcul Delta
+
 	bs.simul_market(past, H, t, rng);
 	mc.delta(past, t, delta, ic_delta);
 	printf("Delta(%f)\n", t);
@@ -100,24 +101,25 @@ int main(){
 	*/
 
 	/*Couverture*/
-	//ofstream fichier1("couv_simulation.txt", ios::out | ios::trunc);  // ouverture en écriture avec effacement du fichier ouvert
-	//ofstream fichier2("couv_theorique.txt", ios::out | ios::trunc);
-	//if(fichier1 && fichier2)
-	//{
-	//	for (int i = 0; i < 500; i++){
+	ofstream fichier1("couv_simulation.txt", ios::out | ios::trunc);  // ouverture en écriture avec effacement du fichier ouvert
+	ofstream fichier2("couv_theorique.txt", ios::out | ios::trunc);
+	if(fichier1 && fichier2)
+	{
+	for (int i = 0; i < 500; i++){
+			cout << i << endl;
 			mc.couv(past, pl, plTheorique, H, T);
-			cout << pl << endl;
-			cout << plTheorique << endl;
+			mc.price(prix, ic);
+			double prix_th = prix_theorique(100., 100., .05, 1., .2);
+			cout << pl/prix << endl;
+			cout << plTheorique/prix_th << endl;
 			cout << endl;
-			
-	//		fichier1 << pl << endl;
-	//		fichier2 << plTheorique << endl;
-	//	}
-	//	fichier1.close();
-	//	fichier2.close();
-	//}
-	//else
-	//	cerr << "Impossible d'ouvrir le fichier !" << endl;
+			fichier1 << pl/prix << endl;
+			fichier2 << plTheorique/prix_th << endl;
+	}
+		fichier1.close();
+		fichier2.close();
+	}else
+		cerr << "Impossible d'ouvrir le fichier !" << endl;
 
 	system("pause");
 	return 0;

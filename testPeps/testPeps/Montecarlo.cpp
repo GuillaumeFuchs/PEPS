@@ -207,7 +207,7 @@ void MonteCarlo::price(const PnlMat *past, double t, double &prix, double &ic){
 		pnl_mat_set_col(path, extractPast, 0);
 	} else {
 		double dtPast = t/H;
-		int indice = floor(dt*100+0.5)/floor(dtPast*100+0.5);
+		int indice = floor(dt*100000000+0.5)/floor(dtPast*100000000+0.5);
 		taille = floor((double)H/(double)indice);
 		int i = 0;
 		while (i < taille+1){
@@ -216,7 +216,6 @@ void MonteCarlo::price(const PnlMat *past, double t, double &prix, double &ic){
 			i++;
 		}
 	}
-
 	//Grid: vecteur de taille N-taille+1 pour générer la grille de temps (t, t_{i+1}, ..., t_{N})
 	PnlVect *grid = pnl_vect_create(timeStep-taille+1);
 	if (fmod(t,dt) != 0){
@@ -303,7 +302,7 @@ void MonteCarlo::delta (const PnlMat *past, double t, PnlVect *delta, PnlVect *i
 		pnl_mat_set_col(path, extractPast, 0);
 	} else {
 		double dtPast = t/H;
-		int indice = floor(dt*100+0.5)/floor(dtPast*100+0.5);
+		int indice = floor(dt*100000000+0.5)/floor(dtPast*100000000+0.5);
 		taille = floor((double)H/(double)indice);
 		int i = 0;
 		while (i < taille+1){
@@ -441,12 +440,10 @@ void MonteCarlo::couv(PnlMat *past, double &pl, double &plTheorique, int H, doub
 	delta_t = delta_theoriqu(100, 100, .05, 1., .2);
 	LET(pF, 0) = prix - pnl_vect_scalar_prod(delta1, S);
 	LET(pFT, 0) = prix_t - delta_t*100;
-	printf("%f\n%f\n", prix, prix_t);
-	pnl_vect_print(delta1);
-	printf("%f\n\n", delta_t);
 	//delta2: vecteur contenant le delta à une date de constation précédente de delta1
 	for (int i=1; i<H+1; i++)
 	{
+		//printf("%d ", i);
 		//On met dans delta2 la valeur du delta à l'instant i-1
 		PnlVect* delta2 = pnl_vect_copy(delta1);
 		delta_t2 = delta_t;
@@ -461,10 +458,6 @@ void MonteCarlo::couv(PnlMat *past, double &pl, double &plTheorique, int H, doub
 		price(past_sub, timeH*i, prix, ic);
 		prix_t = prix_theoriqu(GET(S, 0), 100, .05, 1.- timeH*i, .2);
 		delta_t = delta_theoriqu(GET(S, 0), 100, .05, 1.- timeH*i, .2);
-
-		printf("%f\n%f\n", prix, prix_t);
-		pnl_vect_print(delta1);
-		printf("%f\n\n", delta_t);
 
 		result = pnl_vect_copy(delta1);
 		pnl_vect_minus_vect(result, delta2);
