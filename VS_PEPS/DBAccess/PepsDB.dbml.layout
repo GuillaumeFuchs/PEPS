@@ -1,0 +1,18 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ordesignerObjectsDiagram dslVersion="1.0.0.0" absoluteBounds="0, 0, 11, 8.5" name="PepsDB">
+  <DataContextMoniker Name="/PepsDBDataContext" />
+  <nestedChildShapes>
+    <classShape Id="78e7aab9-74a7-469e-b59e-941b95ac2be0" absoluteBounds="5.75, 2.125, 2, 1.9631982421875">
+      <DataClassMoniker Name="/PepsDBDataContext/PepsDB" />
+      <nestedChildShapes>
+        <elementListCompartment Id="fd6b7205-9464-4546-8d07-d54d92ff5b25" absoluteBounds="5.765, 2.585, 1.9700000000000002, 1.4031982421875" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
+      </nestedChildShapes>
+    </classShape>
+    <classShape Id="15331f9b-6275-4101-935f-a06a288caddd" absoluteBounds="2.875, 1.375, 2, 1.9631982421875">
+      <DataClassMoniker Name="/PepsDBDataContext/Component" />
+      <nestedChildShapes>
+        <elementListCompartment Id="08b5d32e-a7ea-4830-ade3-952e085bd272" absoluteBounds="2.8899999999999997, 1.835, 1.9700000000000002, 1.4031982421875" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
+      </nestedChildShapes>
+    </classShape>
+  </nestedChildShapes>
+</ordesignerObjectsDiagram>
