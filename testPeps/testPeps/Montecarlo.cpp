@@ -430,6 +430,10 @@ void MonteCarlo::couv(PnlMat *past, double &pl, double &plTheorique, int H, doub
 	LET(pF, 0) = prix - pnl_vect_scalar_prod(delta1, S);
 	LET(pFT, 0) = prix_t - delta_t*100;
 
+	printf("%f %f\n", prix_t, prix);
+	printf("%f ", delta_t); pnl_vect_print(delta1); 
+	printf("\n");
+
 	//delta2: vecteur contenant le delta à une date de constation précédente de delta1
 	for (int i=1; i<H+1; i++)
 	{
@@ -448,6 +452,10 @@ void MonteCarlo::couv(PnlMat *past, double &pl, double &plTheorique, int H, doub
 		prix_t = prix_theoriqu(GET(S, 0), 100, .05, 1.- timeH*i, .2);
 		delta_t = delta_theoriqu(GET(S, 0), 100, .05, 1.- timeH*i, .2);
 	
+		printf("%f %f\n", prix_t, prix);
+		printf("%f ", delta_t); pnl_vect_print(delta1); 
+		printf("\n");
+
 		result = pnl_vect_copy(delta1);
 		pnl_vect_minus_vect(result, delta2);
 		result_t = delta_t - delta_t2;
@@ -462,9 +470,9 @@ void MonteCarlo::couv(PnlMat *past, double &pl, double &plTheorique, int H, doub
 	plTheorique = GET(pFT, H) + delta_t*GET(S, 0) - prix_t;
 
 	PnlMat* final = pnl_mat_create(H+1, 2);
-	pnl_mat_set_col(final, pF, 0);
-	pnl_mat_set_col(final, pFT, 1);
-
+	pnl_mat_set_col(final, pFT, 0);
+	pnl_mat_set_col(final, pF, 1);
+	
 	pnl_mat_print(final);
 
 	pnl_vect_free(&pF);

@@ -72,10 +72,10 @@ int main(){
     double sigma[size] = {0.2};//, 0.2, 0.2, 0.15, 0.15};	
     double r = .05;
     double coeff[size] = {1.};// , .2, .2, .2, .2};
-    int N = 5;
-    int samples = 10;
-    double t = .2;
-    int H = 360;
+    int N = 10;
+    int samples = 20000;
+    double t = .1;
+    int H = 50;
 
     PnlMat *past = pnl_mat_create(size, H+1);    
     PnlVect *delta = pnl_vect_create(size);
@@ -85,26 +85,29 @@ int main(){
     Basket opt(strike, coeff, T, N, size);
     MonteCarlo mc(&bs, &opt, rng, 0.01, samples);
 
-    /*Prix en 0
+    /*Prix en 0*/
     mc.price(prix, ic);
     double prix_th = prix_theorique(spot[0], strike, r, T, sigma[0]);
     printf("Prix(0): %f \nPrix theorique: %f\n\n", prix, prix_th);
 
-    /*Calcul Prix t
+    /*Calcul Prix t*/
     bs.simul_market(past, H, t, rng);
-    pnl_mat_print(past);
-    mc.price(past, t, prix, ic);
-    double prix_th = prix_theorique(MGET(past, 0, H), strike, r, T-t, sigma[0]);
+     mc.price(past, t, prix, ic);
+    prix_th = prix_theorique(MGET(past, 0, H), strike, r, T-t, sigma[0]);
     printf("Prix(%f): %f \nPrix theorique: %f\n\n", t, prix, prix_th);
+	
+	pnl_mat_print(past);
 
-    /*Calcul Delta
-    bs.simul_market(past, H, t, rng);
-    pnl_mat_print(past);
+    /*Calcul Delta*/
+    //bs.simul_market(past, H, t, rng);
+    //pnl_mat_print(past);
     mc.delta(past, t, delta, ic_delta);
     printf("Delta(%f)\n", t);
     pnl_vect_print(delta);
     double delta_th = delta_theorique(MGET(past, 0, H), strike, r, T-t, sigma[0]);
     printf("Delta théorique: %f\n", delta_th);
+
+	pnl_mat_print(past);
 
     /*Couverture
     ofstream fichier1(c"ouv_simulation.txt", ios::out | ios::trunc);  // ouverture en écriture avec effacement du fichier ouvert
@@ -112,7 +115,6 @@ int main(){
     if(fichier1 && fichier2)
     {
     for (int i = 0; i < 500; i++){
-    */
             mc.couv(past, pl, plTheorique, H, T);
             /*mc.price(prix, ic);
             double prix_th = prix_theorique(100., 100., .05, 1., .2);
