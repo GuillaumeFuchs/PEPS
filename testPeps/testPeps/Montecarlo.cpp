@@ -75,17 +75,16 @@ void MonteCarlo::set_samples(int samples){
 * Price
 *
 */
-
 void MonteCarlo::price(double &prix, double &ic){
   int size = opt_->get_size();
   int TimeSteps = opt_->get_timeStep();
   double r = mod_->get_r();
   double T = opt_->get_T();
-  //Initialisation de path comme une matrice de dimension d x (N+1)
+  //path: matrice représentant l'évolution du sous-jacent sur l'ensemble des pas de temps
   PnlMat *path = pnl_mat_create(size, TimeSteps+1);
   //G: matrice de dimension N*d pour générer une suite iid selon la loi normale centrée réduite
   PnlMat *G = pnl_mat_create(TimeSteps, size);
-  //grid: vecteur de taille N pour générer la grille de temps (t_0=0, ..., t_N)
+  //grid: vecteur de taille N+1 pour générer la grille de temps (t_0=0, ..., t_N)
   PnlVect *grid = pnl_vect_create(TimeSteps+1);
   //tirages: vecteur de taille samples_ contenant les valeurs des M payoff
   PnlVect *tirages = pnl_vect_create(samples_);
@@ -108,10 +107,10 @@ void MonteCarlo::price(double &prix, double &ic){
   }
 
   //Calcul du prix à l'aide de la formule de MC
-  prix = exp(-r*T)*(1/(double)samples_)*pnl_vect_sum(tirages);
+  prix = exp(-r*T)*(1./(double)samples_)*pnl_vect_sum(tirages);
   //Calcul de la variance de l'estimateur pour avoir l'intervalle de confiance
-  ic = (3.92/sqrt((double)samples_) )* sqrt(exp(-2*r*T)*((1/(double)samples_)*SQR(pnl_vect_norm_two(tirages))-SQR((1/(double)samples_)*pnl_vect_sum(tirages))));
-
+  ic = (3.92/sqrt((double)samples_) )* sqrt(exp(-2.*r*T)*((1./(double)samples_)*SQR(pnl_vect_norm_two(tirages))-SQR((1./(double)samples_)*pnl_vect_sum(tirages))));
+  
   pnl_vect_free(&grid);
   pnl_vect_free(&tirages);
   pnl_mat_free(&path);
@@ -186,21 +185,24 @@ void MonteCarlo::price(double &prix, double &ic){
 	pnl_mat_free(&G);
 }
 */
+
 void MonteCarlo::price(const PnlMat *past, double t, double &prix, double &ic){
 	double T = opt_->get_T();
 	int size = opt_->get_size();
 	int timeStep = opt_->get_timeStep();
 	double r = mod_->get_r();
-	//Initialisation de path comme une matrice de dimension d x (N+1)
+	//path: matrice représentant l'évolution du sous-jacent sur l'ensemble des pas de temps
 	PnlMat *path = pnl_mat_create(size, timeStep+1);
-	//temps: incrémentation pour chaque date de constatation
+	//dt: pas d'incrémentation
 	double dt = T/timeStep;
 	//extractPast: vecteur de taille size servant à extraire de la matrice past les colonnes pour les insérer dans path
 	PnlVect *extractPast = pnl_vect_create(size);
-
+	//H: nombre de pas d'incrémentation de past
 	int H = past->n - 1;
-	int taille;	
 
+	//Si t = 0, on met uniquement la premiere colonne de past dans path
+	//sinon on ajoute les colonnes de past qui possède un pas de temps dans path
+	int taille;	
 	if (fabs(t) < 0.000001){
 		taille = 0;
 		pnl_mat_get_col(extractPast, past, 0);
@@ -216,16 +218,10 @@ void MonteCarlo::price(const PnlMat *past, double t, double &prix, double &ic){
 			i++;
 		}
 	}
-	//Grid: vecteur de taille N-taille+1 pour générer la grille de temps (t, t_{i+1}, ..., t_{N})
-	PnlVect *grid = pnl_vect_create(timeStep-taille+1);
 	if (fmod(t,dt) != 0){
 		pnl_mat_get_col(extractPast, past, H);
-		LET(grid, 0) = t;
-	} else {
-		LET(grid, 0) = dt * taille;
 	}
-	
-
+	//extractPast contient la valeur du sous-jacent en t
 
 	//Cas où on price à maturité
 	//Toutes les informations sont déjà déterminés à l'aide de past
@@ -233,24 +229,23 @@ void MonteCarlo::price(const PnlMat *past, double t, double &prix, double &ic){
 	//et l'intervalle de confiance est de 0 car on est dans un calcul du prix déterministe
 	if (t == T){
 		prix = opt_->payoff(path);
-		//Calcul de la variance
 		ic = 0;
 		pnl_mat_free(&path);
 		pnl_vect_free(&extractPast);
 		return;
 	}
-
+	
 	//tirages: vecteur de taille samples_ contenant la valeur des payoff de l'option
 	PnlVect *tirages = pnl_vect_create(samples_);
-
 	//G: matrice de dimension (N-taille)*d pour générer une suite iid selon la loi normale centrée réduite
 	PnlMat *G = pnl_mat_create(timeStep-taille, size);
-	
-	//Calcul de chaque date de constatation;
+	//grid: vecteur de taille N-taille+1 pour générer la grille de temps de t à t_N
+	PnlVect *grid = pnl_vect_create(timeStep-taille+1);
+	LET(grid, 0) = t;
 	for (int i=1; i<timeStep-taille+1; i++){
 		LET(grid, i) = dt*(i+taille);
 	}
-
+	
 	for (int j=0; j<samples_; j++){
 		//Génération de l'évolution du sous-jacent par le modèle de Bs
 		mod_->asset(path, t, timeStep , T, rng, extractPast, taille, G, grid);
@@ -259,9 +254,9 @@ void MonteCarlo::price(const PnlMat *past, double t, double &prix, double &ic){
 	}
 
 	//Calcul du prix
-	prix = exp(-r*(T-t))*(1/(double)samples_)*pnl_vect_sum(tirages);
+	prix = exp(-r*(T-t))*(1./(double)samples_)*pnl_vect_sum(tirages);
 	//Calcul de la variance
-	ic = (3.92/sqrt((double)samples_)) * sqrt(exp(-2*r*(T-t))*((1/(double)samples_)*SQR(pnl_vect_norm_two(tirages))-SQR((1/(double)samples_)*pnl_vect_sum(tirages))));
+	ic = (3.92/sqrt((double)samples_)) * sqrt(exp(-2.*r*(T-t))*((1./(double)samples_)*SQR(pnl_vect_norm_two(tirages))-SQR((1./(double)samples_)*pnl_vect_sum(tirages))));
 
 	pnl_mat_free(&path);
 	pnl_mat_free(&G);
@@ -311,20 +306,14 @@ void MonteCarlo::delta (const PnlMat *past, double t, PnlVect *delta, PnlVect *i
 			i++;
 		}
 	}
-
-	//Grid: vecteur de taille N-taille+1 pour générer la grille de temps (t, t_{i+1}, ..., t_{N})
-	PnlVect *grid = pnl_vect_create(timeStep-taille+1);
 	if (fmod(t,dt) != 0){
 		pnl_mat_get_col(extractPast, past, H);
-		LET(grid, 0) = t;
-	} else {
-		LET(grid, 0) = dt * taille;
 	}
-
 	//G: matrice de dimension (N-taille)*d pour générer une suite iid selon la loi normale centrée réduite
 	PnlMat *G = pnl_mat_create(timeStep-taille, size);
-	
-	//Calcul de chaque date de constatation;
+	//Grid: vecteur de taille N-taille+1 pour générer la grille de temps (t, t_{i+1}, ..., t_{N})
+	PnlVect *grid = pnl_vect_create(timeStep-taille+1);
+	LET(grid, 0) = t;
 	for (int i=1; i<timeStep-taille+1; i++){
 		LET(grid, i) = dt*(i+taille);
 	}
@@ -350,14 +339,14 @@ void MonteCarlo::delta (const PnlMat *past, double t, PnlVect *delta, PnlVect *i
 		sum2 = pnl_vect_sum(tirages2);
 
 		// calcul de delta
-		facteur =  1/(2*(double)h_*(double)samples_*(double)MGET(past, d, past->n-1));
+		facteur =  1./(2.*(double)h_*(double)samples_*(double)MGET(past, d, past->n-1));
 		result =  exp(-r*(T-t))* facteur * sum;
 		LET(delta, d) = result;
 
 		// calcul de l'intervalle de confiance
 		sum = (sum*facteur)*(sum*facteur);
 		resultic = exp(-r*(T-t))/2 * (facteur*sum2 - sum);
-		resultic = 3.92*sqrt(resultic * 1/ (double)samples_);
+		resultic = 3.92*sqrt(resultic * 1./(double)samples_);
 		LET(ic, d) = resultic;
 	}
 
@@ -414,23 +403,23 @@ void MonteCarlo::couv(PnlMat *past, double &pl, double &plTheorique, int H, doub
 	double prix_t;
 	double result_t;
 
-	//prix: prix du sous-jacent à l'instant 0
-	double prix;
-	double ic;
-	price(prix, ic);
-	prix_t = prix_theoriqu(100, 100, .05, 1., .2);
-
 	//delta1: vecteur contenant le delta à un instant donné
 	PnlVect* delta1 = pnl_vect_create(size);
 	PnlVect* ic_vect = pnl_vect_create(size);
 	PnlMat* past_sub = pnl_mat_create(size, 1);
-
 	//S: vecteur contenant le prix dusous-jacent à un instant donné
 	PnlVect* S = pnl_vect_create(size);
 	//result: vecteur contenant le résultat de la soustraction entre delta1 et delta2
 	PnlVect* result;
 	PnlVect* pF = pnl_vect_create(H+1);
 	PnlVect* pFT = pnl_vect_create(H+1);
+
+	//prix: prix du sous-jacent à l'instant 0
+	double prix;
+	double ic;
+	price(prix, ic);
+	prix_t = prix_theoriqu(100, 100, .05, 1., .2);
+
 
 	//Calcul à l'instant 0 de la composition du portefeuille
 	pnl_mat_get_col(S, past, 0);
@@ -440,10 +429,14 @@ void MonteCarlo::couv(PnlMat *past, double &pl, double &plTheorique, int H, doub
 	delta_t = delta_theoriqu(100, 100, .05, 1., .2);
 	LET(pF, 0) = prix - pnl_vect_scalar_prod(delta1, S);
 	LET(pFT, 0) = prix_t - delta_t*100;
+
+	printf("%f %f\n", prix_t, prix);
+	printf("%f ", delta_t); pnl_vect_print(delta1); 
+	printf("\n");
+
 	//delta2: vecteur contenant le delta à une date de constation précédente de delta1
 	for (int i=1; i<H+1; i++)
 	{
-		//printf("%d ", i);
 		//On met dans delta2 la valeur du delta à l'instant i-1
 		PnlVect* delta2 = pnl_vect_copy(delta1);
 		delta_t2 = delta_t;
@@ -458,6 +451,10 @@ void MonteCarlo::couv(PnlMat *past, double &pl, double &plTheorique, int H, doub
 		price(past_sub, timeH*i, prix, ic);
 		prix_t = prix_theoriqu(GET(S, 0), 100, .05, 1.- timeH*i, .2);
 		delta_t = delta_theoriqu(GET(S, 0), 100, .05, 1.- timeH*i, .2);
+	
+		printf("%f %f\n", prix_t, prix);
+		printf("%f ", delta_t); pnl_vect_print(delta1); 
+		printf("\n");
 
 		result = pnl_vect_copy(delta1);
 		pnl_vect_minus_vect(result, delta2);
@@ -468,10 +465,15 @@ void MonteCarlo::couv(PnlMat *past, double &pl, double &plTheorique, int H, doub
 		
 		pnl_vect_free(&delta2);
 	}
-
 	//Calcul de l'erreur de couverture
 	pl = GET(pF, H) + pnl_vect_scalar_prod(delta1, S) - prix;
 	plTheorique = GET(pFT, H) + delta_t*GET(S, 0) - prix_t;
+
+	PnlMat* final = pnl_mat_create(H+1, 2);
+	pnl_mat_set_col(final, pFT, 0);
+	pnl_mat_set_col(final, pF, 1);
+	
+	pnl_mat_print(final);
 
 	pnl_vect_free(&pF);
 	pnl_vect_free(&S);
