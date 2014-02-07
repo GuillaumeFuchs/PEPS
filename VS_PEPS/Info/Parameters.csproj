@@ -44,9 +44,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\DBAccess\DBPrinting.csproj">
+    <ProjectReference Include="..\DBAccess\AffichageBD.csproj">
       <Project>{B9CADB4F-7103-4A57-A2D8-B35D931A8411}</Project>
-      <Name>DBPrinting</Name>
+      <Name>AffichageBD</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

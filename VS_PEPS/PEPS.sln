@@ -1,21 +1,19 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Engine", "PEPS\PEPS.vcxproj", "{8D4006CB-B6A0-42EB-8AFC-FE77FAB2E126}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Moteur", "PEPS\PEPS.vcxproj", "{8D4006CB-B6A0-42EB-8AFC-FE77FAB2E126}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Wrapper", "Wrapper\Wrapper.vcxproj", "{6010252A-F30E-4A67-8938-BC328A8B8557}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Communicateur", "Wrapper\Wrapper.vcxproj", "{6010252A-F30E-4A67-8938-BC328A8B8557}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebApp", "Interface\WebApp.csproj", "{C7AC889D-7566-44F2-B2B2-957A808FCCEF}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InterfaceWeb", "Interface\InterfaceWeb.csproj", "{C7AC889D-7566-44F2-B2B2-957A808FCCEF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DBPrinting", "DBAccess\DBPrinting.csproj", "{B9CADB4F-7103-4A57-A2D8-B35D931A8411}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AffichageBD", "DBAccess\AffichageBD.csproj", "{B9CADB4F-7103-4A57-A2D8-B35D931A8411}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Parameters", "Info\Parameters.csproj", "{4C57386F-9793-4077-BB57-FB132E8D90E9}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConsoleApplication1", "ConsoleApplication1\ConsoleApplication1.csproj", "{6404A5DE-FF3A-4F67-BBC1-4FBB281E368F}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DBAccess", "ClassLibrary1\DBAccess.csproj", "{F67F26B9-60B3-4BB3-8FE9-6BE9FFB8484F}"
-EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ConvertData", "ConvertData\ConvertData.vcxproj", "{BDD5B69B-9379-4B24-90A7-B6E8A0BA2258}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -113,18 +111,6 @@ Global
 		{F67F26B9-60B3-4BB3-8FE9-6BE9FFB8484F}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{F67F26B9-60B3-4BB3-8FE9-6BE9FFB8484F}.Release|Win32.ActiveCfg = Release|Any CPU
 		{F67F26B9-60B3-4BB3-8FE9-6BE9FFB8484F}.Release|x86.ActiveCfg = Release|Any CPU
-		{BDD5B69B-9379-4B24-90A7-B6E8A0BA2258}.Debug|Any CPU.ActiveCfg = Debug|Win32
-		{BDD5B69B-9379-4B24-90A7-B6E8A0BA2258}.Debug|Mixed Platforms.ActiveCfg = Debug|Win32
-		{BDD5B69B-9379-4B24-90A7-B6E8A0BA2258}.Debug|Mixed Platforms.Build.0 = Debug|Win32
-		{BDD5B69B-9379-4B24-90A7-B6E8A0BA2258}.Debug|Win32.ActiveCfg = Debug|Win32
-		{BDD5B69B-9379-4B24-90A7-B6E8A0BA2258}.Debug|Win32.Build.0 = Debug|Win32
-		{BDD5B69B-9379-4B24-90A7-B6E8A0BA2258}.Debug|x86.ActiveCfg = Debug|Win32
-		{BDD5B69B-9379-4B24-90A7-B6E8A0BA2258}.Release|Any CPU.ActiveCfg = Release|Win32
-		{BDD5B69B-9379-4B24-90A7-B6E8A0BA2258}.Release|Mixed Platforms.ActiveCfg = Release|Win32
-		{BDD5B69B-9379-4B24-90A7-B6E8A0BA2258}.Release|Mixed Platforms.Build.0 = Release|Win32
-		{BDD5B69B-9379-4B24-90A7-B6E8A0BA2258}.Release|Win32.ActiveCfg = Release|Win32
-		{BDD5B69B-9379-4B24-90A7-B6E8A0BA2258}.Release|Win32.Build.0 = Release|Win32
-		{BDD5B69B-9379-4B24-90A7-B6E8A0BA2258}.Release|x86.ActiveCfg = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

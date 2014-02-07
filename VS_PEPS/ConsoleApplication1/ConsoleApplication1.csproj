@@ -47,9 +47,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\DBAccess\DBPrinting.csproj">
+    <ProjectReference Include="..\DBAccess\AffichageBD.csproj">
       <Project>{B9CADB4F-7103-4A57-A2D8-B35D931A8411}</Project>
-      <Name>DBPrinting</Name>
+      <Name>AffichageBD</Name>
     </ProjectReference>
     <ProjectReference Include="..\Info\Parameters.csproj">
       <Project>{4C57386F-9793-4077-BB57-FB132E8D90E9}</Project>

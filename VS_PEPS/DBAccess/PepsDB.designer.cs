@@ -9,7 +9,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace DBPrinting
+namespace AffichageBD
 {
 	using System.Data.Linq;
 	using System.Data.Linq.Mapping;
@@ -33,7 +33,7 @@ namespace DBPrinting
     #endregion
 		
 		public PepsDBDataContext() : 
-				base(global::DBPrinting.Properties.Settings.Default.masterConnectionString, mappingSource)
+				base(global::AffichageBD.Properties.Settings.Default.masterConnectionString, mappingSource)
 		{
 			OnCreated();
 		}

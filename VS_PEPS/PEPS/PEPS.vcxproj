@@ -18,7 +18,10 @@
     <ClCompile Include="Basket.cpp" />
     <ClCompile Include="Bs.cpp" />
     <ClCompile Include="Computations.cpp" />
+    <ClCompile Include="Couverture.cpp" />
+    <ClCompile Include="ModeleIndices.cpp" />
     <ClCompile Include="Montecarlo.cpp" />
+    <ClCompile Include="Moteur.cpp" />
     <ClCompile Include="Option.cpp" />
     <ClCompile Include="Performance.cpp" />
     <ClCompile Include="Playlist.cpp" />
@@ -31,7 +34,10 @@
     <ClInclude Include="Basket.h" />
     <ClInclude Include="Bs.h" />
     <ClInclude Include="Computations.h" />
+    <ClInclude Include="Couverture.h" />
+    <ClInclude Include="ModeleIndices.h" />
     <ClInclude Include="Montecarlo.h" />
+    <ClInclude Include="Moteur.h" />
     <ClInclude Include="Option.h" />
     <ClInclude Include="Performance.h" />
     <ClInclude Include="Playlist.h" />
@@ -40,7 +46,7 @@
     <ProjectGuid>{8D4006CB-B6A0-42EB-8AFC-FE77FAB2E126}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>PEPS</RootNamespace>
-    <ProjectName>Engine</ProjectName>
+    <ProjectName>Moteur</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">

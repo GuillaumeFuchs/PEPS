@@ -9,7 +9,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace DBAccess
+namespace AccesBD
 {
 	using System.Data.Linq;
 	using System.Data.Linq.Mapping;
@@ -33,7 +33,7 @@ namespace DBAccess
     #endregion
 		
 		public PepsDbDataContext() : 
-				base(global::DBAccess.Properties.Settings.Default.masterConnectionString, mappingSource)
+				base(global::AccesBD.Properties.Settings.Default.masterConnectionString, mappingSource)
 		{
 			OnCreated();
 		}

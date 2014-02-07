@@ -20,7 +20,7 @@
 #include <omp.h>
 using namespace std;
 
-void Computations::priceOption(double &ic, double &prix, int M, double T, double S0, double K, double sigma, double r, int size, int timeStep)
+void Moteur::priceOption(double &ic, double &prix, int M, double T, double S0, double K, double sigma, double r, int size, int timeStep)
 {
 	printf("salut");
 	PnlRng *rng = pnl_rng_create(PNL_RNG_MERSENNE);
@@ -38,7 +38,7 @@ void Computations::priceOption(double &ic, double &prix, int M, double T, double
 	mc.price(prix, ic);
 }
 
-void Computations::couvOption(double &pl, int M, double T, double S0, double K, double sigma, double r, int size, int timeStep)
+void Moteur::couvOption(double &pl, int M, double T, double S0, double K, double sigma, double r, int size, int timeStep)
 {
 	PnlRng *rng = pnl_rng_create(PNL_RNG_MERSENNE);
 	pnl_rng_sseed(rng, time(NULL));
