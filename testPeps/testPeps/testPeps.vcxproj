@@ -84,7 +84,9 @@
     <ClInclude Include="Basket.h" />
     <ClInclude Include="Bs.h" />
     <ClInclude Include="Computations.h" />
+    <ClInclude Include="Modelasset.h" />
     <ClInclude Include="Montecarlo.h" />
+    <ClInclude Include="Montecarlos.h" />
     <ClInclude Include="Option.h" />
     <ClInclude Include="Performance.h" />
     <ClInclude Include="Playlist.h" />
@@ -97,7 +99,9 @@
     <ClCompile Include="Basket.cpp" />
     <ClCompile Include="Bs.cpp" />
     <ClCompile Include="Computations.cpp" />
+    <ClCompile Include="Modelasset.cpp" />
     <ClCompile Include="Montecarlo.cpp" />
+    <ClCompile Include="Montecarlos.cpp" />
     <ClCompile Include="Option.cpp" />
     <ClCompile Include="Performance.cpp" />
     <ClCompile Include="Playlist.cpp" />

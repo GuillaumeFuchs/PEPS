@@ -76,6 +76,4 @@ class Basket : public Option {
 	 */
 	double payoff (const PnlMat * path) const;
 }; 
-
 #endif 
-

@@ -6,69 +6,13 @@
 #include <pnl/pnl_mathtools.h>
 #include <cstdio>
 
-MonteCarlo::MonteCarlo(PnlRng * rng){
-	(*this).rng = rng;
-	h_ = 0.0;
-	samples_ = 0;
+MonteCarlo::MonteCarlo(PnlRng* rng) : MonteCarlos(rng) {
 }
 
-MonteCarlo::MonteCarlo(Bs *mod, Option *opt, PnlRng *rng, double h, int samples){
-	(*this).mod_ = mod;
-	(*this).opt_ = opt;
-	(*this).rng = rng;
-	(*this).h_ = h;
-	(*this).samples_ = samples;
+MonteCarlo::MonteCarlo(ModelAsset *mod, Option *opt, PnlRng *rng, double h, int samples) : MonteCarlos(mod, opt, rng, h, samples) {
 }
 
-/**
-* Accesseurs
-*
-*/
 MonteCarlo::~MonteCarlo(){
-}
-
-Bs* MonteCarlo::get_mod() const{
-	return mod_;
-}
-
-Option* MonteCarlo::get_opt() const{
-	return opt_;
-}
-
-PnlRng* MonteCarlo::get_rng() const{
-	return rng;
-}
-
-double MonteCarlo::get_h() const{
-	return h_;
-}
-
-int MonteCarlo::get_samples() const{
-	return samples_;
-}
-
-/**
-* Mutateurs
-*
-*/
-void MonteCarlo::set_mod(Bs* mod){
-	mod_ = mod;
-}
-
-void MonteCarlo::set_opt(Option* opt){
-	opt_ = opt;
-}
-
-void MonteCarlo::set_rng(PnlRng* rng){
-	(*this).rng = rng;
-}
-
-void MonteCarlo::set_h(double h){
-	h_ = h;
-}
-
-void MonteCarlo::set_samples(int samples){
-	samples_ = samples;
 }
 
 /**
@@ -222,7 +166,7 @@ void MonteCarlo::price(const PnlMat *past, double t, double &prix, double &ic){
 		pnl_mat_get_col(extractPast, past, H);
 	}
 	//extractPast contient la valeur du sous-jacent en t
-
+	
 	//Cas où on price à maturité
 	//Toutes les informations sont déjà déterminés à l'aide de past
 	//donc on a besoin d'aucune simulation

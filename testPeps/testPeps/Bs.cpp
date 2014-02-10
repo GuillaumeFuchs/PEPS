@@ -1,131 +1,16 @@
 #include "Bs.h"
 #include <math.h>
 #include <cstdio>
-#include "montecarlo.h"
 #include <iostream>
 
 using namespace std;
-Bs::Bs(){
-	size_ = 0;
-	r_ = 0.0;
-	rho_ = new double();
-	sigma_ = pnl_vect_new();
-	spot_ = pnl_vect_new();
-	trend_ = pnl_vect_new();
-	Cho_ = pnl_mat_new();
-	Gi_ = pnl_vect_new();
-	Ld_ = pnl_vect_new();
+Bs::Bs() : ModelAsset() {
 }
 
-Bs::Bs(int size, double r, double* rho, double* sigma, double* spot, double* trend){
-	(*this).size_ = size;
-	(*this).r_ = r;
-	(*this).rho_ = rho;
-	(*this).sigma_ = pnl_vect_create(size_);
-	(*this).spot_ = pnl_vect_create(size_);
-	(*this).trend_ = pnl_vect_create(size_);
-
-	(*this).Cho_ = pnl_mat_create_from_double(size_, size_, 1);
-	int compteur = -1;
-
-	for (int i = 1; i < size_; i++){
-		for (int j = 0 ; j < i; j++){
-			MLET(Cho_, i, j) = rho_[++compteur];
-			MLET(Cho_, j, i) = rho_[compteur];
-		}
-	}
-	for (int i = 0; i < size_; i++){
-		LET(sigma_, i) = sigma[i];
-		LET(spot_, i) = spot[i];
-		if (trend != NULL)
-			LET(trend_, i) = trend[i];
-		pnl_mat_set_diag(Cho_, 1, i);
-	}
-	pnl_mat_chol(Cho_);
-
-	Gi_ = pnl_vect_create(size_);
-	Ld_ = pnl_vect_create(size_);
+Bs::Bs(int size, double r, double* rho, double* sigma, double* spot, double* trend) : ModelAsset(size, r, rho, sigma, spot, trend){
 }
 
 Bs::~Bs(){
-	pnl_vect_free(&sigma_);
-	pnl_vect_free(&spot_);
-	pnl_vect_free(&trend_);
-	pnl_vect_free(&Gi_);
-	pnl_vect_free(&Ld_);
-	pnl_mat_free(&Cho_);
-}
-
-int Bs::get_size() const{
-	return size_;
-}
-
-double Bs::get_r() const{
-	return r_;
-}
-
-double* Bs::get_rho() const{
-	return rho_;
-}
-
-PnlVect * Bs::get_sigma() const{
-	return sigma_;
-}
-
-PnlVect * Bs::get_spot() const{
-	return spot_;
-}
-
-PnlVect * Bs::get_trend() const{
-	return trend_;
-}
-
-PnlMat * Bs::get_cho() const{
-	return Cho_;
-}
-
-PnlVect * Bs::get_gi() const{
-	return Gi_;
-}
-
-PnlVect * Bs::get_ld() const{
-	return Ld_;
-}
-
-void Bs::set_size(int size){
-	size_ = size;
-}
-
-void Bs::set_r(double r){
-	r_ = r;
-}
-
-void Bs::set_rho(double* rho){
-	rho_ = rho;
-}
-
-void Bs::set_sigma(PnlVect *sigma){
-	sigma_ = sigma;
-}
-
-void Bs::set_spot(PnlVect *spot){
-	spot_ = spot;
-}
-
-void Bs::set_trend(PnlVect *trend){
-	trend_ = trend;
-}
-
-void Bs::set_cho(PnlMat *Cho){
-	Cho_ = pnl_mat_copy(Cho);
-}
-
-void Bs::set_gi(PnlVect *Gi){
-	Gi_ = Gi;
-}
-
-void Bs::set_ld(PnlVect *Ld){
-	Ld_ = Ld;
 }
 
 /*

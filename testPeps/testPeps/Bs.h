@@ -1,5 +1,6 @@
 #ifndef BsH
 #define BsH
+#include "Modelasset.h"
 #include <pnl/pnl_vector.h>
 #include <pnl/pnl_random.h>
 
@@ -7,18 +8,7 @@
  * \class Bs
  * \brief Classe representant le modele de Black Scholes
  */
-class Bs {
-  private:
-	int size_; /*!< nombre d’actifs du modele */
-	double r_; /*!< taux d’interet */
-	double* rho_; /*!< parametre de correlation */
-	PnlVect *sigma_; /*!< vecteur de volatilites */
-	PnlVect *spot_; /*!< valeurs initiales du sous-jacent */
-	PnlVect *trend_; /*!< taux utilise sous la probabilite historique */
-	PnlMat *Cho_; /*!< Matrice de Cholesky utilise pour la correlation*/
-	PnlVect *Gi_; /*!< Vecteur gaussien centré du modele de Bs multidimensionnel*/
-	PnlVect *Ld_; /*!< Ligne d de la matrice de Cholesky Cho_*/
-
+class Bs : public ModelAsset {
   public:
 
 	/*!
@@ -35,170 +25,7 @@ class Bs {
 	 *
 	 * Destructeur de la classe Bs
 	 */
-	~Bs();
-
-	/*!
-	 * \brief Accesseur de size_
-	 *
-	 *  Acceder à la taille du sous-jacent
-	 *
-	 * \return la taille du sous-jacent
-	 */
-	int get_size() const;
-
-	/*!
-	 * \brief Accesseur de r_
-	 *
-	 *  Acceder au taux d'interet du sous-jacent
-	 *
-	 * \return le taux d'interet du sous-jacent
-	 */
-	double get_r() const;
-
-	/*!
-	 * \brief Accesseur de rho_
-	 *
-	 *  Acceder au parametre de correlation du sous-jacent
-	 *
-	 * \return le parametre de correlation du sous-jacent 
-	 */
-	double* get_rho() const;
- 
-	/*!
-	 * \brief Accesseur de Sigma_
-	 *
-	 *  Acceder au vecteur de volatilites
-	 *
-	 * \return le vecteur de volatilites
-	 */
-	PnlVect *get_sigma() const;
-
-	/*!
-	 * \brief Accesseur de Spot_
-	 *
-	 *  Acceder aux valeurs initiales du sous-jacent
-	 *
-	 * \return la valeurs initiales du sous-jacent
-	 */
-	PnlVect *get_spot() const;
-
-	/*!
-	 * \brief Accesseur de Trend_
-	 *
-	 *  Acceder au vecteur de taux sous la probabilite historique
-	 *
-	 * \return le vecteur de taux sous la probabilite historique
-	 */
-	PnlVect *get_trend() const;
-
-	/*!
-	 * \brief Accesseur de Cho_
-	 *
-	 *  Acceder a la matrice de cholesky associee a la correlation du sous-jacent
-	 *
-	 *  \return la matrice de cholesky associee a la correlation du sous-jacent
-	 */
-	PnlMat *get_cho() const;
-
-	/*!
-	 * \brief Accesseur de Gi_
-	 *
-	 *  Acceder au vecteur gaussien centre du modele de Bs
-	 *
-	 *  \return le vecteur gaussien centré du modele de Bs
-	 */
-	PnlVect *get_gi() const;
-
-	/*!
-	 * \brief Accesseur de Ld_
-	 *
-	 *  Acceder a la ligne d de la matrice de Cholesky Cho_
-	 *
-	 *  \return la ligne d de la matrice de Cholesky Cho_
-	 */
-	PnlVect *get_ld() const;
-
-	/*!
-	 * \brief Mutateur de size_
-	 *
-	 *  Modifier la taille du sous-jacent
-	 *
-	 * \param la nouvelle taille du sous-jacent
-	 */
-	void set_size(int size);
-
-	/*!
-	 * \brief Mutateur de r_
-	 *
-	 *  Modifier le taux d'interet du sous-jacent
-	 *
-	 * \param le nouveau taux d'interet du sous-jacent
-	 */
-	void set_r(double r);
-
-	/*!
-	 * \brief Mutateur de rho_
-	 *
-	 *  Modifier au parametre de correlation du sous-jacent
-	 *
-	 * \param le nouveau parametre de correlation du sous-jacent 
-	 */
-	void set_rho(double* rho);
-
-	/*!
-	 * \brief Mutateur de Sigma_
-	 *
-	 *  Modifier au vecteur de volatilites
-	 *
-	 * \param le nouveau vecteur de volatilites
-	 */
-	void set_sigma(PnlVect *sigma);
-
-	/*!
-	 * \brief Mutateur de Spot_
-	 *
-	 *  Modifier aux valeurs initiales du sous-jacent
-	 *
-	 * \param la nouvelle valeurs initiales du sous-jacent
-	 */
-	void set_spot(PnlVect *spot);
-
-	/*!
-	 * \brief Mutateur de Trend_
-	 *
-	 *  Modifier au vecteur de taux sous la probabilite historique
-	 *
-	 * \param le nouveau vecteur de taux sous la probabilite historique
-	 */
-	void set_trend(PnlVect *trend);
-
-	/*!
-	 * \brief Mutateur de Cho_
-	 *
-	 *  Modifier la matrice de cholesky associee a la correlation du sous-jacent
-	 *
-	 *  \param la nouvelle matrice de cholesky associee a la correlation du sous-jacent
-	 */
-	void set_cho(PnlMat *Cho);
-
-	/*!
-	 * \brief Mutateur de Gi_
-	 *
-	 *  Modifier le vecteur gaussien centre du modele de Bs
-	 *
-	 *  \param le nouveau vecteur gaussien centre du modele de Bs
-	 */
-	PnlVect *set_gi();
-	void set_gi(PnlVect *Gi);
-
-	/*!
-	 * \brief Mutateur de Ld_
-	 *
-	 *  Modifier la ligne d de la matrice de Cholesky Cho_
-	 *
-	 *  \param la nouvelle ligne d de la matrice de Cholesky Cho_
-	 */
-	void set_ld(PnlVect *Ld);
+	virtual ~Bs();
 
 	/*!
 	 * \brief Génère une trajectoire du modele et la stocke dans path
@@ -250,6 +77,5 @@ class Bs {
 	 * \param PL (output) erreur de couverture
 	 */
 	void simul_market (PnlMat* past, int H, double T, PnlRng *rng); 
-
 };
 #endif
