@@ -41,6 +41,7 @@ int main(){
 	double sigma[size] = {0.2};//, 0.2, 0.2, 0.15};	
 	double r = .05;
 <<<<<<< HEAD
+<<<<<<< HEAD
 	double coeff[size] = {1.};// , .2, .2, .2, .2};
 	int N = 1;
 	int samples = 20000;
@@ -108,12 +109,31 @@ int main(){
 	MonteCarlo mc(&mod, &opt, rng, 0.01, samples);
 	Test test(&mc);
 
+=======
+	double coeff[size] = {1};//, .25, .25, .25};
+	//double rho[size*(size-1)/2] = {0., 0., 0., 0., 0., 0.};
+	int N = 10;
+	int samples = 50000;
+	int H = 25;
+	double t = 0.5;
+
+	
+
+	Bs mod(size, r, NULL, sigma, spot, NULL);
+	Basket opt(strike, coeff, T, N, size);
+	MonteCarlo mc(&mod, &opt, rng, 0.01, samples);
+	Test test(&mc);
+
+>>>>>>> daa9a163503824ba9326db1fb3cb3c04bcc05fe6
 	//test.compute_prix_samples(1000, true);
 	test.compute_delta_samples(1000, true);
 	//test.compute_prix(25, 0.5);
 	//test.compute_delta(25, 0.5);
 	//test.compute_couv(50, false);
+<<<<<<< HEAD
 >>>>>>> commit
+=======
+>>>>>>> daa9a163503824ba9326db1fb3cb3c04bcc05fe6
 
 	system("pause");
 
