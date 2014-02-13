@@ -79,8 +79,15 @@ class MonteCarlo : public MonteCarlos {
 	 * \param pl erreur de courverture du portefeuille
 	 * \param H nombre de date dans la simulation
 	 * \param T maturite du portefeuille
+	 * \param summary contient les informations liés à l'achat & à la vente d'actions pour le portefeuille de couverture
+	 *	1er colonne: date de recalibrage
+	 *	2e  colonne: cours de l'action
+	 *	3e  colonne: delta simulé
+	 *	4e	colonne: nombre d'actions à acheter (si négatif alors vente)
+	 *	5e	colonne: delta théorique selon B&S
+	 *	6e	colonne: nb d'actions à acheter théorique
 	 */
-	void couv (PnlMat *past, double &pl, double &plTheorique, int H, double T);
+	void couv (PnlMat *past, double &pl, double &plTheorique, int H, double T, PnlMat* summary);
 
 };
 #endif

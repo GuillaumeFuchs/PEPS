@@ -19,7 +19,6 @@ class Bs : public ModelAsset {
 	Bs();
 	Bs(int size, double r, double* rho, double* sigma, double* spot, double* trend);
 
-
 	/*!
 	 * \brief Destructeur
 	 *
