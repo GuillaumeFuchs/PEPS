@@ -783,7 +783,7 @@ Si l'on rentre un peu plus dans le détails, on peut modéliser l'architecture d
 \end{center}
 
 \begin{center}
-\includegraphics[scale=0.8]{GloabalDiag.png}
+\includegraphics[scale=0.6]{../MAXI_ARCHI.png}
 \end{center}
 
 On constate dans cette architecture que l'intégralité de la partie calcul s'effectuera en C++ grâce à l'utilisation de deux modules C++/CLI. C'est pourquoi, on aura deux packages de traitement de la base de données, en effet le premier \lstinline!DBPrinting! sera directement relié à l'application web pour afficher notamment le cours actuel des indices. L'autre \lstinline!DBAccess! permettra de transmettre le nécessaire au calcul des paramètres et donc au calibrage de notre modèle. Les différents paramètres étant calculés, \lstinline!Engine! interviendra pour réaliser les différentes simulations, et donc calculer le prix ainsi que le vecteur associé à la couverture ainsi que le P\&L. Les relations sont dans les deux sens entre \lstinline!WebApp! et le \lstinline!Wrapper! ainsi que entre le \lstinline!Wrapper! et \lstinline!Engine! car comme précisé précédemment le gestionnaire à par exemple la possibilité de donner la composition de son portefeuille, les informations relatives doivent donc redescendre jusqu'à \lstinline!Engine! pour que cela soit pris en compte.
@@ -798,7 +798,7 @@ De façon plus précise, l'architecture précédente peut être explicité comme
 \begin{figure}[h!]
   \caption{Architecture détaillée.}
   \centering
-    \includegraphics[height=14cm, width = 20cm]{DiagClasse.jpg}
+    \includegraphics[height=14cm, width = 20cm]{../MAXI_ARCHI2.png}
 \end{figure}
 \end{landscape}
 
@@ -839,7 +839,24 @@ C'est ainsi que nous obtenons le diagramme de classe suivant :\\
  Un interface alors envisageable pour représenter les éléments décris précédemment pourrait être l'interface suivante :\\
 
 \begin{center}
-\includegraphics[scale=0.3]{maquette.png}
+\includegraphics[scale=0.4]{../Maquette_1.png}
+\end{center}
+
+
+\begin{center}
+\includegraphics[scale=0.4]{../Maquette_2.png}
+\end{center}
+
+\begin{center}
+\includegraphics[scale=0.4]{../Maquette_3.png}
+\end{center}
+
+\begin{center}
+\includegraphics[scale=0.4]{../Maquette_4.png}
+\end{center}
+
+\begin{center}
+\includegraphics[scale=0.4]{../Maquette_5.png}
 \end{center}
 
 On fait ainsi apparaître dans l'onglet en haut à gauche, la date à laquelle à été prise la valeur liquidative de référence, la date actuelle ainsi que la date d'échéance prévu pour avoir une vision global de la chronologie du produit.\\
