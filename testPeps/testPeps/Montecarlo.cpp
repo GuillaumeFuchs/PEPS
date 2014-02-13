@@ -5,6 +5,7 @@
 #include <pnl/pnl_cdf.h>
 #include <pnl/pnl_mathtools.h>
 #include <cstdio>
+#include "Test.h"
 
 MonteCarlo::MonteCarlo(PnlRng* rng) : MonteCarlos(rng) {
 }
@@ -267,8 +268,8 @@ void MonteCarlo::delta (const PnlMat *past, double t, PnlVect *delta, PnlVect *i
 			
 			mod_->asset(path, t, timeStep, T, rng, extractPast, taille, G, grid);
 			// On récupère la trajectoire shiftée
-			mod_->shift_asset(_shift_path_plus, path, d, h_, t,timeStep);
-			mod_->shift_asset (_shift_path_moins, path, d, -h_, t,timeStep);
+			mod_->shift_asset(_shift_path_plus, path, d, h_, t, timeStep);
+			mod_->shift_asset (_shift_path_moins, path, d, -h_, t, timeStep);
 
 			//On calcul la valeur du payoff et on retiens la dtérence
 			temps1 = opt_->payoff(_shift_path_plus);
@@ -283,7 +284,7 @@ void MonteCarlo::delta (const PnlMat *past, double t, PnlVect *delta, PnlVect *i
 		sum2 = pnl_vect_sum(tirages2);
 
 		// calcul de delta
-		facteur =  1./(2.*(double)h_*(double)samples_*(double)MGET(past, d, past->n-1));
+		facteur =  1./(2.*h_*(double)samples_*MGET(past, d, past->n-1));
 		result =  exp(-r*(T-t))* facteur * sum;
 		LET(delta, d) = result;
 
@@ -304,37 +305,7 @@ void MonteCarlo::delta (const PnlMat *past, double t, PnlVect *delta, PnlVect *i
 	pnl_vect_free(&grid);
 }
 
-
-double delta_theoriqu(double S, double K, double r, double T, double sigma){
-	double q, bound;
-	int status;
-	int which = 1;
-	double p;
-	double mean = 0.;
-	double sd = 1.;
-	double d = 1./(sigma * sqrt(T)) * (log(S/K) + (r + sigma * sigma /2)*T);
-
-	pnl_cdf_nor(&which, &p, &q, &d, &mean, &sd, &status, &bound);
-	return p;
-}
-
-double prix_theoriqu(double S, double K, double r, double T, double sigma){
-	double q, bound;
-	int status;
-	int which = 1;
-	double p1, p2;
-	double mean = 0.;
-	double sd = 1.;
-	double d1 = 1./(sigma * sqrt(T)) * (log(S/K) + (r + sigma * sigma /2)*T);
-	double d2 = d1 - sigma * sqrt(T);
-
-	pnl_cdf_nor(&which, &p1, &q, &d1, &mean, &sd, &status, &bound);
-	pnl_cdf_nor(&which, &p2, &q, &d2, &mean, &sd, &status, &bound);
-
-	return S*p1 - K*exp(-r*T)*p2;
-}
-
-void MonteCarlo::couv(PnlMat *past, double &pl, double &plTheorique, int H, double T)
+void MonteCarlo::couv(PnlMat *past, double &pl, double &plTheorique, int H, double T, PnlMat *summary)
 {
 	//Simulation du modèle sous la probabilité historique
 	mod_->simul_market(past, H, T, rng);
@@ -343,14 +314,15 @@ void MonteCarlo::couv(PnlMat *past, double &pl, double &plTheorique, int H, doub
 	int timeStep = opt_->get_timeStep();
 	double timeH = T/H;
 
-	double delta_t, delta_t2;
-	double prix_t;
+	double delta_th, delta_th2;
+	double prix_th;
 	double result_t;
 
 	//delta1: vecteur contenant le delta à un instant donné
 	PnlVect* delta1 = pnl_vect_create(size);
 	PnlVect* ic_vect = pnl_vect_create(size);
 	PnlMat* past_sub = pnl_mat_create(size, 1);
+	PnlVect* past_extract = pnl_vect_create(H+1);
 	//S: vecteur contenant le prix dusous-jacent à un instant donné
 	PnlVect* S = pnl_vect_create(size);
 	//result: vecteur contenant le résultat de la soustraction entre delta1 et delta2
@@ -362,28 +334,39 @@ void MonteCarlo::couv(PnlMat *past, double &pl, double &plTheorique, int H, doub
 	double prix;
 	double ic;
 	price(prix, ic);
-	prix_t = prix_theoriqu(100, 100, .05, 1., .2);
+	prix_th = Test::theo_price(100, 100, .05, 1., .2);
 
+	//Ajout du cours de l'action dans summary (colonne 2)
+	pnl_mat_get_row(past_extract, past, 0);
+	pnl_mat_set_col(summary, past_extract, 1);
 
 	//Calcul à l'instant 0 de la composition du portefeuille
 	pnl_mat_get_col(S, past, 0);
 	pnl_mat_set_col(past_sub, S, 0);
 
 	delta(past_sub, 0, delta1, ic_vect);
-	delta_t = delta_theoriqu(100, 100, .05, 1., .2);
+	delta_th = Test::theo_delta(100, 100, .05, 1., .2);
 	LET(pF, 0) = prix - pnl_vect_scalar_prod(delta1, S);
-	LET(pFT, 0) = prix_t - delta_t*100;
+	LET(pFT, 0) = prix_th - delta_th*100;
+	//Ajout dans summary de la date, du delta & du nombre d'actions à acheter, du delta théorique & du nombre d'actions théorique à acheter
+	MLET(summary, 0, 0) = 0.;
+	MLET(summary, 0, 2) = GET(delta1, 0);
+	MLET(summary, 0, 3) = GET(delta1, 0);
+	MLET(summary, 0, 4) = delta_th;
+	MLET(summary, 0, 5) = delta_th;
+	
 
-	printf("%f %f\n", prix_t, prix);
-	printf("%f ", delta_t); pnl_vect_print(delta1); 
-	printf("\n");
+
+	/*printf("t=%f\n%f %f\n", 0., prix_th, prix);
+	printf("%f ", delta_th); pnl_vect_print(delta1); 
+	printf("\n");*/
 
 	//delta2: vecteur contenant le delta à une date de constation précédente de delta1
 	for (int i=1; i<H+1; i++)
 	{
 		//On met dans delta2 la valeur du delta à l'instant i-1
 		PnlVect* delta2 = pnl_vect_copy(delta1);
-		delta_t2 = delta_t;
+		delta_th2 = delta_th;
 
 		//Calcul du delta & du prix à l'instant tau_i
 		pnl_mat_resize(past_sub, size, i+1);
@@ -393,16 +376,23 @@ void MonteCarlo::couv(PnlMat *past, double &pl, double &plTheorique, int H, doub
 		}
 		delta(past_sub, timeH*i, delta1, ic_vect);
 		price(past_sub, timeH*i, prix, ic);
-		prix_t = prix_theoriqu(GET(S, 0), 100, .05, 1.- timeH*i, .2);
-		delta_t = delta_theoriqu(GET(S, 0), 100, .05, 1.- timeH*i, .2);
+		prix_th = Test::theo_price(GET(S, 0), 100, .05, 1.- timeH*(double)i, .2);
+		delta_th = Test::theo_delta(GET(S, 0), 100, .05, 1.- timeH*(double)i, .2);
 	
-		printf("%f %f\n", prix_t, prix);
-		printf("%f ", delta_t); pnl_vect_print(delta1); 
-		printf("\n");
+		//Ajout des informations dans summary
+		MLET(summary, i, 0) = timeH*(double)i;
+		MLET(summary, i, 2) = GET(delta1, 0);
+		MLET(summary, i, 3) = GET(delta1, 0) - GET(delta2, 0);
+		MLET(summary, i, 4) = delta_th;
+		MLET(summary, i, 5) = delta_th - delta_th2;
+
+		/*printf("t=%f\n%f %f\n", timeH*i, prix_th, prix);
+		printf("%f ", delta_th); pnl_vect_print(delta1); 
+		printf("\n");*/
 
 		result = pnl_vect_copy(delta1);
 		pnl_vect_minus_vect(result, delta2);
-		result_t = delta_t - delta_t2;
+		result_t = delta_th - delta_th2;
 
 		LET(pF, i) = GET(pF,i-1) * exp(r*T/H) - pnl_vect_scalar_prod(result , S);
 		LET(pFT, i) = GET(pFT, i-1) * exp(r*T/H) - result_t * GET(S, 0);
@@ -411,16 +401,17 @@ void MonteCarlo::couv(PnlMat *past, double &pl, double &plTheorique, int H, doub
 	}
 	//Calcul de l'erreur de couverture
 	pl = GET(pF, H) + pnl_vect_scalar_prod(delta1, S) - prix;
-	plTheorique = GET(pFT, H) + delta_t*GET(S, 0) - prix_t;
+	plTheorique = GET(pFT, H) + delta_th*GET(S, 0) - prix_th;
 
 	PnlMat* final = pnl_mat_create(H+1, 2);
 	pnl_mat_set_col(final, pFT, 0);
 	pnl_mat_set_col(final, pF, 1);
 	
-	pnl_mat_print(final);
+	//pnl_mat_print(final);
 
 	pnl_vect_free(&pF);
 	pnl_vect_free(&S);
 	pnl_vect_free(&delta1);
 	pnl_vect_free(&ic_vect);
+	pnl_vect_free(&past_extract);
 }
