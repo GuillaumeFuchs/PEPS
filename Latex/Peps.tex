@@ -621,16 +621,14 @@ Ceci offre donc de l'information à l'investisseur puisque celui-ci en anticipan
 \newpage
 
 
-\section{Modèles Mathématiques}
-/*Intro sur la modélisation à faire */
 
-\subsection{Les sous-jacents}
-Ici on explique que les sous-jacents sont les indices + taux zéro coupon et on montre que ça peut etre modélisé par les modèles suivants.
+\section{Modèles Mathématiques}
+Afin de proposer le produit Playlist aux clients, il faut en déterminer le prix. L'importance de la modélisation est donc capitale. En effet, nous devons faire des prévisions sur l'évolution des différents éléments financiers qui vont impacter sur le prix du produit. Le payoff du produit Playlist est directement lié à l'évolution des 4 indices présentés plus haut. Nous allons voir que pour modéliser l'évolution de ces indices, il nous faudra aussi modéliser l'évolution du taux sans risque, ainsi que la volatilité. Or il existe plusieurs modèles, plus ou moins raffinés, permettant de décrire la dynamique des actifs sous-jacents qui nous concernent et ces deux paramètres. Il convient donc de les présenter, et de faire un choix de modélisation.
 
 \subsection{Modélisation des indices}
 
 \subsubsection{Modèle de Black-Scholes}
-Le modèle de Black et Scholes permet de modéliser le cours des actions. Mais il permet aussi de modéliser l'évolution des indices. Il repose sur les hypothèses suivantes :
+Le modèle de Black et Scholes permet de modéliser le cours des actions. Mais il permet aussi de modéliser l'évolution des indices comme nous le verrons un peu plus loin. Il repose sur les hypothèses suivantes :
 \begin{itemize}
 \item[•] Absence d'Opportunité d'Arbitrage
 \item[•] Absence de coûts de transaction
@@ -672,11 +670,58 @@ et \\
 $$ \frac{dS(t)}{S(t)} = rdt + \sqrt{V(t)}dW_{s}(t) $$ \\
 Où r est le taux sans risque, V la volatilité, K un paramètre de retour à la moyenne, $\theta$ la variance long terme, $\sigma$ la volatilité de la volatilité, et  $W_{s}$ et $W_{v}$ sont deux mouvements browniens corrélés.\\
 
-\subsubsection{Choix du modèle}
-Le modèle de Heston est reconnu comme étant le plus précis. Cependant, le nombre de paramètres étant très important, le calibrage de ces paramètres est très difficile à partir des ressources dont nous disposons. Le modèle de Black-Scholes étant le plus simple à implémenter, nous nous concentrerons tout d'abord sur celui-ci. L'implémentation du modèle de Merton pourrait représenter une bonne voie d'approfondissement, si le temps nous le permettait. \\
+\subsubsection{Choix du modèle et validité du modèle de Black-Scholes pour les indices}
+Le modèle de Heston est reconnu comme étant le plus précis. Cependant, le nombre de paramètres étant très important, le calibrage de ces paramètres est très difficile à partir des ressources dont nous disposons. Le modèle de Black-Scholes étant le plus simple à implémenter, nous nous concentrerons tout d'abord sur celui-ci. L'implémentation du modèle de Merton pourrait représenter une bonne voie d'approfondissement, si le temps nous le permettait. \\ \\
+Le modèle de Black-Scholes est le plus souvent utilisé pour modéliser la dynamique du cours d'une action boursière. Montrons qu'il peut aussi modéliser l'évolution d'un indice boursier. \\
+Un indice peut être assimilé à un portefeuille d'actions. On note :
+\begin{itemize}
+\item[•] $P_t$ la valeur de l'indice à l'instant $t$, $t \in \mathbb{R}^{+} $
+\item[•] $n$ le nombre d'actions qui composent l'indice
+\item[•] $S_{i}(t)$ le cours de l'action $i$ à l'instant $t$, $t \in  \mathbb{R}^{+} $ et $i \in [[1,n]] $
+\item[•] $ \omega_i (t) $ la proportion du titre $i$ dans l'indice, soit la capitalisation boursière de l'action i sur la capitalisation totale
+\item[•] $N_i $ le nombre de titres respectifs, supposé constant au cours du temps\\
+\end{itemize}
+\\
+On a donc à l'instant $t$ :
+$$P_t = \sum_{i=1}^{n}N_{i}S_{i}(t) $$
+On peut écrire pour chacune des actions l'égalité suivante :
+$$ N_{i}S_{i}(t) = \omega_i(t)P_t $$
+De plus, on considère un intervalle de temps infinitésimal $dt$. On a :
+$$ P_{t+dt} = \sum_{i=1}^{n}N_i(S_i(t+dt) + d_{i,t}) $$
+où $d_{i,t}$ sont les dividendes distribués par l'entreprise $i$ entre $t$ et $t+dt$. S'il n'y a pas de distribution de dividendes pendant cette période, alors $d_{i,k}=0$.
+\\
+\\
+Le rendement instantané du portefeuille s'écrit :
+$$ \frac{dP_t}{P_t} = \frac{P_{t+dt}-P_t}{P_t} = \sum_{i=1}^n\frac{N_i}{P_t}(S_i(t+dt)-S_i(t) + d_{k,t})   $$
+Or, d'après la deuxième équation,
+$$ \frac{N_i}{P_t} = \frac{\omega_i(t)}{S_i(t)} $$
+Donc
+$$ \frac{dP_t}{P_t} = \sum_{i=1}^n\frac{\omega_i(t)}{S_i(t)}(S_i(t+dt)-S_i(t) + d_{k,t}) $$
+\\
+On note $ dS_{i,t} = S_i(t+dt)-S_i(t)+d_{k,t} $. \\
+On peut donc écrire
+$$ \frac{dP_t}{P_t} = \sum_{i=1}^n\omega_i(t)\frac{dS_{i,t}}{S_i(t)} $$
+\\
+Notre hypothèse principale, est que chaque cours des différentes actions suit une dynamique de Black-Scholes. On a  :
+$$ \frac{dS_{i,t}}{S_i(t)} = \mu_idt + \sigma_i dW_{i,t} $$  \\
+avec $W_{i,t}$ un processus de Wiener, $ W_{i,t} \rightarrow \mathcal{N}(0,\sqrt{t})$.\\
+
+Le rendement instantané du portefeuille est donc :
+$$ \frac{dP_t}{P_t} = (\sum_{i=1}^n\omega_i(t)\mu_i)dt + \sum_{i=1}^n\omega_i(t)\sigma_idW_{i,t} $$ \\
+On a $ dW_{i,t} \rightarrow \mathcal{N}(0,\sqrt{dt})$, donc on peut écrire $dW_{i,t} = U_i\sqrt{dt}$ avec $U_i \rightarrow \mathcal{N}(0,1)$ de loi centrée réduite. \\
+On pose
+$$\mu = \sum_{i=1}^n\omega_i(t)\mu_i$$ et $$V = \sum_{i=1}^n\omega_i(t)\sigma_iU_i$$
+
+$V$ est une combinaison linéaire de variables aléatoires de loi normale centrée réduites. Elle suit donc une une loi normale centrée, mais non réduite. Elle peut donc s'écrire sous la forme $V = \sigma U$, où $U \rightarrow \mathcal{N}(0,1)$ et $\sigma^2$ est la variance de $Y$, et vaut :
+$$\sigma^2 = \sum_{i=1}^n\sum_{j=1}^n\omega_i(t)\omega_j(t)\sigma_i\sigma_j\rho_{i,j} $$ \\
+où $\rho_{i,j}$ est le coefficient de corrélation entre $U_i$ et $U_j$. \\\\
+On peut donc écrire :
+$$ \frac{dP_t}{P_t} = \mu dt + \sigma U \sqrt{dt} $$
+En posant $dW = U \sqrt{dt}$, on a $dW \rightarrow \mathcal{N}(0,\sqrt{dt})$ est un processus de Wiener. \\ \\
+On peut donc légitimement modéliser l'évolution de la valeur d'un indice boursier avec la méthode de Black-Scholes, en supposant que le cours de chacune des actions qui le composent suivent une dynamique de Black-Scholes.
 
 
-\subsection{Modélisation de la variance}
+\subsection{Modélisation de la volatilité}
 L'un des paramètres les plus déterminants dans la modélisation des indices est la volatilité. Il faut donc être en mesure de modéliser cette volatilité afin de l'utiliser comme paramètre dans la modélisation des indices.\\ \\
 Plusieurs modèles existent :
 \begin{itemize}
@@ -691,14 +736,14 @@ Plusieurs modèles existent :
 Elle est mesurée par l'écart-type du rendement du sous-jacent, durant la période qui précède l'émission des options. En rapprochant les observations du cours du sous-jacent, on peut donc estimer la volatilité instantanée.\\
 
 On peut donc considérer la racine carrée de la variance empirique sans biais comme son estimation :\\
-$$ \widehat{\sigma^{2}} = \frac{1}{n-1} \sum_{i=1}^n (ln(\frac{S_{t}}{S_{t-1}}) - \widehat{\mu})^{2}	$$ \\
+$$ \widehat{\sigma^{2}} = \frac{1}{n-1} \sum_{i=1}^n (ln(\frac{S_{t}}{S_{t-1}}) - \widehat{\mu})^{2}    $$ \\
 avec \\
 $$ \widehat{\mu} = \frac{1}{n} \sum_{i=1}^n ln(\frac{S_{t}}{S_{t-1}})  $$ \\
 où $n$ est le nombre d'observations, $S_{t}$ le cours du sous-jacent à l'instant $t$. \\ \\
 Par convention, l'unité de temps pour mesurer les paramètres est l'année. Il faut donc annualiser la volatilité calculée, en supposant que le nombre de jours ouvrés est 252 jours : \\
 $$ \sigma_{an} = \widehat{\sigma} \sqrt{\frac{252}{\Delta t}}  $$ \\
 avec $\Delta t $ l'intervalle de temps entre deux observations consécutives.\\ \\
-Concernant le nombre d'observations, d'après Hull, utiliser les données des cours les plus récents dans l'intervalle de 90 à 180 jours peut donner les estimations les plus raisonnables. En effet, utiliser des observations trop éloignées va biaiser l'estimation, de même qu'avoir trop peu d'observations.\\
+Concernant le nombre d'observations, d'après Hull, utiliser les données des cours les plus récents sur un durée de l'ordre de grandeur de la maturité du produit à modéliser. En effet, utiliser des observations trop éloignées va biaiser l'estimation, de même qu'avoir trop peu d'observations. Ici, il faudra donc se baser sur les données des six années précedant la mise sur le marché du produit Playlist.\\
 
 \subsubsection{Volatilité implicite}
 La volatilité implicite est obtenue à partir du prix de marché des options, en inversant l'équation :
@@ -708,57 +753,120 @@ où $C_{BS}$ est le prix de l'option calculée avec la méthode de Black-Scholes
 \subsubsection{Choix du modèle}
 Etant donné que le calcul de la volatilité implicite nécessite d'avoir recours à des méthodes numériques pour inverser la formule (notamment la méthode itérative de Newton-Raphson) car celle-ci fait intervenir des intégrales, nous nous orienterons dans un premier temps vers le calcul présenté plus haut de la volatilité historique.
 
-\subsection{Modélisation des taux}
+\subsection{Modélisation des taux d'intérêts}
 
-Afin de pouvoir évaluer le produit structuré, nous devons aussi réussir à modéliser le taux sans risque. Plusieurs modèles de taux existent, présentant chacun des avantages et des inconvénients.
+Afin de pouvoir évaluer le produit structuré, nous devons aussi réussir à modéliser le taux sans risque. Plusieurs modèles de taux existent, présentant chacun des avantages et des inconvénients.\\
+Le taux qui va nous intéresser est le taux sans risque zéro coupon de moyen-long terme comme il est question d'années avant l'échéance du produit Playlist. Il existe 3 catégories de modèles de taux : les modèles à 1 facteur, à 2 facteurs et ceux de type Heath-Jarrow-Morton (HJM).
 
-\subsubsection{Modèle de Vasicek}
-Le modèle de Vasicek fait partie des premiers modèles de taux. Il repose sur l'hypothèse que les déformations de la structure du taux d'intérêt sont expliqués par le mouvement du taux court.\\
-Le taux court suit une diffusion de type Ornstein-Ulenbeck : \\
+\subsubsection{Modèles à un facteur}
+
+Le \textbf{modèle de Vasicek} fait partie des premiers modèles de taux. Il repose sur l'hypothèse que les déformations de la structure du taux d'intérêt sont expliqués par le mouvement du taux court.\\
+Le taux court suit une diffusion de type Ornstein-Uhlenbeck : \\
 $$ dr_{t} = a(b-r_{t})dt + \sigma dW_{t} $$ \\
 où
 \begin{itemize}
+\item[•] a est la force de rappel de retour à la moyenne
+\item[•] b est le taux d'intérêt de long terme
 \item[•] $\sigma$ est l'écart-type de variation instantanée de $r_{t}$ (volatilité instantanée)
 \item[•] $dW_{t}$ est un mouvement brownien
 \end{itemize}
 \\
 
-La remarque négative que l'on peut faire sur ce modèle est que la proportion de taux négatifs parfois importante. Cela crée des distorsions fortes dans la valorisation de certains produits dérivés.\\
+La remarque négative que l'on peut faire sur ce modèle est que la proportion de taux négatifs est parfois importante. Cela crée des distorsions fortes dans la valorisation de certains produits dérivés.\\ \\
 
-\subsubsection{Modèle de Cox-Ingersoll-Ross}
-Le modèle de Cox-Ingersoll-Ross est le suivant :
+Le \textbf{modèle de Cox-Ingersoll-Ross} est proche de celui de Vasicek, en présumant que le taux court suit la dynamique suivante :\\
 $$ dr_{t} = a(b-r_{t})dt + \sigma \sqrt{r_{t}} dW_{t} $$
+avec a, b, $\sigma$,et $dW_{t}$ similaires au modèle de Vasicek.\\
+La principale remarque qu'on peut faire sur ce modèle est que le taux court n'est pas un processus gaussien, ce qui complexifie les calculs. \\ \\
 
-\subsubsection{Modèle de Black-Derman-Toy}
-Le modèle de Black-Derman-Toy est un modèle log-normal :
-$$ d(logr_{t}) = (b_{t} - a_{t} logr_{t})dt + \sigma dW_{t} $$ \\
+Le \textbf{modèle de Black-Derman-Toy}  est un modèle log-normal :
+$$ d(logr_{t}) = (b_{t} - a_{t} logr_{t})dt + \sigma dW_{t} $$
 
-Le problème avec les modèles log-normaux est qu'on observe des proportions trop élevées de taux importants pour des horizons lointains, par rapport à la réalité.\\
+Le problème avec les modèles log-normaux est qu'on observe des proportions trop élevées de taux importants pour des horizons lointains, par rapport à la réalité.\\ \\
 
-Pb de ces trois modèles : ils ne sont pas compatibles avec la courbe des taux observés au comptant -> Opportunité d'arbitrage. Nouvelle classe de modèles : \\
+Le \textbf{modèle de Ho et Lee} est aussi utilisé pour modéliser l'évolution du taux court : \\
+$$ dr_{t} = \theta_{t}dt + \sigma dW_{t} $$
+avec $\theta_{t}$ la moyenne du taux court, évoluant dans le temps. \\
+Ce modèle présente le même problème que celui de Vasicek dans le sens où l'on observe des taux négatifs. De plus, il ne prend pas en compte le phénomène de retour à la moyenne, à la différence des trois modèles précédents.\\ \\
 
-\subsubsection{Modèle de Heath-Jarrow-Morton}
-Principe : On assimile le sous-jacent à l'entière courbe des taux dont la dynamique repose sur les taux forwards instantanés. Cela assure la positivité du taux d'intérêt.
+Ces modèles ont la particularité d'être simples, cependant il est généralement reconnu que l'intégration d'une unique variable d'état ne permet pas de reproduire le comportement des courbes de taux observées. C'est pourquoi nous introduisons ici les modèles à 2 facteurs.
 
-\subsubsection{Modèle Hull et White}
+
+\subsubsection{Modèles à deux facteurs}
+Le premier modèle bi-factoriel que nous allons présenter est le \textbf{modèle de Hull et White}. Ici on prend pour hypotèse que les coefficients varient en fonction du temps, et que les taux courts et taux longs suivent les deux dynamiques suivantes : \\
+Taux court
+$$ dr_{t} = K_{r}(l_{t} - r_{t})dt + \sigma_{r}dW_{r,t}  $$ \\
+Taux long
+$$ dl_{t} = K_{l}(\mu_{l} - l_{t})dt + \sigma_{l}dW_{l,t}  $$ \\
+avec
+\begin{itemize}
+\item[•] $K_{r}$ et $K_{l}$ les vitesses de retour à la moyenne pour les taux courts et taux longs
+\item[•] $\sigma_{r}$ et $\sigma_{l}$ leurs volatilités
+\item[•] $\mu_{l}$ le taux long à 50 ans
+\end{itemize}
+\\
+Les avantages de ce modèle est qu'il prend bien en compte le retour à la moyenne, et que sa discrétisation est exacte. Il faut tout de même préciser que les taux peuvent être négatifs, et que l'on n'observe pas la volatilité. \\ \\
+
+
+Dans le \textbf{modèle de Fong et Vasicek} les deux variables d'état utilisées sont le taux court $r_{t}$ et la variance du taux court $\nu_{t}$ : \\
+$$ dr_{t}=\alpha(b-r_{t})dt + \sqrt{\nu(t)}dW_{1}(t) $$
+$$ d\nu_{t}=\gamma(c-\nu_{t})dt + \xi\sqrt{\nu(t)}dW_{2}(t) $$
+avec
+\begin{itemize}
+\item[•] b et c les moyennes long terme du taux instantané et de sa variance
+\item[•] $\alpha$ et $\gamma$ leurs vitesses de retour à la moyenne
+\end{itemize}
+\\
+Ce modèle présente l'avantage de tenir compte du retour à la moyenne et de ne donner que des taux courts positifs.
+Cependant, la complexité de la dynamique de la variance le rend difficilement exploitable.\\ \\
+
+
+Le dernier modèle bi-factoriel que nous allons présenter est le \textbf{modèle de Lonstaff et Schwartz}. Les dynamiques des deux variables d'état sont des processus d'Ornstein-Uhlenbeck :
+$$ dx_{t} = a(b-x_{t})dt + c\sqrt{x_{t}}dW_{2}(t) $$
+$$ dy_{t} = a(e-y_{t})dt + f\sqrt{y_{t}}dW_{3}(t) $$ \\
+Le taux instantané s'écrit au moyen de ces deux processus par : \\
+
+$$ dr_{t} = (\mu x_{t} - \theta y_{t})dt + \sigma \sqrt{y_{t}}dW_{1}(t) $$ \\
+où $W_{2}$ est non corrélé avec $W_{1}$ et $W_{3}$, et $\theta > \sigma^{2} $ assure la non-négativité de $r_{t}$.\\
+
+Le principal problème de ce modèle est son nombre important de paramètres : 11 en tout.
+ 
+\subsubsection{Modèles de Heath-Jarrow-Morton}
+L'approche HJM est fondée sur la volonté de construire un modèle respectant la courbe des taux initiale, prise comme point de départ : on assimile le sous-jacent à l'entière courbe des taux dont la dynamique repose sur les taux forwards instantanés.
+
+\subsubsection{Retrouver le taux zero-coupon}
+La quasi-totalité des modèles que nous avons présenté permettent d'obtenir la dynamique du taux court $r_{t}$. Cependant, dans le cas de l'évaluation du produit structuré Playlist, il est important de déterminer les taux zéro coupon de moyen-long terme, car les échéances se comptent en années. On peut les obtenir de la manière suivante : \\
+
+On suppose qu'on a la dynamique du taux court $r_{t}$. Le prix des zéro-coupon d'échéance T peut s'exprimer sous la forme \\
+$$ P(t,T)=A(t,T)e^{-B(t,T)r_{t}} $$ \\
+avec A et B qui diffèrent selon les modèles que l'on utilise. On sait de plus que \\
+$$ P(t,T)= e^{-R(t,T)(T-t)}  $$ \\
+avec R(t,T) le taux zéro-coupon d'échéance T. On peut récupérer R(t,T) en résolvant l'équation suivante : \\
+$$ R(t,T)=-\frac{1}{T-t}ln(P(t,T)) $$ \\
 
 \subsubsection{Choix du modèle}
+Si les modèles HJM ou bi-factoriels permettent d'obtenir des courbes beaucoup plus précises de taux zéro-coupon, le modèle le plus abordable serait celui de Vasicek unifactoriel. Le modèle de Black-Scholes pour la simulation des indices nécessite un taux sans risque constant, c'est pourquoi nous commencerons par calculer à partir des données observées sur les marchés, un taux sans risque constant. Dans un deuxième temps seulement, nous essaierons d'implémenter et d'intégrer le modèle de Vasicek unifactoriel dans nos modélisations des indices.
 
-\section{Analyse logiciel}
+\subsection{Modélisation des taux de changes}
+Le produit Playlist fait intervenir des sous-jacents qui sont cotés en devise étrangère. La couverture sur ces produits est donc soumise à l'évolution des taux de changes.
+Nos connaissances actuelles en la matière de nous permettent pas de choisir un modèle de taux de change sophistiqué. En revanche, nous savons que le modèle le plus simple, qui sera implémenté dans la première version, qui consiste à considérer le taux de change constant, n'apporte aucune valeur ajoutée à la modélisation. Nous nous bornerons donc dans un premier temps à l'approximation qui consiste à considérer que tous les sous-jacents sont exprimés en devise domestique.
+
+\section{Analyse logicielle}
 
 \subsection{Cahier des charges}
+Il s'agit ici de faire l'inventaire des fonctionnalités indispensables que doit fournir notre application. Elles seront présentés par ordre d'importance, et détaillées en sous fonctionnalités si besoin est.
+\\
+\indent Dans un premier temps, le gestionnaire doit avoir la possibilité de consulter les informations globales concernant le produit. Ces informations comportent par exemple la date de début de validité du produit soit le 28 avril  2010 ainsi que la date actuelle ou bien la date d'échéance qui sera maintenant de façon certaine le ... avril 2016. Hormis ceci, le gestionnaire doit également pouvoir voir le nombre de parts acquises par les investisseurs ainsi que le nombre de parts disponibles au total et les valeurs que chacun de ces deux ensembles représentent en terme de cash. Toutes ces informations devront être réunies dans un même cadre (page web).\\
+\indent \\
+\indent Le gestionnaire doit également avoir la possibilité de voir l'évolution des différents indices, il doit ainsi avoir accès à la performance actuelle du fonds.
 
-Dans un premier temps, le gestionnaire doit avoir la possibilité de consulter les informations globales concernant le produit telles que la date de début de validité du produit soit le 28 avril  2010 ainsi que la date actuelle ou bien la date d'échéance qui sera maintenant de façon certaine le ... avril 2016. Hormis ceci, le gestionnaire doit pouvoir voir quelle est le nombre de parts acquises par des investisseurs ainsi que le nombre de parts disponibles au total et les valeurs que chacun de ces deux ensembles représentent en terme de cash.\\
 \indent \\
-\indent Le gestionnaire doit également avoir la possibilité de voir l'évolution des différents indices, il doit ainsi avoir accès à la performance du fonds.
-Le gestionnaire doit également avoir la possibilité de choisir le modèle d'évolution des sous jacents, que ce soit Black-Scholes ou bien le modèle de Merton.\\
+\indent Le gestionnaire doit avoir la possibilité de voir la composition de son portefeuille et notamment la répartition en pourcentage ou bien en quantité de chacun de ces investissements. Il pourra ainsi avoir la valeur liquidative de chacune de ses parts. Le gestionnaire doit également avoir la possibilité de choisir le modèle d'évolution des sous jacents, que ce soit Black-Scholes ou bien le modèle de Merton, qu'il souhaite utilisé pour évaluer cette valeur. 
 \indent \\
-\indent Enfin le gestionnaire doit avoir la possibilité de voir la composition de son portefeuille et notamment la répartition en pourcentage ou bien en quantité de chacun de ces investissements. Il pourra ainsi avoir la valeur liquidative de chacune de ses parts. Il pourra également avoir accès à la valeur liquidative en faisant un backtest en utilisant la méthode de couverture proposée.\\
+\indent Aussi, le gestionnaire doit avoir accès à un proposition de couverture, dans le cadre du modèle choisit. Plus précisément le gestionnaire ne devra pas avoir la possibilité de modifier le modèle en cours de simulation par soucis de cohérence. De plus le gestionnaire devra avoir la possibilité d'indiquer ses propres dates de rebalancement.\\
+On laissera la possibilité au gestionnaire de se couvrir différemment de ce qui est préconisé, ce qui implique que celui-ci aura la possibilité de relancer une simulation à partir de la composition de portefeuille qu'il a choisi. Il pourra donc entrer la composition de son nouveau portefeuille.\\
 \indent \\
-\indent Plus précisemment le gestionnaire ne devra pas avoir la possibilité de modifier le modèle en cours de simulation par soucis de cohérence. De plus le gestionnaire devra avoir la possibilité d'indiquer ses propres dates de rebalancement. Lorsque celui ci affiche l'évolution des indices, il ne doit avoir la possibilité que de les afficher entre le début du produit moins un an et la fin du produit.\\
-On laissera la possibilité au gestionnaire de se couvrir différemment de ce qui est préconisé, ce qui implique que celui-ci aura la possibilité de relancer une simulation à partir de la composition de portefeuille qu'il a choisi. Il poura donc entrer la composition de son portefeuille.
-\indent \\
-\indent Chaque jour la simulation devra être refaite puisque nos graphiques intégreront automatiquement les nouveaux cours des indices au jour le jour.
+\indent Enfin, il aura également la possibilité d'accéder à une simulation des cours futurs et de l'erreur commise à maturité pour une trajectoire particulière en supposant qu'il ai suivit aujourd'hui, et chaque fois qu'elles lui auront été proposées, les recommendations de rebalancement. Il s'agit de le convaincre du bien fondé de ces propositions.
 
 \subsection{Architecture logiciel globale}
 
