@@ -114,14 +114,14 @@ int main(){
 	int samples = 20000;
 	int H = 45;
 
-	//PnlMat *past = pnl_mat_create(size, H+1);    
+	PnlMat *past = pnl_mat_create(size, H+1);    
 	PnlVect *delta = pnl_vect_create(size);
 	PnlVect *ic_delta = pnl_vect_create(size);
 	Bs mod(size, r, NULL, sigma, spot, NULL);
 	Basket opt(strike, coeff, T, N, size);
 	MonteCarlo mc(&mod, &opt, rng, 0.01, samples);
 	
-	vector<double> v;
+	/*vector<double> v;
 	int rejet = 0;
 	double t;
 	for (int k = 0; k < 1000; k++){
@@ -135,20 +135,21 @@ int main(){
 	sort(v.begin(), v.end());
 	for (vector<double>::iterator it=v.begin(); it!=v.end(); ++it)
 		cout << *it << endl;
+		*/
 
-	/*Couverture
-	ofstream fichier1(c"ouv_simulation.txt", ios::out | ios::trunc);  // ouverture en écriture avec effacement du fichier ouvert
+	//Couverture
+	ofstream fichier1("couv_simulation.txt", ios::out | ios::trunc);  // ouverture en écriture avec effacement du fichier ouvert
 	ofstream fichier2("couv_theorique.txt", ios::out | ios::trunc);
 	if(fichier1 && fichier2)
 	{
 	for (int i = 0; i < 500; i++){
 	mc.couv(past, pl, plTheorique, H, T);
-	/*mc.price(prix, ic);
+	mc.price(prix, ic);
 	double prix_th = prix_theorique(100., 100., .05, 1., .2);
 	cout << endl;
 	cout << pl/prix << endl;
 	cout << plTheorique/prix_th << endl;
-	/*
+	
 	fichier1 << pl/prix << endl;
 	fichier2 << plTheorique/prix_th << endl;
 	}
@@ -156,7 +157,7 @@ int main(){
 	fichier2.close();
 	}else
 	cerr << "Impossible d'ouvrir le fichier !" << endl;
-	*/
+	
 
 	system("pause");
 

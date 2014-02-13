@@ -688,7 +688,7 @@ Plusieurs modèles existent :
 Étant donné que nous nous concentrons dans un premier temps sur l'implémentation du modèle de Black-Scholes, et que celui-ci suppose que la volatilité est constante, nous allons tout d'abord nous intéresser à celle-ci.  Les deux principaux estimateurs de ce paramètre sont la volatilité historique et la volatilité implicite.
 
 \subsubsection{Volatilité historique}
-Elle est mesurée par l'écart-type du rendement du sous-jacent, durant la période qui précède l'émission des options. En rapprochant les observations du cours du sous-jacent, on peut donc estimer la volatilité instantanée.\\
+Elle est mesurée par l'écart-type du rendement du sous-jacent, durant la période qui précède l'émission du produit structuré. En rapprochant les observations du cours du sous-jacent, on peut donc estimer la volatilité instantanée.\\
 
 On peut donc considérer la racine carrée de la variance empirique sans biais comme son estimation :\\
 $$ \widehat{\sigma^{2}} = \frac{1}{n-1} \sum_{i=1}^n (ln(\frac{S_{t}}{S_{t-1}}) - \widehat{\mu})^{2}	$$ \\
@@ -701,7 +701,7 @@ avec $\Delta t $ l'intervalle de temps entre deux observations consécutives.\\ 
 Concernant le nombre d'observations, d'après Hull, utiliser les données des cours les plus récents dans l'intervalle de 90 à 180 jours peut donner les estimations les plus raisonnables. En effet, utiliser des observations trop éloignées va biaiser l'estimation, de même qu'avoir trop peu d'observations.\\
 
 \subsubsection{Volatilité implicite}
-La volatilité implicite est obtenue à partir du prix de marché des options, en inversant l'équation :
+La volatilité implicite est obtenue à partir du prix de marché des indices, en inversant l'équation :
 $$ C_{BS}(\sigma) = C $$ \\
 où $C_{BS}$ est le prix de l'option calculée avec la méthode de Black-Scholes, et $C$ est son prix observé sur le marché.\\
 
@@ -825,10 +825,10 @@ La base de données ne sera en effet pas plus compliquée puisque nous aurons be
 \subsection{Spécifications}
 
 Nous allons dans un premier temps expliciter ce qui se cache derrière la fonctionnalité couverture énuméré dans le cahier des charges.\\
-La question de la couverture pose différents problèmes, en effet dans un premier temps nous réaliserons une couverture en delta. Ainsi pour une action devant répliquer les flux du fond que nous vendrons, nous cherchons à savoir quelle est la quantité de chaque indices que nous devons acheter pour s'assurer éviter des pertes et plus particulièrement supprimer le risque associé à l'option.\\
-Ainsi dans un premier temps, il nous faut pricer l'option que nous proposons. Cela implique  de devoir fixer le modèle que nous allons utiliser pour modéliser l'évolution des sous jacents. Ainsi nous avons choisi dans un premier temps d'implémenter le modèle de Black& Scholes. Se pose alors la question des différents paramètres du modèle, nous avons dans un premier temps choisi de déterminer la variance à l'aide d'un backtest sur les valeurs des différents indices au cours des trois derniers mois, nous ferons de mêmes pour déterminer la matrice des corrélations. En ce qui concerne les autres paramètres tels que le taux sans risque ou bien la probabilité historique, nous prendrons des valeurs arbitraire en essayant de coller au maximum avec les valeurs dont nous disposons.\\
-Disposant alors d'un modèle, il nous faut définir les paramètres caractérisant notre option, aux vues des propriétés de celle ci énoncé précedemment, on lui attribuera une maturité fixée par défaut à 6, un nombre de date de constatation ainsi que la taille du modèle.
-Enfin on considère un modèle de MonteCarlo pour obtenir le prix de notre option.\\
+La question de la couverture pose différents problèmes, en effet dans un premier temps nous réaliserons une couverture en delta. Ainsi pour une action devant répliquer les flux du fond que nous vendrons, nous cherchons à savoir quelle est la quantité de chaque indices que nous devons acheter pour s'assurer éviter des pertes et plus particulièrement supprimer le risque associé au produit structuré.\\
+Ainsi dans un premier temps, il nous faut pricer le produit que nous proposons. Cela implique  de devoir fixer le modèle que nous allons utiliser pour modéliser l'évolution des sous jacents. Ainsi nous avons choisi dans un premier temps d'implémenter le modèle de Black& Scholes. Se pose alors la question des différents paramètres du modèle, nous avons dans un premier temps choisi de déterminer la variance à l'aide d'un backtest sur les valeurs des différents indices au cours des trois derniers mois, nous ferons de mêmes pour déterminer la matrice des corrélations. En ce qui concerne les autres paramètres tels que le taux sans risque ou bien la probabilité historique, nous prendrons des valeurs arbitraire en essayant de coller au maximum avec les valeurs dont nous disposons.\\
+Disposant alors d'un modèle, il nous faut définir les paramètres caractérisant notre produit, aux vues des propriétés de celle ci énoncé précedemment, on lui attribuera une maturité fixée par défaut à 6, un nombre de date de constatation ainsi que la taille du modèle.
+Enfin on considère un modèle de MonteCarlo pour obtenir le prix de notre produit.\\
 Par la suite, nous considérerons des modèles plus compliqués, c'est pourquoi nous avons choisi d'implémenter des classes abstraites pour que différents modèles puissent être ajouté.
 C'est ainsi que nous obtenons le diagramme de classe suivant :\\  
 
