@@ -18,81 +18,12 @@
 #include "pnl/pnl_cdf.h"
 #include <cstdio>
 #include <ctime>
-#include <iostream>
-#include <fstream>
-#include <omp.h>
-#include <fstream>
 
-#include <vector>
-#include <algorithm>
+
+#include "Test.h"
 
 
 using namespace std;
-
-double delta_theorique(double S, double K, double r, double T, double sigma){
-	double q, bound;
-	int status;
-	int which = 1;
-	double p;
-	double mean = 0.;
-	double sd = 1.;
-	double d = 1./(sigma * sqrt(T)) * (log(S/K) + (r + sigma * sigma /2)*T);
-
-	pnl_cdf_nor(&which, &p, &q, &d, &mean, &sd, &status, &bound);
-	return p;
-}
-
-double prix_theorique(double S, double K, double r, double T, double sigma){
-	double q, bound;
-	int status;
-	int which = 1;
-	double p1, p2;
-	double mean = 0.;
-	double sd = 1.;
-	double d1 = 1./(sigma * sqrt(T)) * (log(S/K) + (r + sigma * sigma /2)*T);
-	double d2 = d1 - sigma * sqrt(T);
-
-	pnl_cdf_nor(&which, &p1, &q, &d1, &mean, &sd, &status, &bound);
-	pnl_cdf_nor(&which, &p2, &q, &d2, &mean, &sd, &status, &bound);
-
-	return S*p1 - K*exp(-r*T)*p2;
-}
-
-int compute_prix(double prix, double ic, MonteCarlos *mc, ModelAsset *mod, PnlMat *past, int H, double t, double *spot, double strike, double r, double T, double* sigma, PnlRng *rng, vector<double> *v){
-	mod->simul_market(past, H, t, rng);
-	mc->price(past, t, prix, ic);
-	double prix_th;
-	if (t==0)
-		prix_th = prix_theorique(spot[0], strike, r, T-t, sigma[0]);
-	else
-		prix_th = prix_theorique(MGET(past, 0, H), strike, r, T-t, sigma[0]);
-	
-	printf("%f\t%f %f\n\n", t, prix, prix_th);
-	if (fabs(prix-prix_th) > 0.5){
-		v->push_back(t);
-		return 1;
-	}
-	return 0;
-}
-double compute_delta(PnlVect *delta, PnlVect* ic_delta, MonteCarlos *mc, ModelAsset *mod, PnlMat* past, int H, double t, double strike ,double r, double T, double *sigma, PnlRng *rng, vector<double> *v){
-	mod->simul_market(past, H, t, rng);
-	mc->delta(past, t, delta, ic_delta);
-	double delta_th;
-	if (t==0)
-		delta_th = delta_theorique(MGET(past, 0, 0), strike, r, T-t, sigma[0]);
-	else
-		delta_th = delta_theorique(MGET(past, 0, H), strike, r, T-t, sigma[0]);
-	
-	printf("Delta(%f)\n", t);
-	pnl_vect_print(delta);
-	printf("Delta théorique: %f\n\n", delta_th);
-
-	if (fabs(GET(delta, 0) - delta_th) > 0.5){
-		v->push_back(t);
-		return 1;
-	}
-	return 0;
-}
 
 int main(){	
 	double prix = 0; 
@@ -105,10 +36,12 @@ int main(){
 
 	int const size = 1;
 	double strike = 100;
-	double spot[size] = {100};//, 80, 100, 120, 110};
+	double spot[size] = {100};//, 80, 100, 120};
 	double T = 1;
-	double sigma[size] = {0.2};//, 0.2, 0.2, 0.15, 0.15};	
+	double sigma[size] = {0.2};//, 0.2, 0.2, 0.15};	
 	double r = .05;
+<<<<<<< HEAD
+<<<<<<< HEAD
 	double coeff[size] = {1.};// , .2, .2, .2, .2};
 	int N = 1;
 	int samples = 20000;
@@ -161,6 +94,46 @@ int main(){
 	}else
 	cerr << "Impossible d'ouvrir le fichier !" << endl;
 	
+=======
+	double coeff[size] = {1};//, .25, .25, .25};
+	//double rho[size*(size-1)/2] = {0., 0., 0., 0., 0., 0.};
+	int N = 10;
+	int samples = 50000;
+	int H = 25;
+	double t = 0.5;
+
+	
+
+	Bs mod(size, r, NULL, sigma, spot, NULL);
+	Basket opt(strike, coeff, T, N, size);
+	MonteCarlo mc(&mod, &opt, rng, 0.01, samples);
+	Test test(&mc);
+
+=======
+	double coeff[size] = {1};//, .25, .25, .25};
+	//double rho[size*(size-1)/2] = {0., 0., 0., 0., 0., 0.};
+	int N = 10;
+	int samples = 50000;
+	int H = 25;
+	double t = 0.5;
+
+	
+
+	Bs mod(size, r, NULL, sigma, spot, NULL);
+	Basket opt(strike, coeff, T, N, size);
+	MonteCarlo mc(&mod, &opt, rng, 0.01, samples);
+	Test test(&mc);
+
+>>>>>>> daa9a163503824ba9326db1fb3cb3c04bcc05fe6
+	//test.compute_prix_samples(1000, true);
+	test.compute_delta_samples(1000, true);
+	//test.compute_prix(25, 0.5);
+	//test.compute_delta(25, 0.5);
+	//test.compute_couv(50, false);
+<<<<<<< HEAD
+>>>>>>> commit
+=======
+>>>>>>> daa9a163503824ba9326db1fb3cb3c04bcc05fe6
 
 	system("pause");
 
