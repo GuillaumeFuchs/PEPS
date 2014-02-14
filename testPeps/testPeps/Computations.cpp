@@ -110,9 +110,9 @@ int main(){
 	double sigma[size] = {0.2};//, 0.2, 0.2, 0.15, 0.15};	
 	double r = .05;
 	double coeff[size] = {1.};// , .2, .2, .2, .2};
-	int N = 10;
+	int N = 1;
 	int samples = 20000;
-	int H = 45;
+	int H = 200;
 
 	PnlMat *past = pnl_mat_create(size, H+1);    
 	PnlVect *delta = pnl_vect_create(size);
@@ -136,7 +136,10 @@ int main(){
 	for (vector<double>::iterator it=v.begin(); it!=v.end(); ++it)
 		cout << *it << endl;
 		*/
+<<<<<<< HEAD
+=======
 
+>>>>>>> c8180235e9eaa8e3e5a0e78ce65b96d80c6f601e
 	//Couverture
 	ofstream fichier1("couv_simulation.txt", ios::out | ios::trunc);  // ouverture en écriture avec effacement du fichier ouvert
 	ofstream fichier2("couv_theorique.txt", ios::out | ios::trunc);
