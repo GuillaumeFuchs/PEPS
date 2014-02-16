@@ -1,14 +1,14 @@
-#ifndef BsH
-#define BsH
+#ifndef ModelassetH
+#define ModelassetH
 #include <pnl/pnl_vector.h>
 #include <pnl/pnl_random.h>
 
 /*!
- * \class Bs
- * \brief Classe representant le modele de Black Scholes
+ * \class ModelAsset
+ * \brief Classe representant la classe mere de tous les modèles de simulation de sous-jacent
  */
-class Bs {
-  private:
+class ModelAsset {
+  protected:
 	int size_; /*!< nombre d’actifs du modele */
 	double r_; /*!< taux d’interet */
 	double* rho_; /*!< parametre de correlation */
@@ -20,22 +20,20 @@ class Bs {
 	PnlVect *Ld_; /*!< Ligne d de la matrice de Cholesky Cho_*/
 
   public:
-
 	/*!
 	 * \brief Constructeur par defaut
 	 *
-	 * Constructeur par defaut de la classe Bs
+	 * Constructeur par defaut de la classe modelasset
 	 */
-	Bs();
-	Bs(int size, double r, double* rho, double* sigma, double* spot, double* trend);
-
+	ModelAsset();
+	ModelAsset(int size, double r, double* rho, double* sigma, double* spot, double* trend);
 
 	/*!
 	 * \brief Destructeur
 	 *
-	 * Destructeur de la classe Bs
+	 * Destructeur de la classe modelasset
 	 */
-	~Bs();
+	virtual ~ModelAsset();
 
 	/*!
 	 * \brief Accesseur de size_
@@ -188,7 +186,6 @@ class Bs {
 	 *
 	 *  \param le nouveau vecteur gaussien centre du modele de Bs
 	 */
-	PnlVect *set_gi();
 	void set_gi(PnlVect *Gi);
 
 	/*!
@@ -210,7 +207,7 @@ class Bs {
 	 * \param G contient N vecteurs gaussiens centres de matrice de covariance identite
 	 * \param grid contient les indices de temps utilises pour l'evolution du sous-jacent
 	 */
-	void asset(PnlMat *path, double T,  int N, PnlRng *rng, PnlMat* G, PnlVect* grid) ;
+	virtual void asset(PnlMat *path, double T,  int N, PnlRng *rng, PnlMat* G, PnlVect* grid) = 0;
 
 	/*!
 	 * \brief Calcule une trajectoire du sous-jacent connaissant le passe jusqu'a la date t
@@ -220,12 +217,12 @@ class Bs {
 	 * \param N nombre de pas de constatation
 	 * \param T date jusqu'a laquelle on simule la trajectoire (maturite)
 	 * \param rng pointeur sur le generateur de nombre aleatoire
-	 * \param past trajectoire realisee jusqu'a la date t
+	 * \param past trajectoire realisee a la date t
 	 * \param taille contient le nombre d'evolution du sous-jacent jusqu'a la date t
 	 * \param G contient N-taille vecteurs gaussiens centrés de matrice de covariance identite
 	 * \param grid contient les indices de temps utilises pour l'evolution du sous-jacent
 	 */
-	void asset(PnlMat *path, double t, int N, double T, PnlRng *rng, const PnlMat *past, int taille, PnlMat* G, PnlVect* grid);
+	virtual void asset(PnlMat *path, double t, int N, double T, PnlRng *rng, const PnlVect *pastT, int taille, PnlMat* G, PnlVect* grid) = 0;
 
 	/*!
 	 * \brief Shift d’une trajectoire du sous-jacent
@@ -237,8 +234,8 @@ class Bs {
 	 * \param d (input) indice du sous-jacent à shifter
 	 * \param timestep (input) pas de constatation du sous-jacent
 	 */
-	void shift_asset (PnlMat *_shift_path, const PnlMat *path,
-		int d, double h, double t, double timestep);
+	virtual void shift_asset(PnlMat *_shift_path, const PnlMat *path,
+		int d, double h, double t, double timestep) = 0;
 
 	/*!
 	 *
@@ -249,7 +246,7 @@ class Bs {
 	 * \param T (input) date jusqu'a laquelle on simule la trajectoire (maturite)
 	 * \param PL (output) erreur de couverture
 	 */
-	void simul_market (PnlMat* past, int H, double T, PnlRng *rng); 
+	virtual void simul_market (PnlMat* past, int H, double T, PnlRng *rng) = 0; 
 
 };
 #endif

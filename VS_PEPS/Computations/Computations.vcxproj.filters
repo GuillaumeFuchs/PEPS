@@ -1,0 +1,126 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Fichiers sources">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Fichiers d%27en-tête">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="Fichiers de ressources">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Fichiers d%27en-tête\Option">
+      <UniqueIdentifier>{304110d6-0a62-4dec-b1d5-8e1cfee8f230}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Fichiers d%27en-tête\Modelasset">
+      <UniqueIdentifier>{871c19fe-5930-4a83-9d6a-5e6714a1ec5c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Fichiers d%27en-tête\Montecarlos">
+      <UniqueIdentifier>{38b636af-e0d2-4a8c-ab35-4a7233fd8e93}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Fichiers sources\Modelasset">
+      <UniqueIdentifier>{e04e4789-76e9-4bab-8940-62ce628adbc9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Fichiers sources\Montecarlos">
+      <UniqueIdentifier>{e73e23e6-933d-4d10-b714-1aed76405a3f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Fichiers sources\Option">
+      <UniqueIdentifier>{89cbb9c8-6013-4374-8ce8-364e1a3399eb}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Computations.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="Test.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="Asian.h">
+      <Filter>Fichiers d%27en-tête\Option</Filter>
+    </ClInclude>
+    <ClInclude Include="Barrier.h">
+      <Filter>Fichiers d%27en-tête\Option</Filter>
+    </ClInclude>
+    <ClInclude Include="Barrier_l.h">
+      <Filter>Fichiers d%27en-tête\Option</Filter>
+    </ClInclude>
+    <ClInclude Include="Barrier_u.h">
+      <Filter>Fichiers d%27en-tête\Option</Filter>
+    </ClInclude>
+    <ClInclude Include="Basket.h">
+      <Filter>Fichiers d%27en-tête\Option</Filter>
+    </ClInclude>
+    <ClInclude Include="Performance.h">
+      <Filter>Fichiers d%27en-tête\Option</Filter>
+    </ClInclude>
+    <ClInclude Include="Option.h">
+      <Filter>Fichiers d%27en-tête\Option</Filter>
+    </ClInclude>
+    <ClInclude Include="Playlist.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="Bs.h">
+      <Filter>Fichiers d%27en-tête\Modelasset</Filter>
+    </ClInclude>
+    <ClInclude Include="Modelasset.h">
+      <Filter>Fichiers d%27en-tête\Modelasset</Filter>
+    </ClInclude>
+    <ClInclude Include="Montecarlos.h">
+      <Filter>Fichiers d%27en-tête\Montecarlos</Filter>
+    </ClInclude>
+    <ClInclude Include="Montecarlo.h">
+      <Filter>Fichiers d%27en-tête\Montecarlos</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Computations.cpp">
+      <Filter>Fichiers sources</Filter>
+    </ClCompile>
+    <ClCompile Include="Test.cpp">
+      <Filter>Fichiers sources</Filter>
+    </ClCompile>
+    <ClCompile Include="Playlist.cpp">
+      <Filter>Fichiers sources</Filter>
+    </ClCompile>
+    <ClCompile Include="Asian.cpp">
+      <Filter>Fichiers sources\Option</Filter>
+    </ClCompile>
+    <ClCompile Include="Basket.cpp">
+      <Filter>Fichiers sources\Option</Filter>
+    </ClCompile>
+    <ClCompile Include="Barrier.cpp">
+      <Filter>Fichiers sources\Option</Filter>
+    </ClCompile>
+    <ClCompile Include="Barrier_l.cpp">
+      <Filter>Fichiers sources\Option</Filter>
+    </ClCompile>
+    <ClCompile Include="Barrier_u.cpp">
+      <Filter>Fichiers sources\Option</Filter>
+    </ClCompile>
+    <ClCompile Include="Option.cpp">
+      <Filter>Fichiers sources\Option</Filter>
+    </ClCompile>
+    <ClCompile Include="Performance.cpp">
+      <Filter>Fichiers sources\Option</Filter>
+    </ClCompile>
+    <ClCompile Include="Bs.cpp">
+      <Filter>Fichiers sources\Modelasset</Filter>
+    </ClCompile>
+    <ClCompile Include="Modelasset.cpp">
+      <Filter>Fichiers sources\Modelasset</Filter>
+    </ClCompile>
+    <ClCompile Include="Montecarlo.cpp">
+      <Filter>Fichiers sources\Montecarlos</Filter>
+    </ClCompile>
+    <ClCompile Include="Montecarlos.cpp">
+      <Filter>Fichiers sources\Montecarlos</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ClassDiagram1.cd" />
+  </ItemGroup>
+</Project>
