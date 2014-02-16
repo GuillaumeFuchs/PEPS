@@ -18,6 +18,7 @@
 \usepackage{setspace}
 \usepackage{lettrine}
 \usepackage{lscape}
+\usepackage{etex}
 \usepackage{lmodern}
 \usepackage{stmaryrd}
 \usepackage{subfigure}
@@ -941,19 +942,49 @@ La base de données ne sera en effet pas plus compliquée puisque nous aurons be
 On considérera tout au long du développement que le gestionnaire maintient toujours le système en cohérence et qu'il n'agit pas sur son portefeuille sans en informer le logiciel.
 Nous allons dans un premier temps expliciter ce qui se cache derrière la fonctionnalité couverture énuméré dans le cahier des charges.\\
 La question de la couverture pose différents problèmes, en effet dans un premier temps nous réaliserons une couverture en delta. Ainsi pour une action devant répliquer les flux du fonds que nous vendrons, nous cherchons à savoir quelle est la quantité de chaque indices que nous devons acheter pour s'assurer éviter des pertes et plus particulièrement supprimer le risque associé au produit structuré.\\
-Ainsi dans un premier temps, il nous faut pricer le produit que nous proposons. Cela implique  de devoir fixer le modèle que nous allons utiliser pour modéliser l'évolution des sous jacents. Ainsi nous avons choisi dans un premier temps d'implémenter le modèle de Black& Scholes. Se pose alors la question des différents paramètres du modèle, nous avons dans un premier temps choisi de déterminer la variance à l'aide d'un backtest sur les valeurs des différents indices au cours des trois derniers mois, nous ferons de mêmes pour déterminer la matrice des corrélations. En ce qui concerne les autres paramètres tels que le taux sans risque ou bien la probabilité historique, nous prendrons des valeurs arbitraire en essayant de coller au maximum avec les valeurs dont nous disposons.\\
+Ainsi dans un premier temps, il nous faut pricer le produit que nous proposons. Cela implique  de devoir fixer le modèle que nous allons utiliser pour modéliser l'évolution des sous jacents. Ainsi nous avons choisi dans un premier temps d'implémenter le modèle de Black\& Scholes. Se pose alors la question des différents paramètres du modèle, nous avons dans un premier temps choisi de déterminer la variance à l'aide d'un backtest sur les valeurs des différents indices au cours des trois derniers mois, nous ferons de mêmes pour déterminer la matrice des corrélations. En ce qui concerne les autres paramètres tels que le taux sans risque ou bien la probabilité historique, nous prendrons des valeurs arbitraire en essayant de coller au maximum avec les valeurs dont nous disposons.\\
 Disposant alors d'un modèle, il nous faut définir les paramètres caractérisant notre produit, aux vues des propriétés de celle ci énoncé précedemment, on lui attribuera une maturité fixée par défaut à 6, un nombre de date de constatation ainsi que la taille du modèle.
 Enfin on considère un modèle de MonteCarlo pour obtenir le prix de notre produit.\\
 Par la suite, nous considérerons des modèles plus compliqués, c'est pourquoi nous avons choisi d'implémenter des classes abstraites pour que différents modèles puissent être ajouté.
  
  Un interface alors envisageable pour représenter les éléments décris précédemment pourrait être l'interface suivante :\\
+ 
+
+\begin{center}
+\includegraphics[scale=0.4]{../Maquette_3.png}
+\end{center}
+
+Dans un premier temps, le gestionnaire avant de vendre son produit, va choisir le modèle qu'il souhaite adopter pour réaliser un backtest. Ainsi par ce biais, le gestionnaire va choisir la modélisation de l'évolution de ses sous jacents, des taux d'intérêts, des taux de change ainsi que de la volatilité. Une fois ces différents paramètres choisi, le gestionnaire peut alors se rendre sur la fenêtre du backtest
+
+
+\begin{center}
+\includegraphics[scale=0.4]{../Maquette_7.png}
+\end{center} 
+ 
+ Sur cette fenêtre et en fonction des paramètres que le gestionnaire a choisi précedemment, il peut normalement choisir la période d'estimation des paramètres si pour le modèle considéré on peut estimer des paramètres, choisir la fenêtre de validation et enfin choisir la date à partir de laquelle on commence le backtest sachant que le calendrier débute lors de la dernière des premières dates de cotation des indices.
+
+\begin{center}
+\includegraphics[scale=0.4]{../Maquette_8.png}
+\end{center}
+
+Le gestionnaire peut alors voir selon les modèles qu'il a choisi l'évolution de son cours théorique par rapport au cours réel pour chaque indices ainsi que obtenir la tracking error pour qu'il puisse voir si son modèle d'évolution des sous jacents est correct ou non.
+
+\begin{center}
+\includegraphics[scale=0.4]{../Maquette_5.png}
+\end{center}
+
+Enfin on arrive sur un onglet de simulation qui reprend la modélisation choisit précédemment, on a alors la possibilité de choisir de nombre de date de rebalancement parmi une plage données car dans notre pricer le nombre de date de rebalancement  doit être un multiple du nombre de date de rebalancement des indices et il pourra choisir le nombre de P&L a calculer. L'objectif étant pour le gestionnaire de voir la distribution des P&L qu'il obtient avec le modèle choisit. Ainsi que la composition de son portefeuille de couverture moyen.
+
+Une fois que tout ceci a été réalisé préalablement au début du cycle de vie du produit, le gestionnaire peut choisir le modèle définitif en validant simplement son modèle.
+
 
 \begin{center}
 \includegraphics[scale=0.4]{../Maquette_1.png}
 \end{center}
 
-Voici la page d'accueil du produit, celle ci décrit les principaux éléments à connaître pour le gestionnaire telles que les échéances, le nombre de parts vendues, le ratio entre le nombre de parts vendues et le nombre de parts totales. \\
-Nous avons modéliser dans un premier temps la navigation par des boutons mais en réalité, ce sera plutôt un système d'onglet.
+
+Voici alors la page d'accueil du produit durant son cycle de vie, celle ci décrit les principaux éléments à connaître pour le gestionnaire telles que les échéances, le nombre de parts vendues, le ratio entre le nombre de parts vendues et le nombre de parts totales. \\
+Nous avons modéliser dans un premier temps la navigation par des boutons mais en réalité, ce sera plutôt un système d'onglets.
 
 
 \begin{center}
@@ -962,11 +993,6 @@ Nous avons modéliser dans un premier temps la navigation par des boutons mais e
 
 Le second onglet présentera l'évolution des différents cours des indices ainsi que l'évolution du cours d'un tracker sur les différents indices afin de pouvoir comparer la performance de notre fonds qui sera décrite à droite là où il est indiqué performance et la performance d'un portefeuille composé des quatre indices.
 
-\begin{center}
-\includegraphics[scale=0.4]{../Maquette_3.png}
-\end{center}
-
-Le troisième onglet permet de paramétriser notre modèle pour obtenir une couverture associée. Lorsque l'on choisit un modèle, des cases apparaissent associés aux différents paramètres du modèle, ces paramètres ont des valeurs par défaut mais il est conseillés au gestionnaire d'entrer ses propres paramètres pour affiner la précision du modèle.
 
 \begin{center}
 \includegraphics[scale=0.4]{../Maquette_4.png}
@@ -975,16 +1001,11 @@ Le troisième onglet permet de paramétriser notre modèle pour obtenir une couv
 On obtient alors la couverture obtenu du fait du modèle choisi, on doit alors avoir la possibilité de voir la composition nécessaire de notre portefeuille pour être couvert, la valeur liquidative de notre produit aujourd'hui ainsi que la différence avec notre ancien portefeuille pour connaître réellement les opérations que l'on doit effectuer pour obtenir le nouveau portefeuille de couverture.
 
 \begin{center}
-\includegraphics[scale=0.4]{../Maquette_5.png}
-\end{center}
-
-Enfin on arrive sur un onglet de simulation qui reprend la modélisation choisit précédemment, on a alors la possibilité de choisir de nombre de date de rebalancement parmi une plage données car dans notre pricer le nombre de date de rebalancement doit doit être un multiple de notre pas de temps où l'on recalcule la valur des indices et il pourra choisir le nombre de P&L a calculé. L'objectif étant pour le gestionnaire de voir la distribution des P&L qu'il obtient avec le modèle choisit. Ainsi que la composition de son portefeuille de couverture moyen.
-
-\begin{center}
 \includegraphics[scale=0.4]{../Maquette_6.png}
 \end{center}
 
-Enfin le gestionnaire à la possibilité d'entrer lui même la composition de son portefeuille si il décide de ne pas suivre les conseils de notre outils d'aide. Cela permet au logiciel de rester en cohérence avec le portefeuille du gestionnaire et de continuer à lui indiquer la quantité à acheter et vendre pour chaque indice. 
+Enfin le gestionnaire à la possibilité d'entrer lui même la composition de son portefeuille si il décide de ne pas suivre les conseils de notre outils d'aide. Cela permet au logiciel de rester en cohérence avec le portefeuille du gestionnaire et de continuer à lui indiquer la quantité à acheter et vendre pour chaque indice.
+ 
 
 \newpage
 
