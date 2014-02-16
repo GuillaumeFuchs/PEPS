@@ -10,38 +10,6 @@
       <Platform>Win32</Platform>
     </ProjectConfiguration>
   </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="Asian.cpp" />
-    <ClCompile Include="Barrier.cpp" />
-    <ClCompile Include="Barrier_l.cpp" />
-    <ClCompile Include="Barrier_u.cpp" />
-    <ClCompile Include="Basket.cpp" />
-    <ClCompile Include="Bs.cpp" />
-    <ClCompile Include="Computations.cpp" />
-    <ClCompile Include="Couverture.cpp" />
-    <ClCompile Include="ModeleIndices.cpp" />
-    <ClCompile Include="Montecarlo.cpp" />
-    <ClCompile Include="Moteur.cpp" />
-    <ClCompile Include="Option.cpp" />
-    <ClCompile Include="Performance.cpp" />
-    <ClCompile Include="Playlist.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="Asian.h" />
-    <ClInclude Include="Barrier.h" />
-    <ClInclude Include="Barrier_l.h" />
-    <ClInclude Include="Barrier_u.h" />
-    <ClInclude Include="Basket.h" />
-    <ClInclude Include="Bs.h" />
-    <ClInclude Include="Computations.h" />
-    <ClInclude Include="Couverture.h" />
-    <ClInclude Include="ModeleIndices.h" />
-    <ClInclude Include="Montecarlo.h" />
-    <ClInclude Include="Moteur.h" />
-    <ClInclude Include="Option.h" />
-    <ClInclude Include="Performance.h" />
-    <ClInclude Include="Playlist.h" />
-  </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{8D4006CB-B6A0-42EB-8AFC-FE77FAB2E126}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>

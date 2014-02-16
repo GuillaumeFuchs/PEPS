@@ -1,8 +1,6 @@
 #ifndef MonteCarloH
 #define MonteCarloH
-#include "Bs.h"
-#include "Option.h"
-#include <pnl/pnl_random.h>
+#include "Montecarlos.h"
 
 /*!
  *  \file	montecarlo.h
@@ -15,14 +13,7 @@
  * \brief Classe representant le pricer Monte Carlo
  */
 
-class MonteCarlo {
-  private:
-	Bs *mod_; /*!< pointeur vers le modele */
-	Option *opt_; /*!< pointeur sur l’option */
-	PnlRng *rng; /*!< pointeur sur le generateur */
-	double h_; /*!< pas de difference finie */
-	int samples_; /*!< nombre de tirages Monte Carlo */
-
+class MonteCarlo : public MonteCarlos {
   public:
 
 	/*!
@@ -32,7 +23,6 @@ class MonteCarlo {
 	 * \param rng: generateur aleatoire
 	 */
 	MonteCarlo(PnlRng *rng);
-
 
 	/*!
 	 * \brief Constructeur avec argument
@@ -45,108 +35,14 @@ class MonteCarlo {
 	 * \param h_: pas de difference finie
 	 * \param samples_: nombre de tirages Monte Carlo
 	 */
-	MonteCarlo(Bs *mod, Option *opt, PnlRng *rng, double h, int samples);
-
+	MonteCarlo(ModelAsset *mod, Option *opt, PnlRng *rng, double h, int samples);
 
 	/*!
 	 * \brief Destructeur
 	 *
 	 * Destructeur de la classe Bs
 	 */
-	~MonteCarlo();
-
-
-	/*!
-	 * \brief Accesseur de mod_
-	 *
-	 *  Acceder au modele du sous-jacent
-	 *
-	 *  \return le modele du sous-jacent
-	 */
-	Bs* get_mod() const;
-
-	/*!
-	 * \brief Accesseur de opt_
-	 *
-	 *  Acceder à l'option
-	 *
-	 * \return l'option
-	 */
-	Option* get_opt() const;
-
-	/*!
-	 * \brief Accesseur de rng_
-	 *
-	 *  Acceder au generateur
-	 *
-	 * \return le generateur
-	 */
-	PnlRng* get_rng() const;
-
-	/*!
-	 * \brief Accesseur de h_
-	 *
-	 *  Acceder au pas de difference finie
-	 *
-	 * \return le pas de difference finie
-	 */
-	double get_h() const;
-
-	/*!
-	 * \brief Accesseur de samples_
-	 *
-	 *  Acceder au nombre de tirages Monte Carlo
-	 *
-	 * \return le nombre de tirage Monte Carlo
-	 */
-	int get_samples() const;
-
-
-
-	/*!
-	 * \brief Mutateur de mod_
-	 *
-	 *  Modifier le modele
-	 *
-	 * \param le nouveau modele
-	 */
-	void set_mod(Bs* mod);
-
-	/*!
-	 * \brief Mutateur de opt_
-	 *
-	 *  Modifier l'option
-	 *
-	 * \param la nouvelle option
-	 */
-	void set_opt(Option* opt);
-
-	/*!
-	 * \brief Mutateur de rng_
-	 *
-	 *  Modifier le generateur
-	 *
-	 * \param le nouveau generateur
-	 */
-	void set_rng(PnlRng* rng);
-
-	/*!
-	 * \brief Mutateur de h_
-	 *
-	 *  Modifier le pas de difference finie
-	 *
-	 * \param le nouveau pas de difference finie
-	 */
-	void set_h(double h);
-
-	/*!
-	 * \brief Mutateur de samples_
-	 *
-	 *  Modifier le nombre de tirages Monte Carlo
-	 *
-	 * \param le nouveau nombre de tirages Monte Carlo
-	 */
-	void set_samples(int samples);
+	virtual ~MonteCarlo();
 
 	/*!
 	 * \brief Calcule du prix de l’option a la date 0
@@ -183,8 +79,15 @@ class MonteCarlo {
 	 * \param pl erreur de courverture du portefeuille
 	 * \param H nombre de date dans la simulation
 	 * \param T maturite du portefeuille
+	 * \param summary contient les informations liés à l'achat & à la vente d'actions pour le portefeuille de couverture
+	 *	1er colonne: date de recalibrage
+	 *	2e  colonne: cours de l'action
+	 *	3e  colonne: delta simulé
+	 *	4e	colonne: nombre d'actions à acheter (si négatif alors vente)
+	 *	5e	colonne: delta théorique selon B&S
+	 *	6e	colonne: nb d'actions à acheter théorique
 	 */
-	void couv (PnlMat *past, double &pl, int H, double T);
+	void couv (PnlMat *past, double &pl, double &plTheorique, int H, double T, PnlMat* summary);
 
 };
 #endif

@@ -1,4 +1,3 @@
-# include "Option.h"
 # include "asian.h"
 # include <pnl/pnl_mathtools.h>
 #include <pnl/pnl_vector.h>
@@ -10,7 +9,7 @@
  */
 
 Asian :: Asian() : Option() {
-  strike_ = 0;
+  strike_ = 0; 
 }
 
 Asian::Asian(double strike, double T, int timeStep, int size) : Option(T, timeStep, size){
