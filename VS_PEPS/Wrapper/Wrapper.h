@@ -23,8 +23,13 @@ namespace Wrapper {
 
 		double pl;
 		double plt;
+		array<double> ^summary;
+
 	public:
-		WrapperClass() {intConfiancePrix = prix = 0;};
+		WrapperClass() {
+			intConfiancePrix = prix = prixBS = intConfianceDelta = delta = deltaBS = mxP = vrP = mxD = vrD = pl = plt = 0;
+			summary = gcnew array<double>(51 * 6);
+		};
 		void getPriceCallEuro(double t, double S0, double K, double sigma, double r, double T, int N, int H, int M);
 		void getDeltaCallEuro(double t, double S0, double K, double sigma, double r, double T, int N, int H, int M);
 
@@ -48,5 +53,7 @@ namespace Wrapper {
 
 		double getPL() {return pl;};
 		double getPLT() {return plt;};
+		array<double> ^getSummary() {return summary;};
+
 	};
 }

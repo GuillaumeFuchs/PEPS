@@ -56,9 +56,9 @@ int main(){
 
 	//test.compute_prix_samples(1000, true);
 	//test.compute_delta_samples(1000, true);
-	test.compute_prix(0, 0);
+	//test.compute_prix(0, 0);
 	//test.compute_delta(25, 0.5);
-	//test.compute_couv(50, false);
+	test.compute_couv(50, false);
 
 	system("pause");
 

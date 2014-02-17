@@ -36,7 +36,10 @@ namespace Wrapper {
 
 	void WrapperClass::getCouvCallEuro(double S0, double K, double sigma, double r, double T, int N, int H, int M){
 		double pal, palt;
-		compute_couv_call(pal, palt, S0, K, sigma, r, T, N, H, M);
+		pin_ptr<double> pdouble = &summary[0];
+
+		compute_couv_call(pal, palt, pdouble, S0, K, sigma, r, T, N, H, M);
+
 		this->pl = pal;
 		this->plt = palt;
 	}

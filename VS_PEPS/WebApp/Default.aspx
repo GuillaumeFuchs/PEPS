@@ -1,98 +1,171 @@
-﻿<%@ Page Title="Page d'accueil" Language="C#" MasterPageFile="~/Site.master" AutoEventWireup="true"
-    CodeBehind="Default.aspx.cs" Inherits="WebApp._Default" %>
+﻿<%@ Page Title="PEPS" Language="C#" MasterPageFile="~/Site.master" AutoEventWireup="true"
+	CodeBehind="Default.aspx.cs" Inherits="WebApp._Default" %>
 
+<%@ Register Assembly="System.Web.DataVisualization, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35"
+	Namespace="System.Web.UI.DataVisualization.Charting" TagPrefix="asp" %>
 <asp:Content ID="HeaderContent" runat="server" ContentPlaceHolderID="HeadContent">
 </asp:Content>
 <asp:Content ID="BodyContent" runat="server" ContentPlaceHolderID="MainContent">
-    <h2>
-        PEPS !
-    </h2>
-
-	<p>
-	Calcul le prix d'un call européen selon le modèle de B&S avec la valeur simulé avec MC et la valeur théorique selon la formule fermée de B&S.
-    </p>
-	<p>
-	    <asp:TextBox ID="TextBox1" runat="server" Width="40px">t</asp:TextBox>
-        <asp:TextBox ID="TextBox2" runat="server" Width="40px">S0</asp:TextBox>
-        <asp:TextBox ID="TextBox3" runat="server" Width="40px">K</asp:TextBox>
-        <asp:TextBox ID="TextBox4" runat="server" Width="40px">sigma</asp:TextBox>
-        <asp:TextBox ID="TextBox5" runat="server" Width="40px">r</asp:TextBox>
-        <asp:TextBox ID="TextBox6" runat="server" Width="40px">T</asp:TextBox>
-        <asp:TextBox ID="TextBox7" runat="server" Width="40px">N</asp:TextBox>
-        <asp:TextBox ID="TextBox8" runat="server" Width="40px">H</asp:TextBox>
-        <asp:TextBox ID="TextBox9" runat="server" Width="40px">M</asp:TextBox>
-    	<asp:Button ID="Button1" runat="server" onclick="Button1_Click" Text="Compute_price_call" />
-		
-        <asp:Label ID="Label1" runat="server" Text="prix"></asp:Label>
-        <asp:Label ID="Label2" runat="server" Text="largeur ic 95%"></asp:Label>
-        <asp:Label ID="Label3" runat="server" Text="prix B&amp;S"></asp:Label>
-	</p>
-	<p>
-		</br>	
-	Calcul le delta d'un call européen selon le modèle de B&S avec la valeur simulé avec MC et la valeur théorique selon la formule fermée de B&S.
-    </p>
-	<p>
-	    <asp:TextBox ID="TextBox10" runat="server" Width="40px">t</asp:TextBox>
-        <asp:TextBox ID="TextBox11" runat="server" Width="40px">S0</asp:TextBox>
-        <asp:TextBox ID="TextBox12" runat="server" Width="40px">K</asp:TextBox>
-        <asp:TextBox ID="TextBox13" runat="server" Width="40px">sigma</asp:TextBox>
-        <asp:TextBox ID="TextBox14" runat="server" Width="40px">r</asp:TextBox>
-        <asp:TextBox ID="TextBox15" runat="server" Width="40px">T</asp:TextBox>
-        <asp:TextBox ID="TextBox16" runat="server" Width="40px">N</asp:TextBox>
-        <asp:TextBox ID="TextBox17" runat="server" Width="40px">H</asp:TextBox>
-        <asp:TextBox ID="TextBox18" runat="server" Width="40px">M</asp:TextBox>
-    	<asp:Button ID="Button2" runat="server" onclick="Button2_Click" Text="Compute_delta_call" />
-		
-        <asp:Label ID="Label4" runat="server" Text="delta"></asp:Label>
-        <asp:Label ID="Label5" runat="server" Text="largeur ic 95%"></asp:Label>
-        <asp:Label ID="Label6" runat="server" Text="delta B&amp;S"></asp:Label>
-	</p>
-	
-	<p>
-		</br>	
-	Calcul la variation moyenne entre le prix d'un call européen selon le modèle de B&S avec la valeur simulé avec MC et la valeur théorique selon la formule fermée de B&S avec un échantillon et donne l'écart max.
-    </p>
-	<p>
-        <asp:TextBox ID="TextBox19" runat="server" Width="40px">S0</asp:TextBox>
-        <asp:TextBox ID="TextBox20" runat="server" Width="40px">K</asp:TextBox>
-        <asp:TextBox ID="TextBox21" runat="server" Width="40px">sigma</asp:TextBox>
-        <asp:TextBox ID="TextBox22" runat="server" Width="40px">r</asp:TextBox>
-        <asp:TextBox ID="TextBox23" runat="server" Width="40px">T</asp:TextBox>
-        <asp:TextBox ID="TextBox24" runat="server" Width="40px">N</asp:TextBox>
-        <asp:TextBox ID="TextBox25" runat="server" Width="40px">M</asp:TextBox>
-		<asp:TextBox ID="TextBox26" runat="server" Width="40px">samples</asp:TextBox>
-    	<asp:Button ID="Button3" runat="server" onclick="Button3_Click" Text="Compute_price_call_samples" />
-		
-        <asp:Label ID="Label7" runat="server" Text="var"></asp:Label>
-        <asp:Label ID="Label8" runat="server" Text="spread max"></asp:Label>
-	</p>
-	
-	<p>
-		</br>	
-	Calcul la variation moyenne entre le delta d'un call européen selon le modèle de B&S avec la valeur simulé avec MC et la valeur théorique selon la formule fermée de B&S avec un échantillon et donne l'écart max.
-    </p>
-	<p>
-        <asp:TextBox ID="TextBox27" runat="server" Width="40px">S0</asp:TextBox>
-        <asp:TextBox ID="TextBox28" runat="server" Width="40px">K</asp:TextBox>
-        <asp:TextBox ID="TextBox29" runat="server" Width="40px">sigma</asp:TextBox>
-        <asp:TextBox ID="TextBox30" runat="server" Width="40px">r</asp:TextBox>
-        <asp:TextBox ID="TextBox31" runat="server" Width="40px">T</asp:TextBox>
-        <asp:TextBox ID="TextBox32" runat="server" Width="40px">N</asp:TextBox>
-        <asp:TextBox ID="TextBox33" runat="server" Width="40px">M</asp:TextBox>
-		<asp:TextBox ID="TextBox34" runat="server" Width="40px">samples</asp:TextBox>
-    	<asp:Button ID="Button4" runat="server" onclick="Button4_Click" Text="Compute_delta_call_samples" />
-		
-        <asp:Label ID="Label9" runat="server" Text="var"></asp:Label>
-        <asp:Label ID="Label10" runat="server" Text="spread max"></asp:Label>
-	</p>
-
-	<p>
-		</br>
-		Calcul du portefeuille de couverture d'un call européen selon le modèle de B&S
-	</p>
-	<p>
-	<asp:Button ID="Button5" runat="server" onclick="Button5_Click" Text="Compute_couv" />
-	        <asp:Label ID="Label11" runat="server" Text="pl"></asp:Label>
-        <asp:Label ID="Label12" runat="server" Text="plt"></asp:Label>
+	<div style="border-style: solid; padding: 10px">
+		<p>
+			Calcul du prix d'un call européen selon le modèle de Black & Scholes.
+			<br />
+			Affiche le prix selon une simulation de Monte-Carlo en considérant la trajectoire
+			du sous-jacent selon le modèle de B&S.
+			<br />
+			Affiche le prix selon la formule théorique de B&S.
+			<br />
 		</p>
+		<div>
+			Paramètres:
+			<ul>
+				<li>SO (prix spot) = 100,0 </li>
+				<li>K (strike) = 100,0 </li>
+				<li>T (maturité) = 1</li>
+				<li>sigma (volatilité) = 20%</li>
+				<li>r (taux sans risque) = 0,05%</li>
+				<li>M (Nombre de simulations de Monte-Carlo) = 50 000</li>
+				<li>t (temps où calculer le prix du call) à déterminer</li>
+				<li>H (nombre de pas de temps utilisé pour simulé le sous-jacent jusqu'à l'instant t)
+					à déterminer</li>
+			</ul>
+		</div>
+		<p>
+			<asp:TextBox ID="TextBox1" runat="server" Width="40px">t</asp:TextBox>
+			<asp:TextBox ID="TextBox2" runat="server" Width="40px">H</asp:TextBox>
+			<asp:Button ID="Button1" runat="server" OnClick="Button1_Click" Text="Go" />
+			<asp:Label ID="Label1" runat="server" Text="Prix simulé" BorderStyle="Solid" BorderWidth="1px"></asp:Label>
+			<asp:Label ID="Label2" runat="server" Text="Largeur IC(95%)" BorderStyle="Solid"
+				BorderWidth="1px"></asp:Label>
+			<asp:Label ID="Label3" runat="server" Text="Prix BS" BorderStyle="Solid" BorderWidth="1px"></asp:Label>
+		</p>
+	</div>
+	<div style="border-style: solid; padding: 10px">
+		<p>
+			Calcul du delta d'un call européen selon le modèle de Black & Scholes.
+			<br />
+			Affiche le delta selon une simulation de Monte-Carlo en considérant la trajectoire
+			du sous-jacent selon le modèle de B&S.
+			<br />
+			Affiche le delta selon la formule théorique de B&S.
+			<br />
+		</p>
+		<div>
+			Paramètres:
+			<ul>
+				<li>SO (prix spot) = 100,0 </li>
+				<li>K (strike) = 100,0 </li>
+				<li>T (maturité) = 1</li>
+				<li>sigma (volatilité) = 20%</li>
+				<li>r (taux sans risque) = 0,05%</li>
+				<li>M (Nombre de simulations de Monte-Carlo) = 50 000</li>
+				<li>t (temps où calculer le delta du call) à déterminer</li>
+				<li>H (nombre de pas de temps utilisé pour simulé le sous-jacent jusqu'à l'instant t)
+					à déterminer</li>
+			</ul>
+		</div>
+		<p>
+			<asp:TextBox ID="TextBox3" runat="server" Width="40px">t</asp:TextBox>
+			<asp:TextBox ID="TextBox4" runat="server" Width="40px">H</asp:TextBox>
+			<asp:Button ID="Button2" runat="server" OnClick="Button2_Click" Text="Go" />
+			<asp:Label ID="Label4" runat="server" Text="Delta" BorderStyle="Solid" BorderWidth="1px"></asp:Label>
+			<asp:Label ID="Label5" runat="server" Text="Largeur IC(95%)" BorderStyle="Solid"
+				BorderWidth="1px"></asp:Label>
+			<asp:Label ID="Label6" runat="server" Text="Delta BS" BorderStyle="Solid" BorderWidth="1px"></asp:Label>
+		</p>
+	</div>
+	<div style="border-style: solid; padding: 10px">
+		<p>
+			Calcul la variation moyenne entre le prix d'un call européen selon le modèle de
+			B&S avec la valeur simulé avec MC et la valeur théorique selon la formule fermée
+			de B&S avec un échantillon de taille samples et donne l'écart max. Les différents
+			temps où sont calculés les deltas sont aléatoires.
+		</p>
+		<div>
+			Paramètres:
+			<ul>
+				<li>SO (prix spot) = 100,0 </li>
+				<li>K (strike) = 100,0 </li>
+				<li>T (maturité) = 1</li>
+				<li>sigma (volatilité) = 20%</li>
+				<li>r (taux sans risque) = 0,05%</li>
+				<li>M (Nombre de simulations de Monte-Carlo) = 50 000</li>
+				<li>samples (Nombre de simulations) à déterminer</li>
+			</ul>
+		</div>
+		<p>
+			<asp:TextBox ID="TextBox5" runat="server" Width="40px">samples</asp:TextBox>
+			<asp:Button ID="Button3" runat="server" OnClick="Button3_Click" Text="Go" />
+			<asp:Label ID="Label7" runat="server" Text="Variation moyenne"></asp:Label>
+			<asp:Label ID="Label8" runat="server" Text="Spread max"></asp:Label>
+		</p>
+	</div>
+	<div style="border-style: solid; padding: 10px">
+		<p>
+			Calcul la variation moyenne entre le delta d'un call européen selon le modèle de
+			B&S avec la valeur simulé avec MC et la valeur théorique selon la formule fermée
+			de B&S avec un échantillon de taille samples et donne l'écart max. Les différents
+			temps où sont calculés les deltas sont aléatoires.
+		</p>
+		<div>
+			Paramètres:
+			<ul>
+				<li>SO (prix spot) = 100,0 </li>
+				<li>K (strike) = 100,0 </li>
+				<li>T (maturité) = 1</li>
+				<li>sigma (volatilité) = 20%</li>
+				<li>r (taux sans risque) = 0,05%</li>
+				<li>M (Nombre de simulations de Monte-Carlo) = 50 000</li>
+				<li>samples (Nombre de simulations) à déterminer</li>
+			</ul>
+		</div>
+		<p>
+			<asp:TextBox ID="TextBox6" runat="server" Width="40px">samples</asp:TextBox>
+			<asp:Button ID="Button4" runat="server" OnClick="Button4_Click" Text="Go" />
+			<asp:Label ID="Label9" runat="server" Text="Variation moyenne"></asp:Label>
+			<asp:Label ID="Label10" runat="server" Text="Spread max"></asp:Label>
+		</p>
+	</div>
+	<div style="border-style: solid; padding: 10px">
+		<p>
+			Calcul du portefeuille de couverture d'un call européen selon le modèle de B&S
+		</p>
+		<div>
+			Paramètres:
+			<ul>
+				<li>SO (prix spot) = 100,0 </li>
+				<li>K (strike) = 100,0 </li>
+				<li>T (maturité) = 1</li>
+				<li>sigma (volatilité) = 20%</li>
+				<li>r (taux sans risque) = 0,05%</li>
+				<li>M (Nombre de simulations de Monte-Carlo) = 50 000</li>
+			</ul>
+		</div>
+		<p>
+			<asp:Button ID="Button5" runat="server" OnClick="Button5_Click" Text="Go" />
+			<asp:Label ID="Label11" runat="server" Text="P&L"></asp:Label>
+			<asp:Label ID="Label12" runat="server" Text="P&L théorique"></asp:Label>
+	</div>
+	<div>
+		<div style="float: left">
+			<asp:Table ID="Table1" runat="server" Height="50px" Width="62px" CellPadding="5"
+				GridLines="Both">
+			</asp:Table>
+		</div>
+		<div style="float: right">
+			<asp:Chart ID="Chart1" runat="server" Height="600px" Width="550px">
+				<Series>
+					<asp:Series ChartType="Line">
+					</asp:Series>
+				</Series>
+				<ChartAreas>
+					<asp:ChartArea Name="ChartArea1">
+					<AxisX Title="Temps"></AxisX>
+					<AxisY Title="Nb d'actions à posséder"></AxisY>
+					</asp:ChartArea>
+				</ChartAreas>
+			</asp:Chart>
+		</div>
+	</div>
+	</p>
 </asp:Content>

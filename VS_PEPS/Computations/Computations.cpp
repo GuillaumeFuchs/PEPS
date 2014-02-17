@@ -191,7 +191,7 @@ void Computations::compute_delta_call_samples(double &max, double &var, double S
 	pnl_mat_free(&past);
 }
 
-void Computations::compute_couv_call(double &pl, double &plt, double **summary, double S0, double K, double sigma, double r, double T, int N, int H, int M, double &temp){
+void Computations::compute_couv_call(double &pl, double &plt, double *summary, double S0, double K, double sigma, double r, double T, int N, int H, int M){
 	if (fmod((double)H, (double)N) > 0.0001){
 		return;
 	}
@@ -199,7 +199,6 @@ void Computations::compute_couv_call(double &pl, double &plt, double **summary, 
 	plt = 0.;
 	
 	double prix, ic;
-
 
 	int const size = 1;
 	double spot[size] = {S0};
@@ -223,10 +222,9 @@ void Computations::compute_couv_call(double &pl, double &plt, double **summary, 
 	plt /= prix_th;
 
 	int compteur = -1;
-	for (int d = 0; d<6; d++){
-		for (int i = 0; i<H+1; i++){
-			(*summary)[++compteur] = MGET(summaryV, i, d);
+	for (int i = 0; i<H+1; i++){
+		for (int d = 0; d<6; d++){
+			summary[++compteur] = MGET(summaryV, i, d);
 		}
 	}
-	temp = MGET(summaryV, 3, 3);
 }
