@@ -851,6 +851,33 @@ Si les modèles HJM ou bi-factoriels permettent d'obtenir des courbes beaucoup p
 Le produit Playlist fait intervenir des sous-jacents qui sont cotés en devise étrangère. La couverture sur ces produits est donc soumise à l'évolution des taux de changes.
 Nos connaissances actuelles en la matière de nous permettent pas de choisir un modèle de taux de change sophistiqué. En revanche, nous savons que le modèle le plus simple, qui sera implémenté dans la première version, qui consiste à considérer le taux de change constant, n'apporte aucune valeur ajoutée à la modélisation. Nous nous bornerons donc dans un premier temps à l'approximation qui consiste à considérer que tous les sous-jacents sont exprimés en devise domestique.
 
+\newpage
+\section{Théorie de la couverture}
+Dans cette partie, nous aborderons les différentes étapes qui permette de valider théoriquement la couverture du gérant du fond. Rappelons au préalable que cette couverture se fait dans le cadre d'un modèle. Ici nous avons opté dans un premier temps pour une couverture en dite en delta neutre, dans le cas d'un modèle de Black-Scholes, avec taux sans risque et volatilité des quatre sous-jacents constante.
+
+\subsection{Le cadre de Black-Scholes constant}
+ Ici la partie de Samuel.
+\subsection{Vers une modification des paramètres?}
+Le cadre du modèle de Black-Scholes constant est assez restrictif. Le calcul des deltas de couverture se fera dans notre application par simulation de Monte Carlo, ce qui suppose de simuler l’évolution des cours futurs des sous-jacents. Ainsi, une remarque vient alors naturellement à l'esprit : les années passant, la connaissance des paramètres, notamment la volatilité historique du sous-jacents s’améliore, pourquoi alors ne pas simuler ces mêmes trajectoires historiques avec des paramètres nouveaux, recalibrés sur une plage de temps plus récente? On collerait alors plus à la réalité de l'évolution futur du sous-jacents.\\
+
+En réalité, une telle supposition ne trouve aucune justification théorique et va même à l'encontre du raisonnement présenté dans la partie précédente. Montrons ceci dans le cadre d'un produit dérivé sur un seul sous-jacent, donc la dynamique s’écrit : 
+\\$$ dS = \mu Sdt + \sigma SdW $$  \\
+Pour décrire le portefeuille $V$ de réplication du payoff du produit, on souhaite se placer sous une mesure de probabilités $\mathbb{Q}$ qui fait en sorte que la valeur du portefeuille actualisé est une martingale. Cette mesure de probabilités $\mathbb{Q}$ s'obtient à partir des équations de marché. En effet, $\mathbb{Q}$ est définie à partir de sa dérivée de Radon-Nykodym :\\
+$$\frac{d\mathbb{Q}}{d\mathbb{P}}= \textbf{exp}(\lambda * W_{t} - \frac{\lambda^{2}}{2}t) $$ \\
+
+avec $\lambda$ solution de $$ \sigma * \lambda + r = \mu $$ \\
+
+Dès lors, on se rend compte que si on change de valeur de volatilité ($\sigma$) pour la simulation, le portefeuille actualisé ne sera plus une martingale sous $\mathbb{Q}$. En fait, changer de volatilité revient à modifier l'évaluation que l'on fait du prix du produit, et à commencer une nouvelle couverture sous une nouvelle de mesure de probabilités : constituer un nouveau portefeuille de réplication. Rien ne dit que le prix que l'on trouve soit égale à celui obtenu précédemment (il est même forcement différent). Dès lors, si on ne veut pas réajuster la valeur du portefeuille par un réinvestissement qui pourrai occasionner une perte de la propriété d'auto-financement supposée dans la partie précédente, on enregistre une erreur de couverture immédiatement, qui perdurera durant tout le restant de la vie du produit dérivé.\\
+
+Illustrons ce propos dans un cas simple : le cas d'un call sur un sous-jacent. On suppose qu'on rebalance notre portefeuille aujourd'hui ($t_{1}$) et demain ($t_{2}$) en ayant changé de volatilité, ayant $\sigma_{1}<\sigma_{2}$. Il se trouve que $S_{t_{1}}=S_{t_{2}}$. On a néanmoins, d'après les propriétés du call : \\
+$$C_{1}<C_{2}$$\\ et $$\Delta_{1}<\Delta_{2}$$ \\
+Pour respecter la couverture, on doit investir plus dans le sous-jacent, sachant que notre portefeuille n'a pas changé de valeur, ou très peu ( composition de l'actif sans risque pendant dt), et que si on apporte pas la différence, le portefeuille n'aura plus la valeur du prix calculé (C_{2}).\\
+
+En conclusion, il sera nécessaire dans notre démarche de couverture, de conserver les paramètres évalués avant le début de la simulation, et ce tout au long de celle-ci.
+  
+
+
+
 \section{Analyse logicielle}
 
 \subsection{Cahier des charges}
@@ -866,9 +893,9 @@ Il s'agit ici de faire l'inventaire des fonctionnalités indispensables que doit
 \indent Aussi, le gestionnaire doit avoir accès à un proposition de couverture, dans le cadre du modèle choisit. Plus précisément le gestionnaire ne devra pas avoir la possibilité de modifier le modèle en cours de simulation par soucis de cohérence. De plus le gestionnaire devra avoir la possibilité d'indiquer ses propres dates de rebalancement.\\
 On laissera la possibilité au gestionnaire de se couvrir différemment de ce qui est préconisé, ce qui implique que celui-ci aura la possibilité de relancer une simulation à partir de la composition de portefeuille qu'il a choisi. Il pourra donc entrer la composition de son nouveau portefeuille.\\
 \indent \\
-\indent Enfin, il aura également la possibilité d'accéder à une simulation des cours futurs et de l'erreur commise à maturité pour une trajectoire particulière en supposant qu'il ai suivit aujourd'hui, et chaque fois qu'elles lui auront été proposées, les recommendations de rebalancement. Il s'agit de le convaincre du bien fondé de ces propositions.
+\indent Enfin, il aura également la possibilité d'accéder à une simulation des cours futurs et de l'erreur commise à maturité pour une trajectoire particulière en supposant qu'il ai suivit aujourd'hui, et chaque fois qu'elles lui auront été proposées, les recommandations de rebalancement. Il s'agit de le convaincre du bien fondé de ces propositions.
 
-\subsection{Architecture logiciel globale}
+\subsection{Architecture logicielle globale}
 
 Voici une première schématisation de l'architecture de notre produit.
 
@@ -935,7 +962,7 @@ La base de données ne sera en effet pas plus compliquée puisque nous aurons be
 Nous allons dans un premier temps expliciter ce qui se cache derrière la fonctionnalité couverture énuméré dans le cahier des charges.\\
 La question de la couverture pose différents problèmes, en effet dans un premier temps nous réaliserons une couverture en delta. Ainsi pour une action devant répliquer les flux du fond que nous vendrons, nous cherchons à savoir quelle est la quantité de chaque indices que nous devons acheter pour s'assurer éviter des pertes et plus particulièrement supprimer le risque associé au produit structuré.\\
 Ainsi dans un premier temps, il nous faut pricer le produit que nous proposons. Cela implique  de devoir fixer le modèle que nous allons utiliser pour modéliser l'évolution des sous jacents. Ainsi nous avons choisi dans un premier temps d'implémenter le modèle de Black& Scholes. Se pose alors la question des différents paramètres du modèle, nous avons dans un premier temps choisi de déterminer la variance à l'aide d'un backtest sur les valeurs des différents indices au cours des trois derniers mois, nous ferons de mêmes pour déterminer la matrice des corrélations. En ce qui concerne les autres paramètres tels que le taux sans risque ou bien la probabilité historique, nous prendrons des valeurs arbitraire en essayant de coller au maximum avec les valeurs dont nous disposons.\\
-Disposant alors d'un modèle, il nous faut définir les paramètres caractérisant notre produit, aux vues des propriétés de celle ci énoncé précedemment, on lui attribuera une maturité fixée par défaut à 6, un nombre de date de constatation ainsi que la taille du modèle.
+Disposant alors d'un modèle, il nous faut définir les paramètres caractérisant notre produit, aux vues des propriétés de celle ci énoncé précédemment, on lui attribuera une maturité fixée par défaut à 6, un nombre de date de constatation ainsi que la taille du modèle.
 Enfin on considère un modèle de MonteCarlo pour obtenir le prix de notre produit.\\
 Par la suite, nous considérerons des modèles plus compliqués, c'est pourquoi nous avons choisi d'implémenter des classes abstraites pour que différents modèles puissent être ajouté.
 C'est ainsi que nous obtenons le diagramme de classe suivant :\\  
@@ -954,7 +981,7 @@ On fait ainsi apparaître dans l'onglet en haut à gauche, la date à laquelle �
 Nous faisons de plus apparaître le nombre de parts disponible à la base ainsi que le nombre de parts qui ont été acquise ainsi que les valeurs monétaires associées. Ceci permet de voir le taux d'acceptation du produit par le marché.\\
 Le bloc situé en bas à droite permettra plutôt de voir l'évolution de la performance du produit ainsi on peut choisir la date de début ainsi que la date de fin, ce qui va nous permettre de visualiser l'évolution des différents indices concernés sur cette plage. Juste à côté nous afficherons la performance du fond sur cette plage.\\
 Enfin le dernier bloc nous permet de choisir le modèle d'évolution des sous-jacents ce qui aura pour conséquence de modifier l'évolution des sous-jacents et ainsi la couverture proposée juste en dessous.
-La couverture sera décrite par le nombre d'action vendue, correspondant aux nombres de parts vendues et le nombre de fois que l'on doit acheté chacun des indices. On en déduiera ainsi la valeur liquidative en dessous.
+La couverture sera décrite par le nombre d'action vendue, correspondant aux nombres de parts vendues et le nombre de fois que l'on doit acheté chacun des indices. La couverture théorique donnera une composition du portefeuille précise, il sera proposé au gestionnaire une composition traitée en amont permettant de satisfaire aux parts minimales des actifs dans lesquelles il est possible d'investir. Un traitement optimisé de ces approximations pourra être ajouté en extension.  On en déduiera ainsi la valeur liquidative en dessous.
 
 \section{Annexes}
 
