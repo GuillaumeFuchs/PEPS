@@ -133,6 +133,10 @@
     <Content Include="Site.Master" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Info\Parameters.csproj">
+      <Project>{4C57386F-9793-4077-BB57-FB132E8D90E9}</Project>
+      <Name>Parameters</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Wrapper\Wrapper.vcxproj">
       <Project>{94A36690-DAF7-4354-B014-5D6AEC3689E3}</Project>
       <Name>Wrapper</Name>

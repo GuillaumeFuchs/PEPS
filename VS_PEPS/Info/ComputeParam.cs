@@ -9,7 +9,7 @@ namespace Parameters
     public class ComputeParam
     {
 
-        private AffichageBD.AffichageBD data;
+        private AffichageBD.AfficheBD data;
 
         private string[] assets;
 
@@ -46,7 +46,7 @@ namespace Parameters
 
         public ComputeParam()
         {
-            data = new AffichageBD.AffichageBD();
+            data = new AffichageBD.AfficheBD();
             Assets = new String[4] { "^STOXX50E", "^FTSE", "^N225", "^GSPC" };
             mean = new double[4];
             volatility = new double[4];
@@ -114,11 +114,12 @@ namespace Parameters
                 mean += (Spots[i] - Spots[i - 1]) / Spots[i - 1];
                 mean2 += ((Spots[i] - Spots[i - 1]) / Spots[i - 1]) * ((Spots[i] - Spots[i - 1]) / Spots[i - 1]);
             }
-            mean *= mean;
+            
             mean /= Spots.Length-1;
+            this.mean[index] = mean;
+            mean *= mean;
             mean /= Spots.Length-2;
             mean2 /= Spots.Length - 2;
-            this.mean[index] = mean;
             this.volatility[index] = ((Math.Sqrt(mean2-mean) * Math.Sqrt(252)));
         }
 
@@ -131,15 +132,20 @@ namespace Parameters
             double correlNum = 0;
             double correlDenomUn = 0;
             double correlDenomDeux = 0;
+            double rend1 = 0;
+            double rend2 = 0;
 
-            for (int i = 0; i < SpotsUn.Length; i++)
+            for (int i = 1; i < SpotsUn.Length; i++)
             {
-                correlNum += (SpotsUn[i] - meanUn) * (SpotsDeux[i] - meanDeux);
-                correlDenomUn += Math.Pow((SpotsUn[i] - meanUn), 2);
-                correlDenomDeux += Math.Pow((SpotsDeux[i] - meanDeux), 2);
+                rend1 = (SpotsUn[i] - SpotsUn[i - 1]) / SpotsUn[i - 1] - meanUn;
+                rend2 = ((SpotsDeux[i] - SpotsDeux[i - 1]) / SpotsDeux[i - 1]) - meanDeux;
+                correlNum += (rend1* rend2);
+                correlDenomUn += Math.Pow(rend1, 2);
+                correlDenomDeux += Math.Pow(rend2, 2);
             }
-            correlDenomUn = Math.Sqrt(correlDenomUn);
-            correlDenomDeux = Math.Sqrt(correlDenomDeux);
+            correlNum /= SpotsUn.Length - 1;
+            correlDenomUn = Math.Sqrt(correlDenomUn/SpotsUn.Length);
+            correlDenomDeux = Math.Sqrt(correlDenomDeux/SpotsDeux.Length);
 
             double corelation = correlNum/(correlDenomUn*correlDenomDeux);
             this.corel[index1, index2] = corelation;

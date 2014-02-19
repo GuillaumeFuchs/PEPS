@@ -5,6 +5,7 @@ using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 using Wrapper;
+using Parameters;
 
 namespace WebApp
 {
@@ -39,6 +40,9 @@ namespace WebApp
 
 			WrapperClass wc = new WrapperClass();
 			wc.getPriceCallEuro(t, S0, K, sigma, r, T, N, H, M);
+
+            ComputeParam cp = new ComputeParam();
+            cp.param(900);
 
 			Label1.Text = wc.getPrice().ToString();
 			Label2.Text = wc.getIC().ToString();

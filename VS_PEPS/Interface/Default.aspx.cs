@@ -5,7 +5,7 @@ using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 using System.Runtime;
-using Communicateur;
+using Wrapper;
 
 namespace WebApp
 {
@@ -14,7 +14,7 @@ namespace WebApp
         public void price(object sender, EventArgs e)
         {
             // Récupérer les valeurs des paramètres dans les différentes TextBox
-            CommunicateurClass wc = new CommunicateurClass();
+            WrapperClass wc = new WrapperClass();
             /*double strike = double.Parse(strike_tb.Text);
             int size = int.Parse(size_tb.Text);
             double r = double.Parse(r_tb.Text);

@@ -9,7 +9,7 @@
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Parameters</RootNamespace>
-    <AssemblyName>Info</AssemblyName>
+    <AssemblyName>Parameters</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -47,6 +47,10 @@
     <ProjectReference Include="..\DBAccess\AffichageBD.csproj">
       <Project>{B9CADB4F-7103-4A57-A2D8-B35D931A8411}</Project>
       <Name>AffichageBD</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Wrapper\Wrapper.vcxproj">
+      <Project>{94A36690-DAF7-4354-B014-5D6AEC3689E3}</Project>
+      <Name>Wrapper</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -9,7 +9,7 @@ using System.Runtime.InteropServices;
 
 namespace AffichageBD
 {
-    public class AffichageBD
+    public class AfficheBD
     {
         /// <summary>
         /// Database context.
@@ -28,7 +28,7 @@ namespace AffichageBD
         /// <summary>
         /// Constructor.
         /// </summary>
-        public AffichageBD()
+        public AfficheBD()
         {
             // initalizing the database context.
             myDbdc = new PepsDBDataContext();
