@@ -15,7 +15,7 @@
         <div class="header">
             <div class="title">
                 <h1>
-                    Mon application ASP.NET
+                    Interface Beta pour Playlist 2
                 </h1>
             </div>
             <div class="loginDisplay">
@@ -32,8 +32,9 @@
             <div class="clear hideSkiplink">
                 <asp:Menu ID="NavigationMenu" runat="server" CssClass="menu" EnableViewState="false" IncludeStyleBlock="false" Orientation="Horizontal">
                     <Items>
-                        <asp:MenuItem NavigateUrl="~/Default.aspx" Text="Accueil"/>
-                        <asp:MenuItem NavigateUrl="~/About.aspx" Text="À propos de"/>
+                        <asp:MenuItem NavigateUrl="~/Default.aspx" Text="Simulation générale"/>
+                        <asp:MenuItem NavigateUrl="~/Couverture.aspx" Text="Couverture"/>
+                        <asp:MenuItem NavigateUrl="~/About.aspx" Text="Base de données"/>
                     </Items>
                 </asp:Menu>
             </div>
