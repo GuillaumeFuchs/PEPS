@@ -28,7 +28,7 @@ namespace Wrapper {
 	public:
 		WrapperClass() {
 			intConfiancePrix = prix = prixBS = intConfianceDelta = delta = deltaBS = mxP = vrP = mxD = vrD = pl = plt = 0;
-			summary = gcnew array<double>(51 * 6);
+			summary = gcnew array<double>(301 * 6);
 		};
 		void getPriceCallEuro(double t, double S0, double K, double sigma, double r, double T, int N, int H, int M);
 		void getDeltaCallEuro(double t, double S0, double K, double sigma, double r, double T, int N, int H, int M);

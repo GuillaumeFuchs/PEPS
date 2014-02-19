@@ -17,17 +17,21 @@
 			<br />
 		</p>
 		<div>
-			Paramètres:
+			Paramètres donnés:
 			<ul>
 				<li>SO (prix spot) = 100,0 </li>
 				<li>K (strike) = 100,0 </li>
 				<li>T (maturité) = 1</li>
 				<li>sigma (volatilité) = 20%</li>
 				<li>r (taux sans risque) = 0,05%</li>
-				<li>M (Nombre de simulations de Monte-Carlo) = 50 000</li>
+				<li>M (nombre de simulations de Monte-Carlo) = 50 000</li>
+			</ul>
+		</div>
+		<div>
+			Paramètres à déterminer:
+			<ul>
 				<li>t (temps où calculer le prix du call) à déterminer</li>
-				<li>H (nombre de pas de temps utilisé pour simulé le sous-jacent jusqu'à l'instant t)
-					à déterminer</li>
+				<li>H (nombre de pas de temps utilisé pour simulé le sous-jacent jusqu'à l'instant t) à déterminer</li>
 			</ul>
 		</div>
 		<p>
@@ -58,7 +62,7 @@
 				<li>T (maturité) = 1</li>
 				<li>sigma (volatilité) = 20%</li>
 				<li>r (taux sans risque) = 0,05%</li>
-				<li>M (Nombre de simulations de Monte-Carlo) = 50 000</li>
+				<li>M (nombre de simulations de Monte-Carlo) = 50 000</li>
 				<li>t (temps où calculer le delta du call) à déterminer</li>
 				<li>H (nombre de pas de temps utilisé pour simulé le sous-jacent jusqu'à l'instant t)
 					à déterminer</li>
@@ -89,15 +93,15 @@
 				<li>T (maturité) = 1</li>
 				<li>sigma (volatilité) = 20%</li>
 				<li>r (taux sans risque) = 0,05%</li>
-				<li>M (Nombre de simulations de Monte-Carlo) = 50 000</li>
-				<li>samples (Nombre de simulations) à déterminer</li>
+				<li>M (nombre de simulations de Monte-Carlo) = 50 000</li>
+				<li>samples (nombre de simulations) à déterminer</li>
 			</ul>
 		</div>
 		<p>
 			<asp:TextBox ID="TextBox5" runat="server" Width="40px">samples</asp:TextBox>
 			<asp:Button ID="Button3" runat="server" OnClick="Button3_Click" Text="Go" />
-			<asp:Label ID="Label7" runat="server" Text="Variation moyenne"></asp:Label>
-			<asp:Label ID="Label8" runat="server" Text="Spread max"></asp:Label>
+			<asp:Label ID="Label7" runat="server" Text="Variation moyenne" BorderStyle="Solid" BorderWidth="1px"></asp:Label>
+			<asp:Label ID="Label8" runat="server" Text="Spread max" BorderStyle="Solid" BorderWidth="1px"></asp:Label>
 		</p>
 	</div>
 	<div style="border-style: solid; padding: 10px">
@@ -115,15 +119,15 @@
 				<li>T (maturité) = 1</li>
 				<li>sigma (volatilité) = 20%</li>
 				<li>r (taux sans risque) = 0,05%</li>
-				<li>M (Nombre de simulations de Monte-Carlo) = 50 000</li>
-				<li>samples (Nombre de simulations) à déterminer</li>
+				<li>M (nombre de simulations de Monte-Carlo) = 50 000</li>
+				<li>samples (nombre de simulations) à déterminer</li>
 			</ul>
 		</div>
 		<p>
 			<asp:TextBox ID="TextBox6" runat="server" Width="40px">samples</asp:TextBox>
 			<asp:Button ID="Button4" runat="server" OnClick="Button4_Click" Text="Go" />
-			<asp:Label ID="Label9" runat="server" Text="Variation moyenne"></asp:Label>
-			<asp:Label ID="Label10" runat="server" Text="Spread max"></asp:Label>
+			<asp:Label ID="Label9" runat="server" Text="Variation moyenne" BorderStyle="Solid" BorderWidth="1px"></asp:Label>
+			<asp:Label ID="Label10" runat="server" Text="Spread max" BorderStyle="Solid" BorderWidth="1px"></asp:Label>
 		</p>
 	</div>
 	<div style="border-style: solid; padding: 10px">
@@ -138,13 +142,15 @@
 				<li>T (maturité) = 1</li>
 				<li>sigma (volatilité) = 20%</li>
 				<li>r (taux sans risque) = 0,05%</li>
-				<li>M (Nombre de simulations de Monte-Carlo) = 50 000</li>
+				<li>M (nombre de simulations de Monte-Carlo) = 50 000</li>
+				<li>H (nombre de date de rebalancement) à déterminer (multiple de 10)</li>
 			</ul>
 		</div>
 		<p>
+			<asp:TextBox ID="TextBox7" runat="server" Width="40px">H</asp:TextBox>
 			<asp:Button ID="Button5" runat="server" OnClick="Button5_Click" Text="Go" />
-			<asp:Label ID="Label11" runat="server" Text="P&L"></asp:Label>
-			<asp:Label ID="Label12" runat="server" Text="P&L théorique"></asp:Label>
+			<asp:Label ID="Label11" runat="server" Text="P&L" BorderStyle="Solid" BorderWidth="1px"></asp:Label>
+			<asp:Label ID="Label12" runat="server" Text="P&L théorique" BorderStyle="Solid" BorderWidth="1px"></asp:Label>
 	</div>
 	<div>
 		<div style="float: left">
@@ -167,5 +173,5 @@
 			</asp:Chart>
 		</div>
 	</div>
-	</p>
+	&nbsp;</p>
 </asp:Content>

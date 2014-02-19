@@ -138,6 +138,7 @@ void Computations::compute_price_call_samples(double &max, double &var, double S
 	}
 	var = fabs(mean-mean_th)/mean_th*100.;
 	pnl_mat_free(&past);
+	pnl_rng_free(&rng);
 }
 
 void Computations::compute_delta_call_samples(double &max, double &var, double S0, double K, double sigma, double r, double T, int N, int M, int samples){
@@ -189,6 +190,9 @@ void Computations::compute_delta_call_samples(double &max, double &var, double S
 	}
 	var = fabs(mean-mean_th)/mean_th*100.;
 	pnl_mat_free(&past);
+	pnl_vect_free(&delta);
+	pnl_vect_free(&ic_delta);
+	pnl_rng_free(&rng);
 }
 
 void Computations::compute_couv_call(double &pl, double &plt, double *summary, double S0, double K, double sigma, double r, double T, int N, int H, int M){
@@ -227,4 +231,7 @@ void Computations::compute_couv_call(double &pl, double &plt, double *summary, d
 			summary[++compteur] = MGET(summaryV, i, d);
 		}
 	}
+	pnl_rng_free(&rng);
+	pnl_mat_free(&past);
+	pnl_mat_free(&summaryV);
 }
