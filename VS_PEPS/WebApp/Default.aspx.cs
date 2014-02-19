@@ -65,8 +65,10 @@ namespace WebApp
 
 		protected void Button5_Click(object sender, EventArgs e)
 		{
+			int H = int.Parse(TextBox7.Text);
+
 			WrapperClass wc = new WrapperClass();
-			wc.getCouvCallEuro(100, 100, 0.2, 0.05, 1, 10, 50, 50000);
+			wc.getCouvCallEuro(100, 100, 0.2, 0.05, 1, 10, H, 50000);
 
 			Label11.Text = Math.Round(wc.getPL(), 4).ToString();
 			Label12.Text = Math.Round(wc.getPLT(), 4).ToString();
@@ -93,7 +95,7 @@ namespace WebApp
 			row_title.Cells.Add(cell_6);
 			Table1.Rows.Add(row_title);
 			int compteur = 0;
-			for (int i = 0; i < 51; i++)
+			for (int i = 0; i < H+1 ; i++)
 			{
 				TableRow row = new TableRow();
 				for (int d = 0; d < 6; d++)

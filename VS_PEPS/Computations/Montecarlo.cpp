@@ -311,7 +311,6 @@ void MonteCarlo::couv(PnlMat *past, double &pl, double &plTheorique, int H, doub
 	mod_->simul_market(past, H, T, rng);
 	double r = mod_->get_r();
 	int size = opt_->get_size();
-	int timeStep = opt_->get_timeStep();
 	double timeH = T/H;
 
 	double delta_th, delta_th2;
@@ -325,8 +324,6 @@ void MonteCarlo::couv(PnlMat *past, double &pl, double &plTheorique, int H, doub
 	PnlVect* past_extract = pnl_vect_create(H+1);
 	//S: vecteur contenant le prix dusous-jacent à un instant donné
 	PnlVect* S = pnl_vect_create(size);
-	//result: vecteur contenant le résultat de la soustraction entre delta1 et delta2
-	PnlVect* result;
 	PnlVect* pF = pnl_vect_create(H+1);
 	PnlVect* pFT = pnl_vect_create(H+1);
 
@@ -390,28 +387,25 @@ void MonteCarlo::couv(PnlMat *past, double &pl, double &plTheorique, int H, doub
 		printf("%f ", delta_th); pnl_vect_print(delta1); 
 		printf("\n");*/
 
-		result = pnl_vect_copy(delta1);
+		PnlVect* result = pnl_vect_copy(delta1);
 		pnl_vect_minus_vect(result, delta2);
 		result_t = delta_th - delta_th2;
 
 		LET(pF, i) = GET(pF,i-1) * exp(r*T/H) - pnl_vect_scalar_prod(result , S);
 		LET(pFT, i) = GET(pFT, i-1) * exp(r*T/H) - result_t * GET(S, 0);
 		
+		pnl_vect_free(&result);
 		pnl_vect_free(&delta2);
 	}
 	//Calcul de l'erreur de couverture
 	pl = GET(pF, H) + pnl_vect_scalar_prod(delta1, S) - prix;
 	plTheorique = GET(pFT, H) + delta_th*GET(S, 0) - prix_th;
 
-	PnlMat* final = pnl_mat_create(H+1, 2);
-	pnl_mat_set_col(final, pFT, 0);
-	pnl_mat_set_col(final, pF, 1);
-	
-	//pnl_mat_print(final);
-
-	pnl_vect_free(&pF);
-	pnl_vect_free(&S);
 	pnl_vect_free(&delta1);
 	pnl_vect_free(&ic_vect);
+	pnl_mat_free(&past_sub);
 	pnl_vect_free(&past_extract);
+	pnl_vect_free(&S);
+	pnl_vect_free(&pF);
+	pnl_vect_free(&pFT);
 }
