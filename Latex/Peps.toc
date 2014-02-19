@@ -1,38 +1,41 @@
 \select@language {french}
-\contentsline {section}{\numberline {1}Introduction}{3}
-\contentsline {section}{\numberline {2}D\IeC {\'e}finition}{3}
-\contentsline {section}{\numberline {3}Analyse des flux financiers du produit}{7}
-\contentsline {subsection}{\numberline {3.1}Description du produit}{7}
-\contentsline {subsection}{\numberline {3.2}Flux envisageables du produit}{7}
-\contentsline {subsection}{\numberline {3.3}Rentabilit\IeC {\'e}s esp\IeC {\'e}r\IeC {\'e}es du produit}{10}
-\contentsline {subsection}{\numberline {3.4}Expression analytique des flux}{10}
-\contentsline {section}{\numberline {4}Clients vis\IeC {\'e}s}{11}
-\contentsline {section}{\numberline {5}Analyse des risques du produit}{13}
-\contentsline {subsection}{\numberline {5.1}Risques pour la Banque}{13}
-\contentsline {subsection}{\numberline {5.2}Risques pour le d\IeC {\'e}tenteur}{15}
-\contentsline {subsection}{\numberline {5.3}Synth\IeC {\`e}se des risques}{16}
-\contentsline {section}{\numberline {6}Corr\IeC {\'e}lation entre les indices}{17}
-\contentsline {section}{\numberline {7}Mod\IeC {\`e}les Math\IeC {\'e}matiques}{19}
-\contentsline {subsection}{\numberline {7.1}Mod\IeC {\'e}lisation des indices}{19}
-\contentsline {subsubsection}{\numberline {7.1.1}Mod\IeC {\`e}le de Black-Scholes}{19}
-\contentsline {subsubsection}{\numberline {7.1.2}Mod\IeC {\`e}le de Merton}{20}
-\contentsline {subsubsection}{\numberline {7.1.3}Mod\IeC {\`e}le de Heston}{20}
-\contentsline {subsubsection}{\numberline {7.1.4}Choix du mod\IeC {\`e}le et validit\IeC {\'e} du mod\IeC {\`e}le de Black-Scholes pour les indices}{20}
-\contentsline {subsection}{\numberline {7.2}Mod\IeC {\'e}lisation de la volatilit\IeC {\'e}}{22}
-\contentsline {subsubsection}{\numberline {7.2.1}Volatilit\IeC {\'e} historique}{23}
-\contentsline {subsubsection}{\numberline {7.2.2}Volatilit\IeC {\'e} implicite}{23}
-\contentsline {subsubsection}{\numberline {7.2.3}Choix du mod\IeC {\`e}le}{23}
-\contentsline {subsection}{\numberline {7.3}Mod\IeC {\'e}lisation des taux d'int\IeC {\'e}r\IeC {\^e}ts}{24}
-\contentsline {subsubsection}{\numberline {7.3.1}Mod\IeC {\`e}les \IeC {\`a} un facteur}{24}
-\contentsline {subsubsection}{\numberline {7.3.2}Mod\IeC {\`e}les \IeC {\`a} deux facteurs}{25}
-\contentsline {subsubsection}{\numberline {7.3.3}Mod\IeC {\`e}les de Heath-Jarrow-Morton}{26}
-\contentsline {subsubsection}{\numberline {7.3.4}Retrouver le taux zero-coupon}{26}
-\contentsline {subsubsection}{\numberline {7.3.5}Choix du mod\IeC {\`e}le}{27}
-\contentsline {subsection}{\numberline {7.4}Mod\IeC {\'e}lisation des taux de changes}{27}
-\contentsline {section}{\numberline {8}Analyse logicielle}{27}
-\contentsline {subsection}{\numberline {8.1}Cahier des charges}{27}
-\contentsline {subsection}{\numberline {8.2}Architecture logiciel globale}{28}
-\contentsline {subsection}{\numberline {8.3}Architecture d\IeC {\'e}taill\IeC {\'e}e}{30}
-\contentsline {subsection}{\numberline {8.4}Sp\IeC {\'e}cifications}{31}
-\contentsline {section}{\numberline {9}Annexes}{36}
-\contentsline {subsection}{\numberline {9.1}Pseudo code pour la valeur du flux vers\IeC {\'e} en t}{36}
+\contentsline {section}{\numberline {1}Introduction}{4}
+\contentsline {section}{\numberline {2}D\IeC {\'e}finition}{4}
+\contentsline {section}{\numberline {3}Analyse des flux financiers du produit}{8}
+\contentsline {subsection}{\numberline {3.1}Description du produit}{8}
+\contentsline {subsection}{\numberline {3.2}Flux envisageables du produit}{8}
+\contentsline {subsection}{\numberline {3.3}Rentabilit\IeC {\'e}s esp\IeC {\'e}r\IeC {\'e}es du produit}{11}
+\contentsline {subsection}{\numberline {3.4}Expression analytique des flux}{11}
+\contentsline {section}{\numberline {4}Clients vis\IeC {\'e}s}{12}
+\contentsline {section}{\numberline {5}Analyse des risques du produit}{14}
+\contentsline {subsection}{\numberline {5.1}Risques pour la Banque}{14}
+\contentsline {subsection}{\numberline {5.2}Risques pour le d\IeC {\'e}tenteur}{16}
+\contentsline {subsection}{\numberline {5.3}Synth\IeC {\`e}se des risques}{17}
+\contentsline {section}{\numberline {6}Corr\IeC {\'e}lation entre les indices}{18}
+\contentsline {section}{\numberline {7}Mod\IeC {\`e}les Math\IeC {\'e}matiques}{20}
+\contentsline {subsection}{\numberline {7.1}Mod\IeC {\'e}lisation des indices}{20}
+\contentsline {subsubsection}{\numberline {7.1.1}Mod\IeC {\`e}le de Black-Scholes}{20}
+\contentsline {subsubsection}{\numberline {7.1.2}Mod\IeC {\`e}le de Merton}{21}
+\contentsline {subsubsection}{\numberline {7.1.3}Mod\IeC {\`e}le de Heston}{21}
+\contentsline {subsubsection}{\numberline {7.1.4}Choix du mod\IeC {\`e}le et validit\IeC {\'e} du mod\IeC {\`e}le de Black-Scholes pour les indices}{21}
+\contentsline {subsection}{\numberline {7.2}Mod\IeC {\'e}lisation de la volatilit\IeC {\'e}}{23}
+\contentsline {subsubsection}{\numberline {7.2.1}Volatilit\IeC {\'e} historique}{24}
+\contentsline {subsubsection}{\numberline {7.2.2}Volatilit\IeC {\'e} implicite}{24}
+\contentsline {subsubsection}{\numberline {7.2.3}Choix du mod\IeC {\`e}le}{24}
+\contentsline {subsection}{\numberline {7.3}Mod\IeC {\'e}lisation des taux d'int\IeC {\'e}r\IeC {\^e}ts}{25}
+\contentsline {subsubsection}{\numberline {7.3.1}Mod\IeC {\`e}les \IeC {\`a} un facteur}{25}
+\contentsline {subsubsection}{\numberline {7.3.2}Mod\IeC {\`e}les \IeC {\`a} deux facteurs}{26}
+\contentsline {subsubsection}{\numberline {7.3.3}Mod\IeC {\`e}les de Heath-Jarrow-Morton}{27}
+\contentsline {subsubsection}{\numberline {7.3.4}Retrouver le taux zero-coupon}{27}
+\contentsline {subsubsection}{\numberline {7.3.5}Choix du mod\IeC {\`e}le}{28}
+\contentsline {subsection}{\numberline {7.4}Mod\IeC {\'e}lisation des taux de changes}{28}
+\contentsline {section}{\numberline {8}Th\IeC {\'e}orie de la couverture}{29}
+\contentsline {subsection}{\numberline {8.1}Le cadre de Black-Scholes constant}{29}
+\contentsline {subsection}{\numberline {8.2}Vers une modification des param\IeC {\`e}tres?}{31}
+\contentsline {section}{\numberline {9}Analyse logicielle}{33}
+\contentsline {subsection}{\numberline {9.1}Cahier des charges}{33}
+\contentsline {subsection}{\numberline {9.2}Architecture logicielle globale}{34}
+\contentsline {subsection}{\numberline {9.3}Architecture d\IeC {\'e}taill\IeC {\'e}e}{35}
+\contentsline {subsection}{\numberline {9.4}Sp\IeC {\'e}cifications}{37}
+\contentsline {section}{\numberline {10}Annexes}{42}
+\contentsline {subsection}{\numberline {10.1}Pseudo code pour la valeur du flux vers\IeC {\'e} en t}{42}

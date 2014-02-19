@@ -726,7 +726,6 @@ $$ \frac{dP_t}{P_t} = \mu dt + \sigma U \sqrt{dt} $$
 En posant $dW = U \sqrt{dt}$, on a $dW \rightarrow \mathcal{N}(0,\sqrt{dt})$ est un processus de Wiener. \\ \\
 On peut donc légitimement modéliser l'évolution de la valeur d'un indice boursier avec la méthode de Black-Scholes, en supposant que le cours de chacune des actions qui le composent suivent une dynamique de Black-Scholes.
 
-
 \subsection{Modélisation de la volatilité}
 L'un des paramètres les plus déterminants dans la modélisation des indices est la volatilité. Il faut donc être en mesure de modéliser cette volatilité afin de l'utiliser comme paramètre dans la modélisation des indices.\\ \\
 Plusieurs modèles existent :
@@ -857,6 +856,91 @@ Si les modèles HJM ou bi-factoriels permettent d'obtenir des courbes beaucoup p
 Le produit Playlist fait intervenir des sous-jacents qui sont cotés en devise étrangère. La couverture sur ces produits est donc soumise à l'évolution des taux de changes.
 Nos connaissances actuelles en la matière de nous permettent pas de choisir un modèle de taux de change sophistiqué. En revanche, nous savons que le modèle le plus simple, qui sera implémenté dans la première version, qui consiste à considérer le taux de change constant, n'apporte aucune valeur ajoutée à la modélisation. Nous nous bornerons donc dans un premier temps à l'approximation qui consiste à considérer que tous les sous-jacents sont exprimés en devise domestique.
 
+\newpage
+\section{Théorie de la couverture}
+Dans cette partie, nous aborderons les différentes étapes qui permette de valider théoriquement la couverture du gérant du fond. Rappelons au préalable que cette couverture se fait dans le cadre d'un modèle. Ici nous avons opté dans un premier temps pour une couverture en dite en delta neutre, dans le cas d'un modèle de Black-Scholes, avec taux sans risque et volatilité des quatre sous-jacents constante.
+
+\subsection{Le cadre de Black-Scholes constant}
+
+On suppose donc que l'évolution des indices suit une dynamique de Black-Scholes. On va s'intéresser aux actifs dérivés d'indices, en déterminant leur prix, et en trouvant une stratégie pour se couvrir. \\ \\
+On se place dans les hypothèses du modèle de Black-Scholes, sous la probabilité $\mathbb{P} $ sous $( \Omega , F_T ) $ . On note $\widetilde{S_{t}}$ l'actif actualisé :
+$$\widetilde{S_{t}} = \frac{S_{t}}{S_{t}^0} = e^{-rt}S_{t} $$
+avec $S_{t}^0$ l'actif sans risque, de dynamique  $ dS_{t}^0 = rS_{t}^{0}dt $ \\ \\
+On applique la formule d'Itô à l'actif actualisé :
+$$ d \widetilde{S_{t}} = \frac{1}{S_{t}^0}dS_{t} + S_{t}d \left(\frac{1}{S_{t}^0} \right) + d \left\langle S, \frac{1}{S^0} \right\rangle_{t} = \widetilde{S_{t}} \left[ (\mu - r)dt + \sigma dW_{t} \right] 	$$ \\
+En notant  $\lambda = \frac{\mu - r}{\sigma}$ et $ \widehat{W_{t}} = W_{t} + \lambda t $ on trouve
+$$ d \widetilde{S_{t}} = \sigma \widetilde{S_{t}} d \widehat{W_{t}} $$ \\
+On remarque donc que si le processus $ \widehat{W_{t}} $ est un mouvement brownien, alors l'actif actualisé $ \widetilde{S_t} $ est une martingale. \\ \\
+En appliquant le Théorème de Girsanov, on montre qu'il existe une probabilité $ \mathbb{Q} $ sur $ ( \Omega , F_{T} ) $ , équivalente à $ \mathbb{P} $ et définie par la densité de Radon-Nikodym suivante :
+$$ Z_{T} = \frac{d\mathbb{Q}}{d\mathbb{P}}_{\mid_{T}} = e^{-\lambda W_{T} - \frac{\lambda^2}{2}T}  	$$
+sous laquelle le processus $ \widehat{W_{t}} = W_{t} + \lambda t $  est un Mouvement Brownien sur [0,T]. \\
+On vient donc de montrer qu'en se plaçant sous cette probabilité $ \mathbb{Q} $ , le prix des actifs actualisé est une martingale. \\ \\ \\
+On introduit maintenant la notion de portefeuille autofinancé. On note $ X_{t} $ la valeur à l'instant t d'un portefeuille composé d'une quantité $ \Phi_t $ d'actif risqué et de $ \Phi_{t}^0 $ d'actif sans risque. On a :
+$$ X_t = \Phi_{t}^0 S_{t}^0  + \Phi_t S_{t}  $$ \\
+On appelle autofinancement le fait que la variation de la valeur du portefeuille soit égale à la variation de la valeur des actifs multipliée par la quantité d'actis détenus. On écrit donc la condition d'autofinancement de la manière suivante :
+$$ dX_t = \Phi_{t}^0 dS_{t}^0  + \Phi_t dS_{t}  $$ \\
+Si on veut actualiser la valeur du portefeuille, on obtient, en utilisant la formule d'intégration par partie :
+$$ d(S_{t}^0 X_t)  = \Phi_{t} d(S_{t}^0 S_{t}) $$
+Ce qui donne, en se plaçant sous la probabilité risque-neutre $ \mathbb{Q} $ introduite plus haut :
+$$ d \widetilde{X_{t}} = \sigma \Phi_t \widetilde{S_t} d \widehat{W_t}  $$
+Si $ ( \Phi_t )_{0<t<T} $ vérifie la condition d'intégrabilité suivante
+$$ \mathbb{E}_{\mathbb{Q}} \left [ \int_{0}^T \mid \Phi_t \widetilde{S_t} \mid^2 dt \right ] < \infty  $$
+alors $ \widetilde{X} $ est une martingale sous $ \mathbb{Q} $ , et donc :
+$$ X_t = e^{rt} \widetilde{X_t} = e^{rt} \mathbb{E}_{\mathbb{Q}} \left [ \widetilde{X_T} \mid F_t \right ] = e^{rt} \mathbb{E}_{\mathbb{Q}} \left [ e^{-rT} X_T \mid F_t \right ] = e^{-r(T-t)} \mathbb{E}_{\mathbb{Q}} \left [ X_T \mid F_t \right ]	$$
+On vient de montrer que la valeur en t de toute stratégie autofinancée respectant les conditions énoncées plus haut, sous la probabilité $ \mathbb{Q} $ et de flux final $ X_T = h(T) $ est :
+$$ X_t = e^{-r(T-t)} \mathbb{E}_{\mathbb{Q}} \left [ h(T) \mid F_t \right ]  	$$ \\ \\
+Dans le modèle de Black-Scholes, la valeur de l'actif en t est :
+$$ S_t = S_0 e^{  ( r - \frac{\sigma^2}{2} ) t - \sigma W_t}  	$$
+On en déduit que
+$$ S_T = S_t e^{ ( r - \frac{\sigma^2}{2} ) (T-t) - \sigma (W_T - W_t) } 	$$
+donc l'espérance conditionnelle se réécrit :
+$$ e^{-r(T-t)} \mathbb{E}_{\mathbb{Q}} \left [ h(T) \mid F_t \right ] = e^{-r(T-t)} \mathbb{E}_{\mathbb{Q}} \left [ h(S_t e^{ ( r - \frac{\sigma^2}{2} ) (T-t) - \sigma (W_T - W_t) }) \mid F_t \right ] $$
+Or $ S_t $ est $ F_t $-mesurable et la variable aléatoire $ W_T - W_t $ est indépendante de $ F_t $.
+\\
+On en déduit donc qu'il existe une fonction v : $ [0,T]  \times \mathbb{R}^+ \to \mathbb{R} $ telle que
+$$ v(t,S_t) = e^{-r(T-t)} \mathbb{E}_{\mathbb{Q}} \left [ h(S_T) \mid F_t \right ] 	$$
+et c'est la fonction suivante :
+$$ v : (t,x) \to  e^{-r(T-t)} \mathbb{E}_{\mathbb{Q}} \left [ h \left ( x e^{ ( r - \frac{\sigma^2}{2} ) (T-t) - \sigma (W_T - W_t) } \right ) \right ]   	$$
+ \\ \\
+On définit un marché complet comme un marché où  $ \forall h \in \L^2 (\Omega, F_T) $, un produit payant h(T) en T peut être couvert par un portefeuille admissible autofinancé. On sait par le théorème fondamental de valorisation des actifs financiers qu'un marché est complet si et seulement si la mesure de probabilité risque neutre est unique. On va supposer que c'est le cas ici.
+\\ \\
+On cherche donc maintenant à se couvrir, c'est à dire trouver un portefeuille admissible et autofinancé qui réplique cette fonction v. On pose donc
+$$ X_t = \Phi_{t}^0 S_{t}^0  + \Phi_t S_{t}  $$
+Le portefeuille est autofinancé, donc
+$$ dX_t = \Phi_{t}^0 dS_{t}^0  + \Phi_t dS_{t} $$
+En remplaçant dans l'équation $ dS_{t}^0 = r S_{t}^0 dt $ , on trouve
+$$ dX_t = r(X_t - \Phi_t S_{t} )dt + \Phi_t dS_{t}  $$
+On applique la formule d'Itô à v :
+$$ dv(t,S_t) = \frac{\partial v}{\partial t}dt + \frac{\partial v}{\partial S}dS_t + \frac{1}{2} \frac{\partial^2 v}{\partial S^2} d \langle S \rangle_t   $$
+Avec la formule de Black-Scholes,
+$$ dv(t,S_t) = \sigma S_t \frac{\partial v}{\partial S} dW_t + \left (  \frac{\partial v}{\partial t} + \mu S_t   \frac{\partial v}{\partial S} +  \frac{1}{2} \sigma^2 S_{t}^2 \frac{\partial^2 v}{\partial S^2} \right ) dt	$$
+Pour que $ dX_t = dv(t,S_t) $ , nécessairement
+$$ \Phi_t = \frac{\partial v(t,S_t)}{\partial S} $$
+$$ rv(t,S_t) = \frac{\partial v}{\partial t} + \mu S  \frac{\partial v}{\partial S} +  \frac{1}{2} \sigma^2 S^2 \frac{\partial^2 v}{\partial S^2} $$ \\
+Si une fonction quelconque $ v(t,S_t) $ satisfait la dernière équation, et c'est le cas de la fonction v donnée plus haut, alors le portefeuille $ X_t $ avec $ \Phi_t = \frac{\partial v(t,S_t)}{\partial S} $ et $ \Phi_{t}^0  = \frac{1}{S_{t}^0} (v(t,S_t) - \Phi_t S_t )$ d'actif sans risque est autofinancé, et réplique le produit financier payant $ h(S_T) $ à l'échéance T.  \\
+C'est ce qu'on appelle la couverture en Delta.
+
+\subsection{Vers une modification des paramètres?}
+Le cadre du modèle de Black-Scholes constant est assez restrictif. Le calcul des deltas de couverture se fera dans notre application par simulation de Monte Carlo, ce qui suppose de simuler l’évolution des cours futurs des sous-jacents. Ainsi, une remarque vient alors naturellement à l'esprit : les années passant, la connaissance des paramètres, notamment la volatilité historique du sous-jacents s’améliore, pourquoi alors ne pas simuler ces mêmes trajectoires historiques avec des paramètres nouveaux, recalibrés sur une plage de temps plus récente? On collerait alors plus à la réalité de l'évolution futur du sous-jacents.\\
+
+En réalité, une telle supposition ne trouve aucune justification théorique et va même à l'encontre du raisonnement présenté dans la partie précédente. Montrons ceci dans le cadre d'un produit dérivé sur un seul sous-jacent, donc la dynamique s’écrit : 
+\\$$ dS = \mu Sdt + \sigma SdW $$  \\
+Pour décrire le portefeuille $V$ de réplication du payoff du produit, on souhaite se placer sous une mesure de probabilités $\mathbb{Q}$ qui fait en sorte que la valeur du portefeuille actualisé est une martingale. Cette mesure de probabilités $\mathbb{Q}$ s'obtient à partir des équations de marché. En effet, $\mathbb{Q}$ est définie à partir de sa dérivée de Radon-Nykodym :\\
+$$\frac{d\mathbb{Q}}{d\mathbb{P}}= \textbf{exp}(\lambda * W_{t} - \frac{\lambda^{2}}{2}t) $$ \\
+
+avec $\lambda$ solution de $$ \sigma * \lambda + r = \mu $$ \\
+
+Dès lors, on se rend compte que si on change de valeur de volatilité ($\sigma$) pour la simulation, le portefeuille actualisé ne sera plus une martingale sous $\mathbb{Q}$. En fait, changer de volatilité revient à modifier l'évaluation que l'on fait du prix du produit, et à commencer une nouvelle couverture sous une nouvelle de mesure de probabilités : constituer un nouveau portefeuille de réplication. Rien ne dit que le prix que l'on trouve soit égale à celui obtenu précédemment (il est même forcement différent). Dès lors, si on ne veut pas réajuster la valeur du portefeuille par un réinvestissement qui pourrai occasionner une perte de la propriété d'auto-financement supposée dans la partie précédente, on enregistre une erreur de couverture immédiatement, qui perdurera durant tout le restant de la vie du produit dérivé.\\
+
+Illustrons ce propos dans un cas simple : le cas d'un call sur un sous-jacent. On suppose qu'on rebalance notre portefeuille aujourd'hui ($t_{1}$) et demain ($t_{2}$) en ayant changé de volatilité, ayant $\sigma_{1}<\sigma_{2}$. Il se trouve que $S_{t_{1}}=S_{t_{2}}$. On a néanmoins, d'après les propriétés du call : \\
+$$C_{1}<C_{2}$$\\ et $$\Delta_{1}<\Delta_{2}$$ \\
+Pour respecter la couverture, on doit investir plus dans le sous-jacent, sachant que notre portefeuille n'a pas changé de valeur, ou très peu ( composition de l'actif sans risque pendant dt), et que si on apporte pas la différence, le portefeuille n'aura plus la valeur du prix calculé (C_{2}).\\
+
+En conclusion, il sera nécessaire dans notre démarche de couverture, de conserver les paramètres évalués avant le début de la simulation, et ce tout au long de celle-ci.
+  
+
+
+
 \section{Analyse logicielle}
 
 \subsection{Cahier des charges}
@@ -874,7 +958,7 @@ On laissera la possibilité au gestionnaire de se couvrir différemment de ce qu
 \indent \\
 \indent Enfin, il aura également la possibilité d'accéder à une simulation des cours futurs et de l'erreur commise à maturité pour une trajectoire particulière en supposant qu'il ait suivi aujourd'hui, et chaque fois qu'elles lui auront été proposées, les recommendations de rebalancement. Il s'agit de le convaincre du bien fondé de ces propositions.
 
-\subsection{Architecture logiciel globale}
+\subsection{Architecture logicielle globale}
 
 Voici une première schématisation de l'architecture de notre produit.
 
@@ -1014,6 +1098,13 @@ Enfin le gestionnaire à la possibilité d'entrer lui même la composition de so
 \end{center}
 
 Une pop up s'affichera alors pour confirmer la bonne prise en compte de l'information, comme on peut le voir ci dessous.
+
+
+%On fait ainsi apparaître dans l'onglet en haut à gauche, la date à laquelle à été prise la valeur liquidative de référence, la date actuelle ainsi que la date d'échéance prévu pour avoir une vision global de la chronologie du produit.\\
+%Nous faisons de plus apparaître le nombre de parts disponible à la base ainsi que le nombre de parts qui ont été acquise ainsi que les valeurs monétaires associées. Ceci permet de voir le taux d'acceptation du produit par le marché.\\
+%Le bloc situé en bas à droite permettra plutôt de voir l'évolution de la performance du produit ainsi on peut choisir la date de début ainsi que la date de fin, ce qui va nous permettre de visualiser l'évolution des différents indices concernés sur cette plage. Juste à côté nous afficherons la performance du fond sur cette plage.\\
+%Enfin le dernier bloc nous permet de choisir le modèle d'évolution des sous-jacents ce qui aura pour conséquence de modifier l'évolution des sous-jacents et ainsi la couverture proposée juste en dessous.
+%La couverture sera décrite par le nombre d'action vendue, correspondant aux nombres de parts vendues et le nombre de fois que l'on doit acheté chacun des indices. La couverture théorique donnera une composition du portefeuille précise, il sera proposé au gestionnaire une composition traitée en amont permettant de satisfaire aux parts minimales des actifs dans lesquelles il est possible d'investir. Un traitement optimisé de ces approximations pourra être ajouté en extension.  On en déduiera ainsi la valeur liquidative en dessous.
 
 
 \section{Annexes}

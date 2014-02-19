@@ -224,6 +224,7 @@ void Test::compute_couv(int H, bool output){
 		cout << "P&L calculé: "<< plTheorique/prix_th << endl;
 		cout << "  Date" << "     Cours" << "     Delta" << "   Act buy" << "  Delta th" << " Act buy th" << endl;
 		pnl_mat_print(summary);
+
 	}
 }
 double Test::theo_price(double S, double K, double r, double T, double sigma){
