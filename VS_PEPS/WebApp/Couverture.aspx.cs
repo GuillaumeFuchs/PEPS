@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
+using Wrapper;
 
 namespace WebApp
 {
@@ -13,5 +14,52 @@ namespace WebApp
         {
 
         }
+
+		protected void Button5_Click(object sender, EventArgs e)
+		{
+			int H = int.Parse(TextBox7.Text);
+
+			WrapperClass wc = new WrapperClass();
+			wc.getCouvCallEuro(100, 100, 0.2, 0.05, 1, 10, H, 50000);
+
+			Label11.Text = Math.Round(wc.getPL(), 4).ToString();
+			Label12.Text = Math.Round(wc.getPLT(), 4).ToString();
+
+			//TABLEAU
+			TableRow row_title = new TableRow();
+			TableCell cell_1 = new TableCell();
+			cell_1.Text = "Temps";
+			row_title.Cells.Add(cell_1);
+			TableCell cell_2 = new TableCell();
+			cell_2.Text = "Cours de l'action";
+			row_title.Cells.Add(cell_2);
+			TableCell cell_3 = new TableCell();
+			cell_3.Text = "Delta simulé";
+			row_title.Cells.Add(cell_3);
+			TableCell cell_4 = new TableCell();
+			cell_4.Text = "Actions achetées (selon delta simulé)";
+			row_title.Cells.Add(cell_4);
+			TableCell cell_5 = new TableCell();
+			cell_5.Text = "Delta théorique";
+			row_title.Cells.Add(cell_5);
+			TableCell cell_6 = new TableCell();
+			cell_6.Text = "Actions achetées (selon delta théorique)";
+			row_title.Cells.Add(cell_6);
+			Table1.Rows.Add(row_title);
+			int compteur = 0;
+			for (int i = 0; i < H + 1; i++)
+			{
+				TableRow row = new TableRow();
+				for (int d = 0; d < 6; d++)
+				{
+					TableCell cell = new TableCell();
+					cell.Text = Math.Round(wc.getSummary()[compteur], 4).ToString();
+					compteur++;
+					row.Cells.Add(cell);
+				}
+				Table1.Rows.Add(row);
+				Chart1.Series[0].Points.AddXY(Math.Round(wc.getSummary()[i * 6], 2), Math.Round(wc.getSummary()[i * 6 + 2], 2));
+			}
+		}
     }
 }

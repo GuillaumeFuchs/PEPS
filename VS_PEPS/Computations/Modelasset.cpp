@@ -39,6 +39,8 @@ ModelAsset::ModelAsset(int size, double r, double* rho, double* sigma, double* s
 		LET(spot_, i) = spot[i];
 		if (trend != NULL)
 			LET(trend_, i) = trend[i];
+		else
+			LET(trend_, i) = r;
 		pnl_mat_set_diag(Cho_, 1, i);
 	}
 	pnl_mat_chol(Cho_);
