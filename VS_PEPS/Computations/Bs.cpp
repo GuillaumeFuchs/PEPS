@@ -193,7 +193,7 @@ void Bs:: simul_market (PnlMat* past, int H, double T, PnlRng *rng){
 			MLET(past, d, i+1) = s;
 		}
 	}
-
+	
 	pnl_mat_free(&G);
 	pnl_vect_free(&grid);
 }

@@ -41,6 +41,7 @@ void Computations::compute_price_call(double &px, double &ic, double &pxBS, doub
 	}
 
 	PnlMat* past = pnl_mat_create(1, H+1);
+	
 	mod.simul_market(past, H, T, rng);
 	mc.price(past, t, px, ic);
 
