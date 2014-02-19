@@ -26,18 +26,18 @@ namespace WebApp
             Label4.Text = Math.Round(100 * (cp.Volatility[2]), 2).ToString() + " %";
             Label5.Text = Math.Round(100 * (cp.Volatility[3]), 2).ToString() + " %";
 
-            Table1.Rows[1].Cells[2].Text = Math.Round(100 * (cp.Corel[0, 1]), 2).ToString();
-            Table1.Rows[1].Cells[3].Text = Math.Round(100 * (cp.Corel[0, 2]), 2).ToString();
-            Table1.Rows[1].Cells[4].Text = Math.Round(100 * (cp.Corel[0, 3]), 2).ToString();
-            Table1.Rows[2].Cells[1].Text = Math.Round(100 * (cp.Corel[1, 0]), 2).ToString();
-            Table1.Rows[2].Cells[3].Text = Math.Round(100 * (cp.Corel[1, 2]), 2).ToString();
-            Table1.Rows[2].Cells[4].Text = Math.Round(100 * (cp.Corel[1, 3]), 2).ToString();
-            Table1.Rows[3].Cells[1].Text = Math.Round(100 * (cp.Corel[2, 0]), 2).ToString();
-            Table1.Rows[3].Cells[2].Text = Math.Round(100 * (cp.Corel[2, 1]), 2).ToString();
-            Table1.Rows[3].Cells[4].Text = Math.Round(100 * (cp.Corel[2, 3]), 2).ToString();
-            Table1.Rows[4].Cells[1].Text = Math.Round(100 * (cp.Corel[3, 0]), 2).ToString();
-            Table1.Rows[4].Cells[2].Text = Math.Round(100 * (cp.Corel[3, 1]), 2).ToString();
-            Table1.Rows[4].Cells[3].Text = Math.Round(100 * (cp.Corel[3, 2]), 2).ToString();
+            Table1.Rows[1].Cells[2].Text = Math.Round((cp.Corel[0, 1]), 2).ToString();
+            Table1.Rows[1].Cells[3].Text = Math.Round((cp.Corel[0, 2]), 2).ToString();
+            Table1.Rows[1].Cells[4].Text = Math.Round((cp.Corel[0, 3]), 2).ToString();
+            Table1.Rows[2].Cells[1].Text = Math.Round((cp.Corel[1, 0]), 2).ToString();
+            Table1.Rows[2].Cells[3].Text = Math.Round((cp.Corel[1, 2]), 2).ToString();
+            Table1.Rows[2].Cells[4].Text = Math.Round((cp.Corel[1, 3]), 2).ToString();
+            Table1.Rows[3].Cells[1].Text = Math.Round((cp.Corel[2, 0]), 2).ToString();
+            Table1.Rows[3].Cells[2].Text = Math.Round((cp.Corel[2, 1]), 2).ToString();
+            Table1.Rows[3].Cells[4].Text = Math.Round((cp.Corel[2, 3]), 2).ToString();
+            Table1.Rows[4].Cells[1].Text = Math.Round((cp.Corel[3, 0]), 2).ToString();
+            Table1.Rows[4].Cells[2].Text = Math.Round((cp.Corel[3, 1]), 2).ToString();
+            Table1.Rows[4].Cells[3].Text = Math.Round((cp.Corel[3, 2]), 2).ToString();
         }
 	}
 }
