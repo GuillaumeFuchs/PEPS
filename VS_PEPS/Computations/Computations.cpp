@@ -128,16 +128,14 @@ void Computations::compute_price_call_samples(double &max, double &var, double S
 
 		prix_th = (int)(prix_th*1000)/1000.;
 		prix = (int)(prix*1000)/1000.;
-
-		sspread = fabs(prix_th-prix);
 		mean += prix;
 		mean_th += prix_th;
 
-
+		sspread = fabs(prix_th-prix);
 		if (sspread > max)
 			max = sspread;
 	}
-	var = fabs(mean-mean_th)/mean_th*100.;
+	var = (fabs(mean-mean_th)/mean_th)*100.;
 	pnl_mat_free(&past);
 	pnl_rng_free(&rng);
 }
@@ -189,7 +187,7 @@ void Computations::compute_delta_call_samples(double &max, double &var, double S
 		if (sspread > max)
 			max = sspread;
 	}
-	var = fabs(mean-mean_th)/mean_th*100.;
+	var = (fabs(mean-mean_th)/mean_th)*100.;
 	pnl_mat_free(&past);
 	pnl_vect_free(&delta);
 	pnl_vect_free(&ic_delta);
