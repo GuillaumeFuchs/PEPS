@@ -104,12 +104,21 @@ Louis \textsc{Perfumo}
 \end{titlepage}
 \newpage
 
-On constatera dans un premier temps que l'objectif de cette interface n'était pas de commencer à mettre en place l'interface finale mais de présenter au mieux les résultats attendus pour la version beta. De plus après chacune des manipulations décrites ci dessous, on devra recharger l'application pour exécuter une nouvelle action. 
+On constatera dans un premier temps que l'objectif de cette interface n'était pas de commencer à mettre en place l'interface finale mais de présenter au mieux les résultats attendus pour la version beta. De plus après chacune des manipulations décrites ci dessous, on devra recharger l'application pour exécuter une nouvelle action. Enfin il est actuellement toujours nécessaire d'ouvrir le projet et de le compiler ainsi que de le l'exécuter pour avoir accès à l'application après avoir préalablement linké la PNL au projet.
 
 \section{Calcul du prix d'un call européen}
 
-Lorsque l'on déploie l'application, nous arrivons dans un premier temps sur l'onglet de simulation générale. Dans cette onglet, on peut distinguer un premier cadre, qui va nous permettre en entrant simplement le temps auquel on souhaite pricer ainsi que le nombre de date de rebalancement du calcul du sous jacent de recevoir le prix de cette option dont les paramètres sont stipulés juste au dessus, la largeur de l'intervalle de confiance à 95\% ainsi que le prix obtenu en utilisant la formule fermée associée à Black - Scholes.
+\indent Lorsque l'on déploie l'application, nous arrivons dans un premier temps sur l'onglet de simulation générale. Dans cette onglet, on peut distinguer un premier cadre, qui va nous permettre en entrant simplement le temps auquel on souhaite pricer ainsi que le nombre de date de rebalancement du calcul du sous jacent de recevoir le prix de cette option dont les paramètres sont stipulés juste au dessus, la largeur de l'intervalle de confiance à 95\% ainsi que le prix obtenu en utilisant la formule fermée associée à Black - Scholes.
 
+\begin{center}
+\begin{figure}[h!]
+    \caption{Calcul pour t=0.5 et 50 rebalancements}
+    \includegraphics[scale=0.45]{../test1.png}
+    \label{fig:PropProf}
+\end{figure}
+\end{center} 
+
+\indent Dans un second cas, nous avons la possibilité de calculer la valeur du delta en un temps t particulier que l'on va préciser ainsi que l'intervalle de confiance associé à cette valeur et le delta théorique obtenu avec la formule fermée après avoir préciser le nombre de dates de rebalancement du sous jacent. On peut alors visualiser les différentes composantes citées précédemment pour les paramètres que nous nous sommes fixés.
 
 \section{Communication avec la base de données}
 
