@@ -82,7 +82,7 @@
 		<p>
 			Calcul la variation moyenne entre le prix d'un call européen selon le modèle de
 			B&S avec la valeur simulé avec MC et la valeur théorique selon la formule fermée
-			de B&S avec un échantillon de taille samples et donne l'écart max. Les différents
+			de B&S à partir d'un échantillon de taille samples et donne l'écart max. Les différents
 			temps où sont calculés les deltas sont aléatoires.
 		</p>
 		<div>
@@ -108,7 +108,7 @@
 		<p>
 			Calcul la variation moyenne entre le delta d'un call européen selon le modèle de
 			B&S avec la valeur simulé avec MC et la valeur théorique selon la formule fermée
-			de B&S avec un échantillon de taille samples et donne l'écart max. Les différents
+			de B&S à partir d'un échantillon de taille samples et donne l'écart max. Les différents
 			temps où sont calculés les deltas sont aléatoires.
 		</p>
 		<div>
