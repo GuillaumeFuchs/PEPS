@@ -50,12 +50,12 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>C:\Users\Louis\Downloads\pnl\pnl-win32-1.6.0\include;C:\Users\Fuchsg\Documents\Visual Studio 2010\Projects\pnl-win32-1.6.0\include;C:\Users\guillaume\Downloads\pnl-win32-1.6.0\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\Louis\Downloads\pnl\pnl-win32-1.6.0\include;C:\Users\Fuchsg\Documents\Ensimag\pnl-win32-1.6.0\include;C:\Users\guillaume\Downloads\pnl-win32-1.6.0\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>C:\Users\Louis\Downloads\pnl\pnl-win32-1.6.0\lib;C:\Users\guillaume\Downloads\pnl-win32-1.6.0\lib;C:\Users\Fuchsg\Documents\Visual Studio 2010\Projects\pnl-win32-1.6.0\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>C:\Users\Louis\Downloads\pnl\pnl-win32-1.6.0\lib;C:\Users\guillaume\Downloads\pnl-win32-1.6.0\lib;C:\Users\Fuchsg\Documents\Ensimag\pnl-win32-1.6.0\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>libpnl.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
@@ -107,6 +107,9 @@
     <ClCompile Include="Performance.cpp" />
     <ClCompile Include="Playlist.cpp" />
     <ClCompile Include="Test.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ClassDiagram1.cd" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

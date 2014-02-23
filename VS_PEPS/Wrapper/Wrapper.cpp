@@ -34,11 +34,21 @@ namespace Wrapper {
 		this->vrD = varD;
 	}
 
-	void WrapperClass::getCouvCallEuro(double S0, double K, double sigma, double r, double T, int N, int H, int M){
-		double pal, palt;
-		pin_ptr<double> pdouble = &summary[0];
-		compute_couv_call(pal, palt, pdouble, S0, K, sigma, r, T, N, H, M);
+	void WrapperClass::getCouvCallEuro(int size, array<double> ^spot, double K, array<double> ^sigma, double r, array<double> ^coeff, array<double> ^rho, double T, int N, int H, int M){
+		double pal, execTime;
+		pin_ptr<double> pSummary = &summary[0];
+
+		pin_ptr<double> pSpot = &spot[0];
+		pin_ptr<double> pSigma = &sigma[0];
+		pin_ptr<double> pCoeff = &coeff[0];
+		pin_ptr<double> pRho = &rho[0];
+
+		//double* pSpot = spot;
+
+		compute_couv_call(pal, pSummary, size, pSpot, K, pSigma, r, pCoeff, pRho, T, N, H, M, execTime);
+
 		this->pl = pal;
-		this->plt = palt;
+		this->plt = 0.;
+		this->executionTime = execTime;
 	}
 }

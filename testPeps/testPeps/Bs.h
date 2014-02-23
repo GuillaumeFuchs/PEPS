@@ -58,13 +58,12 @@ class Bs : public ModelAsset {
 	 *
 	 * \param path (input) contient en input la trajectoire du sous-jacent
 	 * \param shift_path (output) contient la trajectoire path dont la composante d a ete shiftee par (1+h) a partir de la date t.
-	 * \param t (input) date a partir de laquelle on shift
 	 * \param h (input) pas de differences finies
 	 * \param d (input) indice du sous-jacent à shifter
-	 * \param timestep (input) pas de constatation du sous-jacent
+	 * \param indice (intput) indice dans path à partir duquel il faut shifter
 	 */
 	void shift_asset (PnlMat *_shift_path, const PnlMat *path,
-		int d, double h, double t, double timestep);
+		int d, double h, int indice);
 
 	/*!
 	 *

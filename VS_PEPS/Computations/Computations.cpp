@@ -194,39 +194,37 @@ void Computations::compute_delta_call_samples(double &max, double &var, double S
 	pnl_rng_free(&rng);
 }
 
-void Computations::compute_couv_call(double &pl, double &plt, double *summary, double S0, double K, double sigma, double r, double T, int N, int H, int M){
+void Computations::compute_couv_call(double &pl, double *summary, int size, double *spot, double K, double *sigma, double r, double *coeff, double *rho, double T, int N, int H, int M, double &execTime){
 	if (fmod((double)H, (double)N) > 0.0001){
 		return;
 	}
+	double plt;
 	pl = 0.;
-	plt = 0.;
 	
 	double prix, ic;
 
-	int const size = 1;
-	double spot[size] = {S0};
-	double sigmaV[size] = {sigma};
-	double coeff[size] = {1};
-
 	PnlRng *rng = pnl_rng_create(PNL_RNG_MERSENNE);
 	pnl_rng_sseed(rng, time(NULL));
-	Bs mod(size, r, NULL, sigmaV, spot, NULL);
+	Bs mod(size, r, rho, sigma, spot, NULL);
 	Basket opt(K, coeff, T, N, size);
 	MonteCarlo mc(&mod, &opt, rng, 0.01, M);
 
-	PnlMat* past = pnl_mat_create(1, H+1);
-	PnlMat* summaryV = pnl_mat_create(H+1, 6);
+	PnlMat* past = pnl_mat_create(size, H+1);
+	PnlMat* summaryV = pnl_mat_create(H+1, size*3+1);
+
+	float temps;
+    clock_t tbegin, tend;
+	tbegin = clock();
 	mc.couv(past, pl, plt, H, T, summaryV);
+	tend = clock();
+	execTime = (float)(tend-tbegin)/CLOCKS_PER_SEC;
 
 	mc.price(prix, ic);
-	double prix_th = Test::theo_price(100, 100, .05, 1, .2);
-
 	pl /= prix;
-	plt /= prix_th;
 
 	int compteur = -1;
 	for (int i = 0; i<H+1; i++){
-		for (int d = 0; d<6; d++){
+		for (int d = 0; d<(3*size+1); d++){
 			summary[++compteur] = MGET(summaryV, i, d);
 		}
 	}

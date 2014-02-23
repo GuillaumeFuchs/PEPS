@@ -144,12 +144,10 @@ void Bs::asset(PnlMat *path, double t, int N, double T, PnlRng *rng, const PnlVe
 }
 
 void Bs:: shift_asset (PnlMat *_shift_path, const PnlMat *path,
-	int d, double h, double t, double timestep){
+	int d, double h, int indice){
 		pnl_mat_clone(_shift_path, path);
-		for (int i=0; i<timestep+1; i++){
-			if (i>t){
-				MLET(_shift_path, d,i) =  (1+h)*MGET(path, d,i);
-			}
+		for (int i = indice; i < path->n; i++){
+			MLET(_shift_path, d,i) =  (1+h)*MGET(path, d,i);
 		}
 }
 
@@ -159,6 +157,7 @@ void Bs:: simul_market (PnlMat* past, int H, double T, PnlRng *rng){
 		pnl_mat_set_col(past, spot_, 0);
 		return;
 	}
+
 	//Temps: incrémentation pour chaque date de constation
 	double temps = T/H;
 	//s: valeur du sous-jacent à la date t_{i+1}
