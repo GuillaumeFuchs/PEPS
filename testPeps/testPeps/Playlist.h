@@ -11,7 +11,6 @@ class Playlist : public Option {
 
   private:
 	double strike_; /*! strike de l'option */ 
-	PnlVect *Coeff_; /*! payoff coefficients */
 	double r_;
 
   public:
@@ -22,7 +21,7 @@ class Playlist : public Option {
 	 * Constructeur par defaut de la classe Playlist
 	 */
 	Playlist();
-	Playlist(double strike, double* coeff, double T, int timeStep, int size, double r);
+	Playlist(double strike, double T, int timeStep, int size, double r, double* coeff);
 
 	/*!
 	 * \brief Destructeur
@@ -39,15 +38,6 @@ class Playlist : public Option {
 	 * \return le strike de l'option 
 	 */
 	double get_Strike() const;
-
-	/*!
-	 * \brief Accesseur de Coeff_
-	 *
-	 *  Acceder au vecteur des coefficients des payoff de l'option
-	 *
-	 * \return le vecteur des coefficients des payoff
-	 */
-	PnlVect * get_Coeff() const;
 	
 	double get_r() const;
 
@@ -59,16 +49,6 @@ class Playlist : public Option {
 	 * \param Strike: nouveau strike
 	 */
 	void set_Strike(double strike);
-
-	/*!
-	 * \brief Mutateur de Coeff_
-	 *
-	 * Modifie le vecteur des coefficients des payoff de l'option 
-	 *
-	 * \param Coeff: nouveau vecteur des coefficients des payoff
-	 */
-	void set_Coeff(PnlVect *Coeff);
-
 
 	void set_r(double r);
 	/*!

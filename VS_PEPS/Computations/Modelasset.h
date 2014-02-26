@@ -11,7 +11,7 @@ class ModelAsset {
   protected:
 	int size_; /*!< nombre d’actifs du modele */
 	double r_; /*!< taux d’interet */
-	double* rho_; /*!< parametre de correlation */
+	PnlVect* rho_; /*!< parametre de correlation */
 	PnlVect *sigma_; /*!< vecteur de volatilites */
 	PnlVect *spot_; /*!< valeurs initiales du sous-jacent */
 	PnlVect *trend_; /*!< taux utilise sous la probabilite historique */
@@ -60,7 +60,7 @@ class ModelAsset {
 	 *
 	 * \return le parametre de correlation du sous-jacent 
 	 */
-	double* get_rho() const;
+	PnlVect* get_rho() const;
  
 	/*!
 	 * \brief Accesseur de Sigma_
@@ -141,7 +141,7 @@ class ModelAsset {
 	 *
 	 * \param le nouveau parametre de correlation du sous-jacent 
 	 */
-	void set_rho(double* rho);
+	void set_rho(PnlVect* rho);
 
 	/*!
 	 * \brief Mutateur de Sigma_

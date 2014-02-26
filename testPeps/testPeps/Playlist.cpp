@@ -11,29 +11,19 @@ using namespace std;
 
 Playlist :: Playlist() : Option() {
   strike_ = 0;
-  Coeff_ = pnl_vect_new();
   r_ = 0;
 }
 
-Playlist::Playlist(double strike, double* coeff, double T, int timeStep, int size, double r) : Option(T, timeStep, size){
+Playlist::Playlist(double strike, double T, int timeStep, int size, double r, double *coeff) : Option(T, timeStep, size, coeff){
 	strike_ = strike;
-	Coeff_ = pnl_vect_create(size_);
-	for (int i = 0; i < size_; i++){
-		LET(Coeff_, i) = coeff[i];
-	}
 	r_ = r;
 }
 
 Playlist :: ~Playlist(){
-  pnl_vect_free(&Coeff_);
 }
 
 double Playlist :: get_Strike() const{
   return strike_;
-}
-
-PnlVect * Playlist :: get_Coeff() const{
-  return Coeff_;
 }
 
 double Playlist :: get_r() const{
@@ -42,10 +32,6 @@ double Playlist :: get_r() const{
 
 void Playlist :: set_Strike(double strike) {
   strike_ = strike;
-}
-
-void Playlist :: set_Coeff(PnlVect *Coeff) {
-  Coeff_ = Coeff;
 }
 
 void Playlist :: set_r(double r) {

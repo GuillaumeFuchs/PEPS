@@ -19,16 +19,21 @@ namespace WebApp
 		{
 			int H = int.Parse(TextBox7.Text);
 
-
 			int size = 4;
 			double[] spot = new double[] { 100, 80, 90, 120 };
 			double K = 100;
-			double[] sigma = new double[] { 0.7, 0.05, 0.2, 0.15 };
-
+			double[] sigma = new double[] { 0.3, 0.05, 0.2, 0.15 };
 			double r = 0.05;
 			double[] coeff = new double[] { .25, .25, .25, .25 };
-
 			double[] rho = new double[] { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 };
+
+			//int size = 1;
+			//double[] spot = new double[] { 100 };
+			//double K = 100;
+			//double[] sigma = new double[] { 0.2 };
+			//double r = 0.05;
+			//double[] coeff = new double[] { 1 };
+			//double[] rho = new double[] { 0.0 };
 
 			double T = 1;
 			int N = 10;
@@ -40,7 +45,7 @@ namespace WebApp
 			Label11.Text = Math.Round(wc.getPL(), 4).ToString();
 			Label12.Text = Math.Round(wc.getExecutionTime(), 4).ToString();
 
-			//TABLEAU
+			//Array
 			TableRow row_title = new TableRow();
 			TableCell cell_1 = new TableCell();
 			cell_1.Text = "Temps";
@@ -58,6 +63,8 @@ namespace WebApp
 				row_title.Cells.Add(cell_4);
 			}
 			Table1.Rows.Add(row_title);
+
+			//Chart
 			int compteur = 0;
 			for (int i = 0; i < H + 1; i++)
 			{
@@ -70,11 +77,12 @@ namespace WebApp
 					row.Cells.Add(cell);
 				}
 				Table1.Rows.Add(row);
-				Chart1.Series[0].Points.AddXY(Math.Round(wc.getSummary()[i * (1+3*size)], 2), Math.Round(wc.getSummary()[i * (1+3*size) + 2], 2));
-				Chart1.Series[1].Points.AddXY(Math.Round(wc.getSummary()[i * (1 + 3 * size)], 2), Math.Round(wc.getSummary()[i * (1 + 3 * size) + 5], 2));
-				Chart1.Series[2].Points.AddXY(Math.Round(wc.getSummary()[i * (1 + 3 * size)], 2), Math.Round(wc.getSummary()[i * (1 + 3 * size) + 8], 2));
-				Chart1.Series[3].Points.AddXY(Math.Round(wc.getSummary()[i * (1 + 3 * size)], 2), Math.Round(wc.getSummary()[i * (1 + 3 * size) + 11], 2));
 
+				for (int d = 0; d < size; d++)
+				{
+					Chart1.Series[d].Points.AddXY(Math.Round(wc.getSummary()[i * (1 + 3 * size)], 2), Math.Round(wc.getSummary()[i * (1 + 3 * size) + 2+3*d], 2));
+					Chart2.Series[d].Points.AddXY(Math.Round(wc.getSummary()[i * (1 + 3 * size)], 2), Math.Round(wc.getSummary()[i * (1 + 3 * size) + 1+3*d], 2));
+				}
 			}
 		}
     }

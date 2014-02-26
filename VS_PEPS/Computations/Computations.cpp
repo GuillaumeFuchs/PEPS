@@ -32,7 +32,7 @@ void Computations::compute_price_call(double &px, double &ic, double &pxBS, doub
 	double coeff[size] = {1};
 
 	Bs mod(size, r, NULL, sigmaV, spot, NULL);
-	Basket opt(K, coeff, T, N, size);
+	Basket opt(K, T, N, size, coeff);
 	MonteCarlo mc(&mod, &opt, rng, 0.01, M);
 
 
@@ -64,7 +64,7 @@ void Computations::compute_delta_call(double &delt, double &icd, double &deltBS,
 	double coeff[size] = {1};
 
 	Bs mod(size, r, NULL, sigmaV, spot, NULL);
-	Basket opt(K, coeff, T, N, size);
+	Basket opt(K, T, N, size, coeff);
 	MonteCarlo mc(&mod, &opt, rng, 0.01, M);
 
 	PnlVect* delta = pnl_vect_create(size);
@@ -105,7 +105,7 @@ void Computations::compute_price_call_samples(double &max, double &var, double S
 	double coeff[size] = {1};
 
 	Bs mod(size, r, NULL, sigmaV, spot, NULL);
-	Basket opt(K, coeff, T, N, size);
+	Basket opt(K, T, N, size, coeff);
 	MonteCarlo mc(&mod, &opt, rng, 0.01, M);
 
 	double sspread, t, mean = 0, mean_th = 0;
@@ -155,7 +155,7 @@ void Computations::compute_delta_call_samples(double &max, double &var, double S
 	double delta_th;
 
 	Bs mod(size, r, NULL, sigmaV, spot, NULL);
-	Basket opt(K, coeff, T, N, size);
+	Basket opt(K, T, N, size, coeff);
 	MonteCarlo mc(&mod, &opt, rng, 0.01, M);
 
 	double sspread, t, mean = 0, mean_th = 0;
@@ -205,8 +205,9 @@ void Computations::compute_couv_call(double &pl, double *summary, int size, doub
 
 	PnlRng *rng = pnl_rng_create(PNL_RNG_MERSENNE);
 	pnl_rng_sseed(rng, time(NULL));
+
 	Bs mod(size, r, rho, sigma, spot, NULL);
-	Basket opt(K, coeff, T, N, size);
+	Basket opt(K, T, N, size, coeff);
 	MonteCarlo mc(&mod, &opt, rng, 0.01, M);
 
 	PnlMat* past = pnl_mat_create(size, H+1);

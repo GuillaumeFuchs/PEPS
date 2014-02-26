@@ -17,7 +17,7 @@
 class Performance : public Option {
 
   private:
-	PnlVect *Coeff_; /*! payoff coefficients */
+	
 
   public:
 
@@ -27,7 +27,7 @@ class Performance : public Option {
 	 * Constructeur par defaut de la classe performance
 	 */
 	Performance();
-	Performance(double* coeff, double T, int timeStep, int size);
+	Performance( double T, int timeStep, int size, double* coeff);
 
 	/*!
 	 * \brief Destructeur
@@ -35,24 +35,6 @@ class Performance : public Option {
 	 * Destructeur de la classe performance
 	 */
 	~ Performance();
-
-	/*!
-	 * \brief Accesseur de Coeff_
-	 *
-	 *  Acceder au vecteur des coefficients des payoff du sous-jacent
-	 *
-	 * \return le vecteur des coefficients des payoff
-	 */
-	PnlVect* get_Coeff() const;
-
-	/*!
-	 * \brief Mutateur de Coeff_
-	 *
-	 * Modifie le vecteur des coefficients des payoff du sous-jacent 
-	 *
-	 * \param Coeff: nouveau vecteur des coefficients des payoff
-	 */
-	void set_Coeff(PnlVect *Coeff);
 
 	/*!
 	 * \brief Payoff option performance

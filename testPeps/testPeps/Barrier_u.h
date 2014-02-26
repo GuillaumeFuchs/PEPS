@@ -18,7 +18,6 @@ class Barrier_u : public Option {
 
   private:
 	double strike_; /*!< strike du sous-jacent */
-	PnlVect *Coeff_; /*!< payoff coefficients */
 	PnlVect *Bu_; /*!< barriere haute */
 
   public:
@@ -29,7 +28,7 @@ class Barrier_u : public Option {
 	 * Constructeur par defaut de la classe barrier_u
 	 */
 	Barrier_u();
-	Barrier_u(double strike, double* coeff, double *bu, double T, int timeStep, int size);
+	Barrier_u(double strike, double *bu, double T, int timeStep, int size, double* coeff);
 	
 	/*!
 	 * \brief Destructeur
@@ -48,15 +47,6 @@ class Barrier_u : public Option {
 	double get_Strike() const;
 
 	/*!
-	 * \brief Accesseur de Coeff_
-	 *
-	 *  Acceder au vecteur des coefficients des payoff du sous-jacent
-	 *
-	 * \return le vecteur des coefficients des payoff
-	 */
-	PnlVect* get_Coeff() const;
-
-	/*!
 	 * \brief Accesseur de Bu_
 	 *
 	 *  Acceder au vecteur de la barriere haute basse du sous-jacent
@@ -73,15 +63,6 @@ class Barrier_u : public Option {
 	 * \param Strike: nouveau strike
 	 */
 	void set_Strike(double Strike);
-
-	/*!
-	 * \brief Mutateur de Coeff_
-	 *
-	 * Modifie le vecteur des coefficients des payoff du sous-jacent 
-	 *
-	 * \param Coeff: nouveau vecteur des coefficients des payoff
-	 */
-	void set_Coeff(PnlVect *Coeff);
 
 	/*!
 	 * \brief Mutateur de Bu_

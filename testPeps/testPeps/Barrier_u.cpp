@@ -9,31 +9,23 @@
 
 Barrier_u :: Barrier_u() : Option() {
   strike_ = 0;
-  Coeff_ = pnl_vect_new();
   Bu_ = pnl_vect_new();
 }
 
-Barrier_u::Barrier_u(double strike, double* coeff, double* bu, double T, int timeStep, int size) : Option(T, timeStep, size){
+Barrier_u::Barrier_u(double strike, double* bu, double T, int timeStep, int size, double *coeff) : Option(T, timeStep, size, coeff){
 	strike_ = strike;
-	Coeff_ = pnl_vect_create(size_);
 	Bu_ = pnl_vect_create(size_);
 	for (int i = 0; i < size_; i++){
-		LET(Coeff_, i) = coeff[i];
 		LET(Bu_, i) = bu[i];
 	}
 }
 
 Barrier_u :: ~Barrier_u(){
-  pnl_vect_free(&Coeff_);
   pnl_vect_free(&Bu_);
 }
 
 double Barrier_u :: get_Strike() const{
   return strike_;
-}
-
-PnlVect* Barrier_u :: get_Coeff() const{
-  return Coeff_;
 }
 
 PnlVect* Barrier_u :: get_Bu() const{
@@ -42,10 +34,6 @@ PnlVect* Barrier_u :: get_Bu() const{
 
 void Barrier_u :: set_Strike(double Strike) {
   strike_ = Strike;
-}
-
-void Barrier_u :: set_Coeff(PnlVect *Coeff) {
-  Coeff_ = Coeff;
 }
 
 void Barrier_u :: set_Bu(PnlVect *Bu) {

@@ -12,7 +12,7 @@ Asian :: Asian() : Option() {
   strike_ = 0; 
 }
 
-Asian::Asian(double strike, double T, int timeStep, int size) : Option(T, timeStep, size){
+Asian::Asian(double strike, double T, int timeStep, int size, double* coeff) : Option(T, timeStep, size, coeff){
 	strike_ = strike;
 }
 

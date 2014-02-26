@@ -12,6 +12,7 @@ protected:
 	double T_; /*!< maturite */
 	int timeStep_; /*!< nombre de pas de temps de discretisation */
 	int size_; /*!< dimension du modele, redondant avec option::size_ */
+	PnlVect *Coeff_; /*! payoff coefficients */
 
 public:
 
@@ -21,7 +22,7 @@ public:
 	* Constructeur par defaut de la classe option
 	*/
 	Option();
-	Option(double T, int timeStep, int size);
+	Option(double T, int timeStep, int size, double* coeff);
 
 
 	/*!
@@ -59,6 +60,15 @@ public:
 	int get_size() const; 
 
 	/*!
+	 * \brief Accesseur de Coeff_
+	 *
+	 *  Acceder au vecteur des coefficients des payoff de l'option
+	 *
+	 * \return le vecteur des coefficients des payoff
+	 */
+	PnlVect * get_Coeff() const;
+
+	/*!
 	* \brief Mutateur de T_
 	*
 	*  Modifier la maturite du sous-jacent
@@ -84,6 +94,15 @@ public:
 	* \param la nouvelle taille du sous-jacent
 	*/
 	void set_size(int size);
+	
+	/*!
+	 * \brief Mutateur de Coeff_
+	 *
+	 * Modifie le vecteur des coefficients des payoff de l'option 
+	 *
+	 * \param Coeff: nouveau vecteur des coefficients des payoff
+	 */
+	void set_Coeff(PnlVect *Coeff);
 
 
 	/*!

@@ -8,25 +8,12 @@
  */
 
 Performance :: Performance() : Option() {
-  Coeff_ = pnl_vect_new();
 }
 
-Performance :: Performance(double* coeff, double T, int timeStep, int size) : Option(T, timeStep, size){
-	Coeff_ = pnl_vect_create(size_);
-	for (int i = 0; i < size_; i++){
-		LET(Coeff_, i) = coeff[i];
-	}
+Performance :: Performance(double T, int timeStep, int size, double* coeff) : Option(T, timeStep, size, coeff){
 }
  
 Performance :: ~Performance(){
-}
-
-PnlVect* Performance :: get_Coeff() const{
-  return Coeff_;
-}
-
-void Performance :: set_Coeff(PnlVect *Coeff) {
-  Coeff_ = Coeff;
 }
 
 double Performance :: payoff (const PnlMat *path) const{

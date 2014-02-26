@@ -43,8 +43,6 @@ namespace Wrapper {
 		pin_ptr<double> pCoeff = &coeff[0];
 		pin_ptr<double> pRho = &rho[0];
 
-		//double* pSpot = spot;
-
 		compute_couv_call(pal, pSummary, size, pSpot, K, pSigma, r, pCoeff, pRho, T, N, H, M, execTime);
 
 		this->pl = pal;

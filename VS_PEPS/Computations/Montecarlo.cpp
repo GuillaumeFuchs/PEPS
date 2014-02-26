@@ -219,6 +219,25 @@ void MonteCarlo::delta (const PnlMat *past, double t, PnlVect *delta, PnlVect *i
 
 	double T = opt_->get_T();
 	int size = opt_->get_size();
+
+	//Delta à maturité
+	//Si le payoff est positif alors la somme des deltas vaut 1
+	//et chaque actif à un delta correspondant à son coefficnent
+	if (fabs(T-t) < 0.00001){
+		//Cas où le payoff est positif
+		if (fabs(opt_->payoff(past)) > 0.001){
+			PnlVect *coeff = opt_->get_Coeff();
+			for (int d = 0; d < size; d++){
+				LET(delta, d) =  GET(coeff, d);
+			}
+		} else {
+			for (int d = 0; d < size; d++){
+				LET(delta, d) =  0;
+			}
+		}
+		return;
+	}
+
 	int timeStep = opt_->get_timeStep();
 	double r = mod_->get_r();
  
@@ -233,7 +252,7 @@ void MonteCarlo::delta (const PnlMat *past, double t, PnlVect *delta, PnlVect *i
 	PnlMat *tirages = pnl_mat_create(samples_, size);
 	PnlMat *tirages2 =  pnl_mat_create(samples_, size);
 	PnlVect *tiragesRow = pnl_vect_create(samples_);
-
+	
 	int H = past->n - 1;
 	int taille;	
 

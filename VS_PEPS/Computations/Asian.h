@@ -26,7 +26,7 @@ class Asian : public Option {
 	 * Constructeur par defaut de la classe Asian
 	 */
 	Asian();
-	Asian(double strike, double T, int timeStep, int size);
+	Asian(double strike, double T, int timeStep, int size, double* coeff);
 
 
 	/*!

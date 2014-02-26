@@ -11,7 +11,6 @@ class Basket : public Option {
 
   private:
 	double strike_; /*! strike de l'option */ 
-	PnlVect *Coeff_; /*! payoff coefficients */
 
   public:
 
@@ -21,7 +20,7 @@ class Basket : public Option {
 	 * Constructeur par defaut de la classe Basket
 	 */
 	Basket();
-	Basket(double strike, double* coeff, double T, int timeStep, int size);
+	Basket(double strike, double T, int timeStep, int size, double* coeff);
 
 	/*!
 	 * \brief Destructeur
@@ -40,15 +39,6 @@ class Basket : public Option {
 	double get_Strike() const;
 
 	/*!
-	 * \brief Accesseur de Coeff_
-	 *
-	 *  Acceder au vecteur des coefficients des payoff de l'option
-	 *
-	 * \return le vecteur des coefficients des payoff
-	 */
-	PnlVect * get_Coeff() const;
-
-	/*!
 	 * \brief Mutateur de strike_
 	 *
 	 * Modifie la valeur du strike de l'option
@@ -56,15 +46,6 @@ class Basket : public Option {
 	 * \param Strike: nouveau strike
 	 */
 	void set_Strike(double strike);
-
-	/*!
-	 * \brief Mutateur de Coeff_
-	 *
-	 * Modifie le vecteur des coefficients des payoff de l'option 
-	 *
-	 * \param Coeff: nouveau vecteur des coefficients des payoff
-	 */
-	void set_Coeff(PnlVect *Coeff);
 
 	/*!
 	 * \brief Payoff option panier

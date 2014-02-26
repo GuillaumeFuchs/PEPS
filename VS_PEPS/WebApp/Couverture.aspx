@@ -36,11 +36,33 @@
 			<Series>
 				<asp:Series ChartType="Line">
 				</asp:Series>
-								<asp:Series ChartType="Line">
+				<asp:Series ChartType="Line">
 				</asp:Series>
-								<asp:Series ChartType="Line">
+				<asp:Series ChartType="Line">
 				</asp:Series>
-								<asp:Series ChartType="Line">
+				<asp:Series ChartType="Line">
+				</asp:Series>
+			</Series>
+			<ChartAreas>
+				<asp:ChartArea Name="ChartArea1">
+					<AxisX Title="Temps">
+					</AxisX>
+					<AxisY Title="Nb d'actions à posséder">
+					</AxisY>
+				</asp:ChartArea>
+			</ChartAreas>
+		</asp:Chart>
+	</div>
+	<div>
+	<asp:Chart ID="Chart2" runat="server" Height="600px" Width="800px">
+			<Series>
+				<asp:Series ChartType="Line">
+				</asp:Series>
+				<asp:Series ChartType="Line">
+				</asp:Series>
+				<asp:Series ChartType="Line">
+				</asp:Series>
+				<asp:Series ChartType="Line">
 				</asp:Series>
 			</Series>
 			<ChartAreas>

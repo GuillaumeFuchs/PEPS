@@ -9,35 +9,21 @@
 
 Basket :: Basket() : Option() {
   strike_ = 0;
-  Coeff_ = pnl_vect_new();
 }
 
-Basket::Basket(double strike, double* coeff, double T, int timeStep, int size) : Option(T, timeStep, size){
+Basket::Basket(double strike, double T, int timeStep, int size, double *coeff) : Option(T, timeStep, size, coeff){
 	strike_ = strike;
-	Coeff_ = pnl_vect_create(size_);
-	for (int i = 0; i < size_; i++){
-		LET(Coeff_, i) = coeff[i];
-	}
 }
 
 Basket :: ~Basket(){
-  pnl_vect_free(&Coeff_);
 }
 
 double Basket :: get_Strike() const{
   return strike_;
 }
 
-PnlVect * Basket :: get_Coeff() const{
-  return Coeff_;
-}
-
 void Basket :: set_Strike(double strike) {
   strike_ = strike;
-}
-
-void Basket :: set_Coeff(PnlVect *Coeff) {
-  Coeff_ = Coeff;
 }
 
 double Basket :: payoff (const PnlMat *path) const{
