@@ -134,15 +134,18 @@ void Test::compute_prix(int H, double t){
 	}
 	PnlMat* past = pnl_mat_create(size, H+1);
 	mod->simul_market(past, H, T, rng);
+
 	mc_->price(past, t, prix, ic);
 
+	/*
 	if (t==0)
-		prix_th = theo_price(MGET(past, 0, 0), strike, r, T-t, GET(sigma, 0));
+	prix_th = theo_price(MGET(past, 0, 0), strike, r, T-t, GET(sigma, 0));
 	else
-		prix_th = theo_price(MGET(past, 0, H), strike, r, T-t, GET(sigma, 0));
+	prix_th = theo_price(MGET(past, 0, H), strike, r, T-t, GET(sigma, 0));
 
-	printf("%f %f\n", prix, prix_th);
-
+	printf("%f %f, %f\n", prix_/500, ic_/500, prix_th);
+	*/
+	printf("%f %f\n", prix, ic);
 	pnl_mat_free(&past);
 }
 
@@ -166,18 +169,20 @@ void Test::compute_delta(int H, double t){
 	}
 	PnlMat* past = pnl_mat_create(size, H+1);
 	mod->simul_market(past, H, T, rng);
-	pnl_mat_print(past);
+
 	mc_->delta(past, t, delta, ic_delta);
-	
+
 	/*
 	if (t==0)
-		delta_th = theo_delta(MGET(past, 0, 0), strike, r, T-t, GET(sigma, 0));
+	delta_th = theo_delta(MGET(past, 0, 0), strike, r, T-t, GET(sigma, 0));
 	else
-		delta_th = theo_delta(MGET(past, 0, H), strike, r, T-t, GET(sigma, 0));
-	printf("Theo %f\n", delta_th);
+	delta_th = theo_delta(MGET(past, 0, H), strike, r, T-t, GET(sigma, 0));
+
+	printf("Simul %f IC %f Theo %f\n", delta_/1000., ic_delta_/1000., delta_th);
 	*/
-	printf("%f \n", MGET(past, 0, 10)*0.25 + MGET(past, 1, 10)*0.25 + MGET(past, 2, 10)*0.25 + MGET(past, 3, 10)*0.25);
 	pnl_vect_print(delta);
+	printf("\n");
+	pnl_vect_print(ic_delta);
 	pnl_mat_free(&past);
 }
 
@@ -200,15 +205,13 @@ void Test::compute_couv(int H, bool output){
 			for (int i = 0; i < 500; i++){
 				cout << i << endl;
 				PnlMat* past = pnl_mat_create(size, H+1);
-				PnlMat* summary = pnl_mat_create(H+1, 6);
+				PnlMat* summary = pnl_mat_create(H+1, 1+3*size);
 				mc_->couv(past, pl, plTheorique, H, T, summary);
 
 				mc_->price(prix, ic);
 				double prix_th = theo_price(100, 100, .05, 1, .2);
 
 				cout << "P&L simule: " << pl/prix << endl;
-				cout << "P&L calcule: "<< plTheorique/prix_th << endl;
-				cout << "  Date" << "     Cours" << "     Delta" << "   Act buy" << "  Delta th" << " Act buy th" << endl;
 				pnl_mat_print(summary);
 				fichier1 << pl/prix << endl;
 				fichier2 << plTheorique/prix_th << endl;
@@ -219,14 +222,11 @@ void Test::compute_couv(int H, bool output){
 			cerr << "Impossible d'ouvrir le fichier !" << endl;
 	}else{
 		PnlMat* past = pnl_mat_create(size, H+1);
-		PnlMat* summary = pnl_mat_create(H+1, 1+3*size+2);
+		PnlMat* summary = pnl_mat_create(H+1, 1+3*size);
 		mc_->couv(past, pl, plTheorique, H, T, summary);
 		mc_->price(prix, ic);
 		double prix_th = theo_price(100, 100, .05, 1, .2);
 
-		cout << "P&L simulé: " << pl/prix << endl;
-		cout << "P&L calculé: "<< plTheorique/prix_th << endl;
-		cout << "  Date" << "     Cours" << "     Delta" << "   Act buy" << "  Delta th" << " Act buy th" << endl;
 		pnl_mat_print(summary);
 	}
 }

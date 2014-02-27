@@ -28,7 +28,7 @@ class Barrier_l : public Option {
 	 * Constructeur par defaut de la classe barrier_l
 	 */
 	Barrier_l();
-	Barrier_l(double strike, double* bl, double T, int timeStep, int size, double* coeff);
+	Barrier_l(double strike, double* bl, double T, int timeStep, int size, double r, double* coeff);
 
 	/*!
 	 * \brief Destructeur
@@ -76,11 +76,13 @@ class Barrier_l : public Option {
 	/*!
 	 * \brief Payoff option barriere
 	 *
-	 * Calcul la valeur du payoff du sous-jacent barriere sur la trajectoire passee en parametre
+	 * Calcul la valeur du payoff du sous-jacent asiatique sur la trajectoire passee en parametre
 	 *
 	 * \param path: matrice de taille d x (N+1) contenant une trajectoire du modele telle que creee par la fonction asset
-	 * \return payoff du sous-jacent barriere
+	 * \param t: temps où l'option est pricer
+	 *
+	 * \return payoff du sous-jacent asiatique
 	 */
-	double payoff (const PnlMat *path) const;
+	double payoff (const PnlMat *path, double t) const;
 };
 #endif

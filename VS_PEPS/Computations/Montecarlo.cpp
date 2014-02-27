@@ -311,7 +311,7 @@ void MonteCarlo::delta (const PnlMat *past, double t, PnlVect *delta, PnlVect *i
 
 		// calcul de delta
 		facteur =  1./(2.*h_*(double)samples_*MGET(past, d, past->n-1));
-		result =  exp(-r*(T-t))* facteur * sum;
+		result = exp(-r*(T-t)) * facteur * sum;
 		LET(delta, d) = result;
 
 		// calcul de l'intervalle de confiance

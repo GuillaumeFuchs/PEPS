@@ -28,7 +28,7 @@ class Barrier_u : public Option {
 	 * Constructeur par defaut de la classe barrier_u
 	 */
 	Barrier_u();
-	Barrier_u(double strike, double *bu, double T, int timeStep, int size, double* coeff);
+	Barrier_u(double strike, double *bu, double T, int timeStep, int size, double r, double* coeff);
 	
 	/*!
 	 * \brief Destructeur
@@ -76,11 +76,13 @@ class Barrier_u : public Option {
 	/*!
 	 * \brief Payoff option barriere haute
 	 *
-	 * Calcul la valeur du payoff du sous-jacent barriere haute sur la trajectoire passee en parametre
+	 * Calcul la valeur du payoff du sous-jacent asiatique sur la trajectoire passee en parametre
 	 *
 	 * \param path: matrice de taille d x (N+1) contenant une trajectoire du modele telle que creee par la fonction asset
-	 * \return payoff du sous-jacent barriere haute
+	 * \param t: temps où l'option est pricer
+	 *
+	 * \return payoff du sous-jacent asiatique
 	 */
-	double payoff (const PnlMat *path) const;
+	double payoff (const PnlMat *path, double t) const;
 };
 #endif
