@@ -105,7 +105,7 @@ void Test::compute_delta_samples(int samples, bool affiche){
 		mean_th += delta_th;
 
 		if (affiche)
-			printf("%d %f\t%f %f %f\n", k, t, GET(delta, 0), delta_th, sspread);
+			printf("k:%d t:%f\t%f %f %f\n", k, t, GET(delta, 0), delta_th, sspread);
 
 		if (sspread > maxSpread)
 			maxSpread = sspread;
@@ -125,24 +125,27 @@ void Test::compute_prix(int H, double t){
 	double r = mod->get_r();
 	double strike = ((Basket *)(mc_->get_opt()))->get_Strike();
 	PnlVect* sigma = mod->get_sigma();
-
+	int size = mod->get_size();
 
 	if (fmod(T/(double)N, t/(double)H) > 0.0001){
 		printf("Erreur: H non adapte \n");
 		system("pause");
 		return;
 	}
-	PnlMat* past = pnl_mat_create(1, H+1);
+	PnlMat* past = pnl_mat_create(size, H+1);
 	mod->simul_market(past, H, T, rng);
+
 	mc_->price(past, t, prix, ic);
 
+	/*
 	if (t==0)
-		prix_th = theo_price(MGET(past, 0, 0), strike, r, T-t, GET(sigma, 0));
+	prix_th = theo_price(MGET(past, 0, 0), strike, r, T-t, GET(sigma, 0));
 	else
-		prix_th = theo_price(MGET(past, 0, H), strike, r, T-t, GET(sigma, 0));
+	prix_th = theo_price(MGET(past, 0, H), strike, r, T-t, GET(sigma, 0));
 
-	printf("%f %f\n", prix, prix_th);
-
+	printf("%f %f, %f\n", prix_/500, ic_/500, prix_th);
+	*/
+	printf("%f %f\n", prix, ic);
 	pnl_mat_free(&past);
 }
 
@@ -157,23 +160,29 @@ void Test::compute_delta(int H, double t){
 	PnlVect* sigma = mod->get_sigma();
 	PnlVect* delta = pnl_vect_create(mod->get_size());
 	PnlVect* ic_delta = pnl_vect_create(mod->get_size());
+	int size = mod->get_size();
 
 	if (fmod(T/(double)N, t/(double)H) > 0.0001){
 		printf("Erreur: H non adapte \n");
 		system("pause");
 		return;
 	}
-	PnlMat* past = pnl_mat_create(1, H+1);
+	PnlMat* past = pnl_mat_create(size, H+1);
 	mod->simul_market(past, H, T, rng);
+
 	mc_->delta(past, t, delta, ic_delta);
 
+	/*
 	if (t==0)
-		delta_th = theo_delta(MGET(past, 0, 0), strike, r, T-t, GET(sigma, 0));
+	delta_th = theo_delta(MGET(past, 0, 0), strike, r, T-t, GET(sigma, 0));
 	else
-		delta_th = theo_delta(MGET(past, 0, H), strike, r, T-t, GET(sigma, 0));
+	delta_th = theo_delta(MGET(past, 0, H), strike, r, T-t, GET(sigma, 0));
 
-	printf("%f %f\n", GET(delta, 0), delta_th);
-
+	printf("Simul %f IC %f Theo %f\n", delta_/1000., ic_delta_/1000., delta_th);
+	*/
+	pnl_vect_print(delta);
+	printf("\n");
+	pnl_vect_print(ic_delta);
 	pnl_mat_free(&past);
 }
 
@@ -181,6 +190,7 @@ void Test::compute_couv(int H, bool output){
 	double N = mc_->get_opt()->get_timeStep();
 	double T = mc_->get_opt()->get_T();
 	double pl, plTheorique, prix, ic;
+	int size = mc_->get_opt()->get_size();
 
 	if (fmod((double)H, (double)N) > 0.0001){
 		printf("Erreur: H non adapte \n");
@@ -194,16 +204,14 @@ void Test::compute_couv(int H, bool output){
 		{
 			for (int i = 0; i < 500; i++){
 				cout << i << endl;
-				PnlMat* past = pnl_mat_create(1, H+1);
-				PnlMat* summary = pnl_mat_create(H+1, 6);
+				PnlMat* past = pnl_mat_create(size, H+1);
+				PnlMat* summary = pnl_mat_create(H+1, 1+3*size);
 				mc_->couv(past, pl, plTheorique, H, T, summary);
 
 				mc_->price(prix, ic);
 				double prix_th = theo_price(100, 100, .05, 1, .2);
 
 				cout << "P&L simule: " << pl/prix << endl;
-				cout << "P&L calcule: "<< plTheorique/prix_th << endl;
-				cout << "  Date" << "     Cours" << "     Delta" << "   Act buy" << "  Delta th" << " Act buy th" << endl;
 				pnl_mat_print(summary);
 				fichier1 << pl/prix << endl;
 				fichier2 << plTheorique/prix_th << endl;
@@ -213,18 +221,13 @@ void Test::compute_couv(int H, bool output){
 		}else
 			cerr << "Impossible d'ouvrir le fichier !" << endl;
 	}else{
-		PnlMat* past = pnl_mat_create(1, H+1);
-		PnlMat* summary = pnl_mat_create(H+1, 6);
+		PnlMat* past = pnl_mat_create(size, H+1);
+		PnlMat* summary = pnl_mat_create(H+1, 1+3*size);
 		mc_->couv(past, pl, plTheorique, H, T, summary);
-
 		mc_->price(prix, ic);
 		double prix_th = theo_price(100, 100, .05, 1, .2);
 
-		cout << "P&L simulé: " << pl/prix << endl;
-		cout << "P&L calculé: "<< plTheorique/prix_th << endl;
-		cout << "  Date" << "     Cours" << "     Delta" << "   Act buy" << "  Delta th" << " Act buy th" << endl;
 		pnl_mat_print(summary);
-
 	}
 }
 double Test::theo_price(double S, double K, double r, double T, double sigma){

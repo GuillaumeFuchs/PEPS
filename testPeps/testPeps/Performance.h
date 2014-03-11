@@ -17,7 +17,7 @@
 class Performance : public Option {
 
   private:
-	PnlVect *Coeff_; /*! payoff coefficients */
+	
 
   public:
 
@@ -27,7 +27,7 @@ class Performance : public Option {
 	 * Constructeur par defaut de la classe performance
 	 */
 	Performance();
-	Performance(double* coeff, double T, int timeStep, int size);
+	Performance( double T, int timeStep, int size, double r, double* coeff);
 
 	/*!
 	 * \brief Destructeur
@@ -37,31 +37,15 @@ class Performance : public Option {
 	~ Performance();
 
 	/*!
-	 * \brief Accesseur de Coeff_
-	 *
-	 *  Acceder au vecteur des coefficients des payoff du sous-jacent
-	 *
-	 * \return le vecteur des coefficients des payoff
-	 */
-	PnlVect* get_Coeff() const;
-
-	/*!
-	 * \brief Mutateur de Coeff_
-	 *
-	 * Modifie le vecteur des coefficients des payoff du sous-jacent 
-	 *
-	 * \param Coeff: nouveau vecteur des coefficients des payoff
-	 */
-	void set_Coeff(PnlVect *Coeff);
-
-	/*!
 	 * \brief Payoff option performance
 	 *
-	 * Calcul la valeur du payoff du sous-jacent performance sur la trajectoire passee en parametre
+	 * Calcul la valeur du payoff du sous-jacent asiatique sur la trajectoire passee en parametre
 	 *
 	 * \param path: matrice de taille d x (N+1) contenant une trajectoire du modele telle que creee par la fonction asset
-	 * \return payoff du sous-jacent performance
+	 * \param t: temps où l'option est pricer
+	 *
+	 * \return payoff du sous-jacent asiatique
 	 */
-	double payoff (const PnlMat *path) const;
+	double payoff (const PnlMat *path, double t) const;
 };
 #endif

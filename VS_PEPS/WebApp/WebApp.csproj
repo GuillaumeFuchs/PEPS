@@ -222,7 +222,7 @@
         <WebProjectProperties>
           <UseIIS>False</UseIIS>
           <AutoAssignPort>True</AutoAssignPort>
-          <DevelopmentServerPort>17687</DevelopmentServerPort>
+          <DevelopmentServerPort>59424</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
           <IISUrl>
           </IISUrl>
@@ -240,10 +240,10 @@
 copy $(SolutionDir)Debug\Computations.lib $(SolutionDir)WebApp\bin\Computations.lib
 copy $(SolutionDir)Debug\Computations.pdb $(SolutionDir)WebApp\bin\Computations.pdb
 
-copy $(SolutionDir)Debug\libblas.dll $(SolutionDir)WebApp\bin\libblas.dll
-copy $(SolutionDir)Debug\liblapack.dll $(SolutionDir)WebApp\bin\liblapack.dll
-copy $(SolutionDir)Debug\libpnl.dll $(SolutionDir)WebApp\bin\libpnl.dll
-copy $(SolutionDir)Debug\libpnl.lib $(SolutionDir)WebApp\bin\libpnl.lib
+copy C:\Users\Fuchsg\Documents\Ensimag\pnl-win32-1.6.0\lib\libblas.dll $(SolutionDir)WebApp\bin\libblas.dll
+copy C:\Users\Fuchsg\Documents\Ensimag\pnl-win32-1.6.0\lib\liblapack.dll $(SolutionDir)WebApp\bin\liblapack.dll
+copy C:\Users\Fuchsg\Documents\Ensimag\pnl-win32-1.6.0\lib\libpnl.dll $(SolutionDir)WebApp\bin\libpnl.dll
+copy C:\Users\Fuchsg\Documents\Ensimag\pnl-win32-1.6.0\lib\libpnl.lib $(SolutionDir)WebApp\bin\libpnl.lib
 
 copy $(SolutionDir)Debug\Wrapper.dll $(SolutionDir)WebApp\bin\Wrapper.dll
 copy $(SolutionDir)Debug\Wrapper.pdb $(SolutionDir)WebApp\bin\Wrapper.pdb

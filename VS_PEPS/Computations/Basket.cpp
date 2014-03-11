@@ -9,38 +9,24 @@
 
 Basket :: Basket() : Option() {
   strike_ = 0;
-  Coeff_ = pnl_vect_new();
 }
 
-Basket::Basket(double strike, double* coeff, double T, int timeStep, int size) : Option(T, timeStep, size){
+Basket::Basket(double strike, double T, int timeStep, int size, double r, double * coeff) : Option(T, timeStep, size, r, coeff){
 	strike_ = strike;
-	Coeff_ = pnl_vect_create(size_);
-	for (int i = 0; i < size_; i++){
-		LET(Coeff_, i) = coeff[i];
-	}
 }
 
 Basket :: ~Basket(){
-  pnl_vect_free(&Coeff_);
 }
 
 double Basket :: get_Strike() const{
   return strike_;
 }
 
-PnlVect * Basket :: get_Coeff() const{
-  return Coeff_;
-}
-
 void Basket :: set_Strike(double strike) {
   strike_ = strike;
 }
 
-void Basket :: set_Coeff(PnlVect *Coeff) {
-  Coeff_ = Coeff;
-}
-
-double Basket :: payoff (const PnlMat *path) const{
+double Basket :: payoff (const PnlMat *path, double t) const{
   double sum;
   PnlVect* final = pnl_vect_create(path->m);
 
@@ -49,5 +35,5 @@ double Basket :: payoff (const PnlMat *path) const{
   sum = pnl_vect_scalar_prod(final, Coeff_) - strike_;
   pnl_vect_free(&final);
   //On retourne le max entre le résultat de la somme et 0
-  return MAX(sum, 0);
+  return exp(-r_*(T_-t))*MAX(sum, 0);
 }

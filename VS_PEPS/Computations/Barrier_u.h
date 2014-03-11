@@ -18,7 +18,6 @@ class Barrier_u : public Option {
 
   private:
 	double strike_; /*!< strike du sous-jacent */
-	PnlVect *Coeff_; /*!< payoff coefficients */
 	PnlVect *Bu_; /*!< barriere haute */
 
   public:
@@ -29,7 +28,7 @@ class Barrier_u : public Option {
 	 * Constructeur par defaut de la classe barrier_u
 	 */
 	Barrier_u();
-	Barrier_u(double strike, double* coeff, double *bu, double T, int timeStep, int size);
+	Barrier_u(double strike, double *bu, double T, int timeStep, int size, double r, double* coeff);
 	
 	/*!
 	 * \brief Destructeur
@@ -46,15 +45,6 @@ class Barrier_u : public Option {
 	 * \return le strike du sous-jacent 
 	 */
 	double get_Strike() const;
-
-	/*!
-	 * \brief Accesseur de Coeff_
-	 *
-	 *  Acceder au vecteur des coefficients des payoff du sous-jacent
-	 *
-	 * \return le vecteur des coefficients des payoff
-	 */
-	PnlVect* get_Coeff() const;
 
 	/*!
 	 * \brief Accesseur de Bu_
@@ -75,15 +65,6 @@ class Barrier_u : public Option {
 	void set_Strike(double Strike);
 
 	/*!
-	 * \brief Mutateur de Coeff_
-	 *
-	 * Modifie le vecteur des coefficients des payoff du sous-jacent 
-	 *
-	 * \param Coeff: nouveau vecteur des coefficients des payoff
-	 */
-	void set_Coeff(PnlVect *Coeff);
-
-	/*!
 	 * \brief Mutateur de Bu_
 	 *
 	 * Modifie la vecteur de la barriere haute basse du sous-jacent
@@ -95,11 +76,13 @@ class Barrier_u : public Option {
 	/*!
 	 * \brief Payoff option barriere haute
 	 *
-	 * Calcul la valeur du payoff du sous-jacent barriere haute sur la trajectoire passee en parametre
+	 * Calcul la valeur du payoff du sous-jacent asiatique sur la trajectoire passee en parametre
 	 *
 	 * \param path: matrice de taille d x (N+1) contenant une trajectoire du modele telle que creee par la fonction asset
-	 * \return payoff du sous-jacent barriere haute
+	 * \param t: temps où l'option est pricer
+	 *
+	 * \return payoff du sous-jacent asiatique
 	 */
-	double payoff (const PnlMat *path) const;
+	double payoff (const PnlMat *path, double t) const;
 };
 #endif

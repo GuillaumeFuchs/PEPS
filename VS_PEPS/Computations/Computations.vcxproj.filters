@@ -60,9 +60,6 @@
     <ClInclude Include="Option.h">
       <Filter>Fichiers d%27en-tête\Option</Filter>
     </ClInclude>
-    <ClInclude Include="Playlist.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
     <ClInclude Include="Bs.h">
       <Filter>Fichiers d%27en-tête\Modelasset</Filter>
     </ClInclude>
@@ -75,15 +72,15 @@
     <ClInclude Include="Montecarlo.h">
       <Filter>Fichiers d%27en-tête\Montecarlos</Filter>
     </ClInclude>
+    <ClInclude Include="Playlist.h">
+      <Filter>Fichiers d%27en-tête\Option</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Computations.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
     <ClCompile Include="Test.cpp">
-      <Filter>Fichiers sources</Filter>
-    </ClCompile>
-    <ClCompile Include="Playlist.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
     <ClCompile Include="Asian.cpp">
@@ -118,6 +115,9 @@
     </ClCompile>
     <ClCompile Include="Montecarlos.cpp">
       <Filter>Fichiers sources\Montecarlos</Filter>
+    </ClCompile>
+    <ClCompile Include="Playlist.cpp">
+      <Filter>Fichiers sources\Option</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

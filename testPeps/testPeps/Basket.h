@@ -11,7 +11,6 @@ class Basket : public Option {
 
   private:
 	double strike_; /*! strike de l'option */ 
-	PnlVect *Coeff_; /*! payoff coefficients */
 
   public:
 
@@ -21,7 +20,7 @@ class Basket : public Option {
 	 * Constructeur par defaut de la classe Basket
 	 */
 	Basket();
-	Basket(double strike, double* coeff, double T, int timeStep, int size);
+	Basket(double strike, double T, int timeStep, int size, double r, double* coeff);
 
 	/*!
 	 * \brief Destructeur
@@ -40,15 +39,6 @@ class Basket : public Option {
 	double get_Strike() const;
 
 	/*!
-	 * \brief Accesseur de Coeff_
-	 *
-	 *  Acceder au vecteur des coefficients des payoff de l'option
-	 *
-	 * \return le vecteur des coefficients des payoff
-	 */
-	PnlVect * get_Coeff() const;
-
-	/*!
 	 * \brief Mutateur de strike_
 	 *
 	 * Modifie la valeur du strike de l'option
@@ -58,22 +48,15 @@ class Basket : public Option {
 	void set_Strike(double strike);
 
 	/*!
-	 * \brief Mutateur de Coeff_
-	 *
-	 * Modifie le vecteur des coefficients des payoff de l'option 
-	 *
-	 * \param Coeff: nouveau vecteur des coefficients des payoff
-	 */
-	void set_Coeff(PnlVect *Coeff);
-
-	/*!
 	 * \brief Payoff option panier
 	 *
-	 * Calcul la valeur du payoff de l'option panier sur la trajectoire passee en parametre
+	 * Calcul la valeur du payoff du sous-jacent asiatique sur la trajectoire passee en parametre
 	 *
 	 * \param path: matrice de taille d x (N+1) contenant une trajectoire du modele telle que creee par la fonction asset
-	 * \return payoff de l'option panier
+	 * \param t: temps où l'option est pricer
+	 *
+	 * \return payoff du sous-jacent asiatique
 	 */
-	double payoff (const PnlMat * path) const;
+	double payoff (const PnlMat *path, double t) const;
 }; 
 #endif 
