@@ -38,19 +38,20 @@ class Test {
 	* \brief Test des valeurs de prix pour un call
 	*
 	* samples: nombre de prix calculé
-	* affiche: booleen pour savoir si les prix sont affichés à l'écran ou non
-	* spread: ecart à tester entre le prix théorique et le prix calculé
+	* display: booleen pour savoir si les prix sont affichés à l'écran ou non
+	* output: bool pour savoir si les prix sont stockés dans un fichier price_simul.txt et price_theo.txt et les temps où les prix sont calculés dans price_time.txt 
 	*/
-	void compute_prix_samples(int samples, bool affiche);
+	void compute_price_samples(int samples, bool display, bool output, PnlMat* past);
 
 	/*!
 	* \brief Test des valeurs du delta pour un call
 	*
 	* samples: nombre de prix calculé
-	* affiche: booleen pour savoir si les prix sont affichés à l'écran ou non
+	* display: booleen pour savoir si les prix sont affichés à l'écran ou non
 	* spread: ecart à tester entre le prix théorique et le prix calculé
+	* output: bool pour savoir si les prix sont stockés dans un fichier delta_simul.txt et delta_theo.txt et les temps où les prix sont calculés dans delta_time.txt
 	*/
-	void compute_delta_samples(int samples, bool affiche);
+	void compute_delta_samples(int samples, bool display, bool output, PnlMat* past);
 
 	/*!
 	* \brief Calcul du prix de l'option à une date t donnée
@@ -58,7 +59,7 @@ class Test {
 	* H: nombre de pas dans la matrice de simulation de marche jusqu'à la date t
 	* t: date de calcul
 	*/
-	void compute_prix(int H, double t);
+	void compute_price(int H, double t);
 	
 	/*!
 	* \brief Calcul du delta de l'option à une date t donnée
@@ -72,7 +73,7 @@ class Test {
 	* \brief Calcul du portefeuille de couverture sur la duree de vie de l'option
 	*
 	* H: nombre de pas dans la matrice de simulation de marche jusqu'à la date t
-	* output: si vrai alors affiche les résultat de 500 couverture dans couv_simulation.txt (couverture simulee) et dans couv_theorique (couverture calculee avec BS)
+	* output: si vrai alors display les résultat de 500 couverture dans couv_simulation.txt (couverture simulee) et dans couv_theorique (couverture calculee avec BS)
 	*/
 	void compute_couv(int H, bool output);
 
