@@ -11,7 +11,7 @@ Basket :: Basket() : Option() {
   strike_ = 0;
 }
 
-Basket::Basket(double strike, double T, int timeStep, int size, double *coeff) : Option(T, timeStep, size, coeff){
+Basket::Basket(double strike, double T, int timeStep, int size, double r, double * coeff) : Option(T, timeStep, size, r, coeff){
 	strike_ = strike;
 }
 
@@ -26,7 +26,7 @@ void Basket :: set_Strike(double strike) {
   strike_ = strike;
 }
 
-double Basket :: payoff (const PnlMat *path) const{
+double Basket :: payoff (const PnlMat *path, double t) const{
   double sum;
   PnlVect* final = pnl_vect_create(path->m);
 
@@ -35,5 +35,5 @@ double Basket :: payoff (const PnlMat *path) const{
   sum = pnl_vect_scalar_prod(final, Coeff_) - strike_;
   pnl_vect_free(&final);
   //On retourne le max entre le résultat de la somme et 0
-  return MAX(sum, 0);
+  return exp(-r_*(T_-t))*MAX(sum, 0);
 }

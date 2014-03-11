@@ -10,8 +10,6 @@
 class Playlist : public Option {
 
   private:
-	double strike_; /*! strike de l'option */ 
-	double r_;
 
   public:
 
@@ -21,7 +19,7 @@ class Playlist : public Option {
 	 * Constructeur par defaut de la classe Playlist
 	 */
 	Playlist();
-	Playlist(double strike, double T, int timeStep, int size, double r, double* coeff);
+	Playlist(double T, int timeStep, int size, double r, double* coeff);
 
 	/*!
 	 * \brief Destructeur
@@ -31,35 +29,16 @@ class Playlist : public Option {
 	virtual ~Playlist();
 
 	/*!
-	 * \brief Accesseur de strike_
-	 *
-	 *  Acceder au strike de l'option
-	 *
-	 * \return le strike de l'option 
-	 */
-	double get_Strike() const;
-	
-	double get_r() const;
-
-	/*!
-	 * \brief Mutateur de strike_
-	 *
-	 * Modifie la valeur du strike de l'option
-	 *
-	 * \param Strike: nouveau strike
-	 */
-	void set_Strike(double strike);
-
-	void set_r(double r);
-	/*!
 	 * \brief Payoff option panier
 	 *
-	 * Calcul la valeur du payoff de l'option panier sur la trajectoire passee en parametre
+	 * Calcul la valeur du payoff du sous-jacent asiatique sur la trajectoire passee en parametre
 	 *
 	 * \param path: matrice de taille d x (N+1) contenant une trajectoire du modele telle que creee par la fonction asset
-	 * \return payoff de l'option panier
+	 * \param t: temps où l'option est pricer
+	 *
+	 * \return payoff du sous-jacent asiatique
 	 */
-	double payoff (const PnlMat * path) const;
+	double payoff (const PnlMat *path, double t) const;
 }; 
 
 #endif 

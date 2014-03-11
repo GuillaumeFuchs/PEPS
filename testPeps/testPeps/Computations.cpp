@@ -62,11 +62,11 @@ int main(){
 	float temps;
 	clock_t tbegin, tend;
 	//tbegin = clock();
-	//test.compute_prix_samples(1000, true);
+	test.compute_prix_samples(1000, true);
 	//test.compute_delta_samples(1000, true);
 	//test.compute_prix(0 , 0.);	
 	//test.compute_delta(0, 0.);
-	test.compute_couv(18, false);
+	//test.compute_couv(18, false);
 	/*tend = clock();
 	temps = (float)(tend-tbegin)/CLOCKS_PER_SEC;
 	printf("temps = %f\n", temps);*/

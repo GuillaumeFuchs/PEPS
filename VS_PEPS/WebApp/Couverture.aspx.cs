@@ -20,9 +20,8 @@ namespace WebApp
 			int H = int.Parse(TextBox7.Text);
 
 			int size = 4;
-			double[] spot = new double[] { 100, 80, 90, 120 };
-			double K = 100;
-			double[] sigma = new double[] { 0.3, 0.05, 0.2, 0.15 };
+			double[] spot = new double[] { 100, 100, 100, 100 };
+			double[] sigma = new double[] { 0.2, 0.2, 0.2, 0.2 };
 			double r = 0.05;
 			double[] coeff = new double[] { .25, .25, .25, .25 };
 			double[] rho = new double[] { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 };
@@ -35,12 +34,13 @@ namespace WebApp
 			//double[] coeff = new double[] { 1 };
 			//double[] rho = new double[] { 0.0 };
 
-			double T = 1;
-			int N = 10;
+			double T = 6;
+			int N = 6;
 			int samples = 50000;
 
 			WrapperClass wc = new WrapperClass(size, H);
-			wc.getCouvCallEuro(size, spot, K, sigma, r, coeff, rho, T, N, H, samples);
+			double K = 0.0;
+			wc.getCouv(size, spot, K, sigma, r, coeff, rho, T, N, H, samples);
 			
 			Label11.Text = Math.Round(wc.getPL(), 4).ToString();
 			Label12.Text = Math.Round(wc.getExecutionTime(), 4).ToString();

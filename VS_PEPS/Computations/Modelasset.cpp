@@ -8,7 +8,7 @@ using namespace std;
 ModelAsset::ModelAsset(){
 	size_ = 0;
 	r_ = 0.0;
-	rho_ = pnl_vect_new();
+	rho_ = new double();
 	sigma_ = pnl_vect_new();
 	spot_ = pnl_vect_new();
 	trend_ = pnl_vect_new();
@@ -20,7 +20,7 @@ ModelAsset::ModelAsset(){
 ModelAsset::ModelAsset(int size, double r, double* rho, double* sigma, double* spot, double* trend){
 	(*this).size_ = size;
 	(*this).r_ = r;
-	(*this).rho_ = pnl_vect_create(size_*(size_-1)/2);
+	(*this).rho_ = rho;
 	(*this).sigma_ = pnl_vect_create(size_);
 	(*this).spot_ = pnl_vect_create(size_);
 	(*this).trend_ = pnl_vect_create(size_);
@@ -30,23 +30,19 @@ ModelAsset::ModelAsset(int size, double r, double* rho, double* sigma, double* s
 
 	for (int i = 1; i < size_; i++){
 		for (int j = 0 ; j < i; j++){
-			MLET(Cho_, i, j) = rho[++compteur];
-			MLET(Cho_, j, i) = rho[compteur];
+			MLET(Cho_, i, j) = rho_[++compteur];
+			MLET(Cho_, j, i) = rho_[compteur];
 		}
 	}
 	for (int i = 0; i < size_; i++){
 		LET(sigma_, i) = sigma[i];
 		LET(spot_, i) = spot[i];
-		LET(rho_, i) = rho[i];
 		if (trend != NULL)
 			LET(trend_, i) = trend[i];
 		else
 			LET(trend_, i) = r;
 		pnl_mat_set_diag(Cho_, 1, i);
 	}
-	for (int i = size_; i < size_*(size_-1)/2; i++)
-		LET(rho_, i) = rho[i];
-
 	pnl_mat_chol(Cho_);
 
 	Gi_ = pnl_vect_create(size_);
@@ -70,7 +66,7 @@ double ModelAsset::get_r() const{
 	return r_;
 }
 
-PnlVect* ModelAsset::get_rho() const{
+double* ModelAsset::get_rho() const{
 	return rho_;
 }
 
@@ -106,7 +102,7 @@ void ModelAsset::set_r(double r){
 	r_ = r;
 }
 
-void ModelAsset::set_rho(PnlVect* rho){
+void ModelAsset::set_rho(double* rho){
 	rho_ = rho;
 }
 

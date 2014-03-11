@@ -19,9 +19,19 @@ namespace WebApp
 		{
 			double t = double.Parse(TextBox1.Text);
 			int H = int.Parse(TextBox2.Text);
+			int size = 4;
+			double[] spot = new double[] {  100, 100, 100, 100 };
+			double[] sigma = new double[] { 0.2, 0.2, 0.2, 0.2 };
+			double r = 0.05;
+			double[] coeff = new double[] { .25, .25, .25, .25 };
+			double[] rho = new double[] { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 };
+			double T = 6;
+			int N = 6;
+			int M = 50000;
 
 			WrapperClass wc = new WrapperClass();
-			wc.getPriceCallEuro(t, 100, 100, .2, .05, 1, 10, H, 50000);
+			double K = 0.0;
+			wc.getPrice(t, size, spot, K, sigma, r, coeff, rho, T, N, H, M);
 
 			Label1.Text = Math.Round(wc.getPrice(), 4).ToString();
 			Label2.Text = Math.Round(wc.getICP(), 4).ToString();
@@ -32,9 +42,19 @@ namespace WebApp
 		{
 			double t = double.Parse(TextBox3.Text);
 			int H = int.Parse(TextBox4.Text);
+			int size = 4;
+			double[] spot = new double[] {  100, 100, 100, 100 };
+			double[] sigma = new double[] { 0.2, 0.2, 0.2, 0.2 };
+			double r = 0.05;
+			double[] coeff = new double[] { .25, .25, .25, .25 };
+			double[] rho = new double[] { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 };
+			double T = 6;
+			int N = 6;
+			int M = 50000;
 
 			WrapperClass wc = new WrapperClass();
-			wc.getDeltaCallEuro(t, 100, 100, .2, .05, 1, 10, H, 500000);
+			double K = 0.0;
+			wc.getDelta(t, size, spot, K, sigma, r, coeff, rho, T, N, H, M);
 
 			Label4.Text = Math.Round(wc.getDelta(), 4).ToString();
 			Label5.Text = Math.Round(wc.getICD(), 4).ToString();
@@ -44,9 +64,19 @@ namespace WebApp
 		protected void Button3_Click(object sender, EventArgs e)
 		{
 			int samples = int.Parse(TextBox5.Text);
+			int size = 4;
+			double[] spot = new double[] {  100, 100, 100, 100 };
+			double[] sigma = new double[] { 0.2, 0.2, 0.2, 0.2 };
+			double r = 0.05;
+			double[] coeff = new double[] { .25, .25, .25, .25 };
+			double[] rho = new double[] { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 };
+			double T = 6;
+			int N = 6;
+			int M = 50000;
 
 			WrapperClass wc = new WrapperClass();
-			wc.getPriceCallEuroSamples(100, 100, 0.2, 0.05, 1, 10, 50000, samples);
+			double K = 0.0;
+			wc.getPriceSamples(size, spot, K, sigma, r, coeff, rho, T, N, M, samples);
 
 			Label7.Text = Math.Round(wc.getVrP(), 4).ToString();
 			Label8.Text = Math.Round(wc.getMxP(), 4).ToString();
@@ -55,9 +85,19 @@ namespace WebApp
 		protected void Button4_Click(object sender, EventArgs e)
 		{
 			int samples = int.Parse(TextBox6.Text);
+			int size = 4;
+			double[] spot = new double[] {  100, 100, 100, 100 };
+			double[] sigma = new double[] { 0.2, 0.2, 0.2, 0.2 };
+			double r = 0.05;
+			double[] coeff = new double[] { .25, .25, .25, .25 };
+			double[] rho = new double[] { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 };
+			double T = 6;
+			int N = 6;
+			int M = 50000;
 
 			WrapperClass wc = new WrapperClass();
-			wc.getDeltaCallEuroSamples(100, 100, 0.2, 0.05, 1, 10, 50000, samples);
+			double K = 0.0;
+			wc.getDeltaSamples(size, spot, K, sigma, r, coeff, rho, T, N, M, samples);
 
 			Label9.Text = Math.Round(wc.getVrD(), 4).ToString();
 			Label10.Text = Math.Round(wc.getMxD(), 4).ToString();

@@ -36,12 +36,13 @@ namespace Wrapper {
 			summary = gcnew array<double>((3*size+1)*(H+1));
 		};
 
-		void getPriceCallEuro(double t, double S0, double K, double sigma, double r, double T, int N, int H, int M);
-		void getDeltaCallEuro(double t, double S0, double K, double sigma, double r, double T, int N, int H, int M);
+		void getPrice(double t, int size, array<double> ^spot, double K, array<double> ^sigma, double r, array<double> ^coeff, array<double> ^rho, double T, int N, int H, int M);
+		void getDelta(double t, int size, array<double> ^spot, double K, array<double> ^sigma, double r, array<double> ^coeff, array<double> ^rho, double T, int N, int H, int M);
 
-		void getPriceCallEuroSamples(double S0, double K, double sigma, double r, double T, int N, int M, int samples);
-		void getDeltaCallEuroSamples(double S0, double K, double sigma, double r, double T, int N, int M, int samples);
-		void getCouvCallEuro(int size, array<double> ^spot, double K, array<double> ^sigma, double r, array<double> ^coeff, array<double> ^rho, double T, int N, int H, int M);
+		void getPriceSamples(int size, array<double> ^spot, double K, array<double> ^sigma, double r, array<double> ^coeff, array<double> ^rho, double T, int N, int M, int samples);
+		void getDeltaSamples(int size, array<double> ^spot, double K, array<double> ^sigma, double r, array<double> ^coeff, array<double> ^rho, double T, int N, int M, int samples);
+
+		void getCouv(int size, array<double> ^spot, double K, array<double> ^sigma, double r, array<double> ^coeff, array<double> ^rho, double T, int N, int H, int M);
 
 		double getPrice() {return prix;};
 		double getPriceBS() {return prixBS;};

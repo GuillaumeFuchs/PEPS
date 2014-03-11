@@ -10,13 +10,13 @@
 Performance :: Performance() : Option() {
 }
 
-Performance :: Performance(double T, int timeStep, int size, double* coeff) : Option(T, timeStep, size, coeff){
+Performance :: Performance(double T, int timeStep, int size, double r, double* coeff) : Option(T, timeStep, size, r, coeff){
 }
  
 Performance :: ~Performance(){
 }
 
-double Performance :: payoff (const PnlMat *path) const{
+double Performance :: payoff (const PnlMat *path, double t) const{
   double sum = 0.0;
   double temp_num;
   double temp_deno;
@@ -38,5 +38,5 @@ double Performance :: payoff (const PnlMat *path) const{
   sum = sum/(double)(timeStep_) - 1;
   pnl_vect_free(&numerateur);
   pnl_vect_free(&denominateur);
-  return 1+MIN(MAX(sum,0), 0.1);
+  return exp(-r_*(T_-t))*(1+MIN(MAX(sum,0), 0.1));
 }

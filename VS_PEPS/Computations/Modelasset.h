@@ -11,7 +11,7 @@ class ModelAsset {
   protected:
 	int size_; /*!< nombre d’actifs du modele */
 	double r_; /*!< taux d’interet */
-	PnlVect* rho_; /*!< parametre de correlation */
+	double* rho_; /*!< parametre de correlation */
 	PnlVect *sigma_; /*!< vecteur de volatilites */
 	PnlVect *spot_; /*!< valeurs initiales du sous-jacent */
 	PnlVect *trend_; /*!< taux utilise sous la probabilite historique */
@@ -60,7 +60,7 @@ class ModelAsset {
 	 *
 	 * \return le parametre de correlation du sous-jacent 
 	 */
-	PnlVect* get_rho() const;
+	double* get_rho() const;
  
 	/*!
 	 * \brief Accesseur de Sigma_
@@ -141,7 +141,7 @@ class ModelAsset {
 	 *
 	 * \param le nouveau parametre de correlation du sous-jacent 
 	 */
-	void set_rho(PnlVect* rho);
+	void set_rho(double* rho);
 
 	/*!
 	 * \brief Mutateur de Sigma_
@@ -230,7 +230,8 @@ class ModelAsset {
 	 * \param path (input) contient en input la trajectoire du sous-jacent
 	 * \param shift_path (output) contient la trajectoire path dont la composante d a ete shiftee par (1+h) a partir de la date t.
 	 * \param h (input) pas de differences finies
-	 * \param d (input) indice du sous-jacent à 
+	 * \param d (input) indice du sous-jacent à shifter
+	 * \param indice (intput) indice dans path à partir duquel il faut shifter
 	 */
 	virtual void shift_asset(PnlMat *_shift_path, const PnlMat *path,
 		int d, double h, int indice) = 0;

@@ -12,7 +12,7 @@ Barrier_l :: Barrier_l() : Option() {
   Bl_ = pnl_vect_new();
 }
 
-Barrier_l::Barrier_l(double strike, double *bl, double T, int timeStep, int size, double* coeff) : Option(T, timeStep, size, coeff){
+Barrier_l::Barrier_l(double strike, double *bl, double T, int timeStep, int size, double r, double* coeff) : Option(T, timeStep, size, r, coeff){
 	strike_ = strike;
 	Bl_ = pnl_vect_create(size_);
 	for (int i = 0; i < size_; i++){
@@ -40,7 +40,7 @@ void Barrier_l :: set_Bl(PnlVect *Bl) {
   Bl_ = Bl;
 }
 
-double Barrier_l :: payoff (const PnlMat *path) const{
+double Barrier_l :: payoff (const PnlMat *path, double t) const{
   double sum ;
   PnlVect* final = pnl_vect_create(size_);
 
@@ -57,5 +57,5 @@ double Barrier_l :: payoff (const PnlMat *path) const{
 	  }
 	}
   }
-  return MAX(sum, 0);
+  return exp(-r_*(T_-t))*MAX(sum, 0);
 }

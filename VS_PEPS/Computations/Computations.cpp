@@ -22,67 +22,54 @@
 
 using namespace std;
 
-void Computations::compute_price_call(double &px, double &ic, double &pxBS, double t, double S0, double K, double sigma, double r, double T, int N, int H, int M){
+void Computations::compute_price(double &px, double &ic, double &pxBS, double t, int size, double *spot, double K, double *sigma, double r, double *coeff, double *rho, double T, int N, int H, int M){
 	PnlRng *rng = pnl_rng_create(PNL_RNG_MERSENNE);
 	pnl_rng_sseed(rng, time(NULL));
 
-	int const size = 1;
-	double spot[size] = {S0};
-	double sigmaV[size] = {sigma};
-	double coeff[size] = {1};
-
-	Bs mod(size, r, NULL, sigmaV, spot, NULL);
-	Basket opt(K, T, N, size, coeff);
+	Bs mod(size, r, rho, sigma, spot, NULL);
+	Playlist opt(T, N, size, r, coeff);
 	MonteCarlo mc(&mod, &opt, rng, 0.01, M);
 
-
-	if (fmod(T/(double)N, t/(double)H) > 0.0001){
+	if (fmod(T/(double)N, t/(double)H) > 0.0001)
 		return;
-	}
 
-	PnlMat* past = pnl_mat_create(1, H+1);
+	PnlMat* past = pnl_mat_create(size, H+1);
 	
 	mod.simul_market(past, H, T, rng);
 	mc.price(past, t, px, ic);
 
-	if (t==0)
-		pxBS = Test::theo_price(MGET(past, 0, 0), K, r, T-t, sigmaV[0]);
+/*	if (t==0)
+		pxBS = Test::theo_price(MGET(past, 0, 0), K, r, T-t, sigma[0]);
 	else
-		pxBS = Test::theo_price(MGET(past, 0, H), K, r, T-t, sigmaV[0]);
-	 
+		pxBS = Test::theo_price(MGET(past, 0, H), K, r, T-t, sigma[0]);
+*/ 
 	pnl_mat_free(&past);
 	pnl_rng_free(&rng);
 }
 
-void Computations::compute_delta_call(double &delt, double &icd, double &deltBS, double t, double S0, double K, double sigma, double r, double T, int N, int H, int M){
+void Computations::compute_delta(double &delt, double &icd, double &deltBS, double t, int size, double *spot, double K, double *sigma, double r, double *coeff, double *rho, double T, int N, int H, int M){
 	PnlRng *rng = pnl_rng_create(PNL_RNG_MERSENNE);
 	pnl_rng_sseed(rng, time(NULL));
 
-	int const size = 1;
-	double spot[size] = {S0};
-	double sigmaV[size] = {sigma};
-	double coeff[size] = {1};
-
-	Bs mod(size, r, NULL, sigmaV, spot, NULL);
-	Basket opt(K, T, N, size, coeff);
+	Bs mod(size, r, rho, sigma, spot, NULL);
+	Playlist opt(T, N, size, r, coeff);
 	MonteCarlo mc(&mod, &opt, rng, 0.01, M);
 
 	PnlVect* delta = pnl_vect_create(size);
 	PnlVect* ic_delta = pnl_vect_create(size);
 
-	if (fmod(T/(double)N, t/(double)H) > 0.0001){
+	if (fmod(T/(double)N, t/(double)H) > 0.0001)
 		return;
-	}
 
-	PnlMat* past = pnl_mat_create(1, H+1);
+	PnlMat* past = pnl_mat_create(size, H+1);
 	mod.simul_market(past, H, T, rng);
 	mc.delta(past, t, delta, ic_delta);
-
+/*
 	if (t==0)
-		deltBS = Test::theo_delta(MGET(past, 0, 0), K, r, T-t, sigmaV[0]);
+		deltBS = Test::theo_delta(MGET(past, 0, 0), K, r, T-t, sigma[0]);
 	else
-		deltBS = Test::theo_delta(MGET(past, 0, H), K, r, T-t, sigmaV[0]);
-	 
+		deltBS = Test::theo_delta(MGET(past, 0, H), K, r, T-t, sigma[0]);
+*/	 
 	delt = GET(delta, 0);
 	icd = GET(ic_delta, 0);
 
@@ -92,20 +79,15 @@ void Computations::compute_delta_call(double &delt, double &icd, double &deltBS,
 	pnl_rng_free(&rng);
 }
 
-void Computations::compute_price_call_samples(double &max, double &var, double S0, double K, double sigma, double r, double T, int N, int M, int samples){
+void Computations::compute_price_samples(double &max, double &var, int size, double *spot, double K, double *sigma, double r, double *coeff, double *rho, double T, int N, int M, int samples){
 	max = 0;
 	double prix, ic, prix_th;
 	
 	PnlRng *rng = pnl_rng_create(PNL_RNG_MERSENNE);
 	pnl_rng_sseed(rng, time(NULL));
 
-	int const size = 1;
-	double spot[size] = {S0};
-	double sigmaV[size] = {sigma};
-	double coeff[size] = {1};
-
-	Bs mod(size, r, NULL, sigmaV, spot, NULL);
-	Basket opt(K, T, N, size, coeff);
+	Bs mod(size, r, rho, sigma, spot, NULL);
+	Playlist opt(T, N, size, r, coeff);
 	MonteCarlo mc(&mod, &opt, rng, 0.01, M);
 
 	double sspread, t, mean = 0, mean_th = 0;
@@ -122,9 +104,9 @@ void Computations::compute_price_call_samples(double &max, double &var, double S
 		mc.price(past, t, prix, ic);
 
 		if (t==0)
-			prix_th = Test::theo_price(MGET(past, 0, 0), K, r, T-t, sigmaV[0]);
+			prix_th = Test::theo_price(MGET(past, 0, 0), K, r, T-t, sigma[0]);
 		else
-			prix_th = Test::theo_price(MGET(past, 0, H), K, r, T-t, sigmaV[0]);
+			prix_th = Test::theo_price(MGET(past, 0, H), K, r, T-t, sigma[0]);
 
 		prix_th = (int)(prix_th*1000)/1000.;
 		prix = (int)(prix*1000)/1000.;
@@ -140,22 +122,18 @@ void Computations::compute_price_call_samples(double &max, double &var, double S
 	pnl_rng_free(&rng);
 }
 
-void Computations::compute_delta_call_samples(double &max, double &var, double S0, double K, double sigma, double r, double T, int N, int M, int samples){
+void Computations::compute_delta_samples(double &max, double &var, int size, double *spot, double K, double *sigma, double r, double *coeff, double *rho, double T, int N, int M, int samples){
 	max = 0;
 	
 	PnlRng *rng = pnl_rng_create(PNL_RNG_MERSENNE);
 	pnl_rng_sseed(rng, time(NULL));
 
-	int const size = 1;
-	double spot[size] = {S0};
-	double sigmaV[size] = {sigma};
-	double coeff[size] = {1};
 	PnlVect* delta = pnl_vect_create(size);
 	PnlVect* ic_delta = pnl_vect_create(size);
 	double delta_th;
 
-	Bs mod(size, r, NULL, sigmaV, spot, NULL);
-	Basket opt(K, T, N, size, coeff);
+	Bs mod(size, r, rho, sigma, spot, NULL);
+	Playlist opt(T, N, size, r, coeff);
 	MonteCarlo mc(&mod, &opt, rng, 0.01, M);
 
 	double sspread, t, mean = 0, mean_th = 0;
@@ -172,9 +150,9 @@ void Computations::compute_delta_call_samples(double &max, double &var, double S
 		mc.delta(past, t, delta, ic_delta);
 
 		if (t==0)
-			delta_th = Test::theo_delta(MGET(past, 0, 0), K, r, T-t, sigmaV[0]);
+			delta_th = Test::theo_delta(MGET(past, 0, 0), K, r, T-t, sigma[0]);
 		else
-			delta_th = Test::theo_delta(MGET(past, 0, H), K, r, T-t, sigmaV[0]);
+			delta_th = Test::theo_delta(MGET(past, 0, H), K, r, T-t, sigma[0]);
 
 		delta_th = (int)(delta_th*1000)/1000.;
 		LET(delta, 0) = (int)(GET(delta, 0)*1000)/1000.;
@@ -194,7 +172,7 @@ void Computations::compute_delta_call_samples(double &max, double &var, double S
 	pnl_rng_free(&rng);
 }
 
-void Computations::compute_couv_call(double &pl, double *summary, int size, double *spot, double K, double *sigma, double r, double *coeff, double *rho, double T, int N, int H, int M, double &execTime){
+void Computations::compute_couv(double &pl, double *summary, int size, double *spot, double K, double *sigma, double r, double *coeff, double *rho, double T, int N, int H, int M, double &execTime){
 	if (fmod((double)H, (double)N) > 0.0001){
 		return;
 	}
@@ -207,13 +185,12 @@ void Computations::compute_couv_call(double &pl, double *summary, int size, doub
 	pnl_rng_sseed(rng, time(NULL));
 
 	Bs mod(size, r, rho, sigma, spot, NULL);
-	Basket opt(K, T, N, size, coeff);
+	Playlist opt(T, N, size, r, coeff);
 	MonteCarlo mc(&mod, &opt, rng, 0.01, M);
 
 	PnlMat* past = pnl_mat_create(size, H+1);
 	PnlMat* summaryV = pnl_mat_create(H+1, size*3+1);
 
-	float temps;
     clock_t tbegin, tend;
 	tbegin = clock();
 	mc.couv(past, pl, plt, H, T, summaryV);

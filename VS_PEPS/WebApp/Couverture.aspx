@@ -69,7 +69,7 @@
 				<asp:ChartArea Name="ChartArea1">
 					<AxisX Title="Temps">
 					</AxisX>
-					<AxisY Title="Nb d'actions à posséder">
+					<AxisY Title="Cours">
 					</AxisY>
 				</asp:ChartArea>
 			</ChartAreas>

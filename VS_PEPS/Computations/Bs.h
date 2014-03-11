@@ -57,7 +57,7 @@ class Bs : public ModelAsset {
 	 * \brief Shift d’une trajectoire du sous-jacent
 	 *
 	 * \param path (input) contient en input la trajectoire du sous-jacent
-	 * \param shift_path (output) contient la trajectoire path dont la composante d a ete shiftee par (1+h) a partir de la date t
+	 * \param shift_path (output) contient la trajectoire path dont la composante d a ete shiftee par (1+h) a partir de la date t.
 	 * \param h (input) pas de differences finies
 	 * \param d (input) indice du sous-jacent à shifter
 	 * \param indice (intput) indice dans path à partir duquel il faut shifter
