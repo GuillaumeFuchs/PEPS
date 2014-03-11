@@ -32,7 +32,9 @@
             <div class="clear hideSkiplink">
                 <asp:Menu ID="NavigationMenu" runat="server" CssClass="menu" EnableViewState="false" IncludeStyleBlock="false" Orientation="Horizontal">
                     <Items>
-                        <asp:MenuItem NavigateUrl="~/Default.aspx" Text="Test sur call"/>
+                        <asp:MenuItem NavigateUrl="~/Model.aspx" Text="Modélisation"/>
+                        <asp:MenuItem NavigateUrl="~/WebForm2.aspx" Text="Paramétrage du backtest"/>
+                        <asp:MenuItem NavigateUrl="~/WebForm3.aspx" Text="Tracking des indices"/>
                         <asp:MenuItem NavigateUrl="~/Couverture.aspx" Text="Couverture sur call"/>
                         <asp:MenuItem NavigateUrl="~/About.aspx" Text="Base de données"/>
                     </Items>
