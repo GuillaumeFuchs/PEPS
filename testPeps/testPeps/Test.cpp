@@ -25,7 +25,7 @@ MonteCarlos* Test::get_mc() const{
 }
 
 void Test::compute_price_samples(int samples, bool display, bool output, PnlMat* past){
-	double price, ic, price_theo;
+	double price, ic, priceTheo;
 	PnlMat* past_extract = pnl_mat_create(0, 0);
 	PnlRng* rng = mc_->get_rng();
 	ModelAsset *mod = mc_->get_mod();
@@ -39,7 +39,7 @@ void Test::compute_price_samples(int samples, bool display, bool output, PnlMat*
 
 	if (output) {
 		ofstream fichier1("Data/price_simul.txt", ios::out | ios::trunc);  // ouverture en écriture avec effacement du fichier ouvert
-		ofstream fichier2("Data/price_theo.txt", ios::out | ios::trunc);
+		ofstream fichier2("Data/priceTheo.txt", ios::out | ios::trunc);
 		ofstream fichier3("Data/time.txt", ios::out | ios::trunc);
 		if(fichier1 && fichier2)
 		{
@@ -58,15 +58,15 @@ void Test::compute_price_samples(int samples, bool display, bool output, PnlMat*
 				mc_->price(past_extract, t, price, ic);
 
 				if (t==0)
-					price_theo = theo_price(MGET(past, 0, 0), strike, r, T-t, GET(sigma, 0));
+					priceTheo = theo_price(MGET(past, 0, 0), strike, r, T-t, GET(sigma, 0));
 				else
-					price_theo = theo_price(MGET(past, 0, temp_H), strike, r, T-t, GET(sigma, 0));
+					priceTheo = theo_price(MGET(past, 0, temp_H), strike, r, T-t, GET(sigma, 0));
 
-				price_theo = (int)(price_theo*1000)/1000.;
+				priceTheo = (int)(priceTheo*1000)/1000.;
 				price = (int)(price*1000)/1000.;
 
 				fichier1 << price << endl;
-				fichier2 << price_theo << endl;
+				fichier2 << priceTheo << endl;
 				fichier3 << t << endl;
 			}
 			fichier1.close();
@@ -76,7 +76,7 @@ void Test::compute_price_samples(int samples, bool display, bool output, PnlMat*
 	}else{
 		double sspread, mean = 0, mean_th = 0, maxSpread = 0;
 		for (int k = 0; k < 1001; k++){
-			
+
 			t = k/1000.;
 			temp_H = (int)(t*1000);
 			pnl_mat_resize(past_extract, 1, temp_H+1);
@@ -88,19 +88,19 @@ void Test::compute_price_samples(int samples, bool display, bool output, PnlMat*
 			mc_->price(past_extract, t, price, ic);
 
 			if (t==0)
-				price_theo = theo_price(MGET(past, 0, 0), strike, r, T-t, GET(sigma, 0));
+				priceTheo = theo_price(MGET(past, 0, 0), strike, r, T-t, GET(sigma, 0));
 			else
-				price_theo = theo_price(MGET(past, 0, temp_H), strike, r, T-t, GET(sigma, 0));
+				priceTheo = theo_price(MGET(past, 0, temp_H), strike, r, T-t, GET(sigma, 0));
 
-			price_theo = (int)(price_theo*1000)/1000.;
+			priceTheo = (int)(priceTheo*1000)/1000.;
 			price = (int)(price*1000)/1000.;
 
-			sspread = fabs(price_theo-price);
+			sspread = fabs(priceTheo-price);
 			mean += price;
-			mean_th += price_theo;
+			mean_th += priceTheo;
 
 			if (display)
-				printf("%d %f \t%f %f %f\n", k, t, price, price_theo, sspread);
+				printf("%d %f \t%f %f %f\n", k, t, price, priceTheo, sspread);
 
 			if (sspread > maxSpread)
 				maxSpread = sspread;
@@ -195,7 +195,7 @@ void Test::compute_delta_samples(int samples, bool display, bool output, PnlMat*
 }
 
 void Test::compute_price(int H, double t){
-	double price, price_theo, ic;
+	double price, priceTheo, ic;
 
 	double N = mc_->get_opt()->get_timeStep();
 	double T = mc_->get_opt()->get_T();
@@ -218,11 +218,11 @@ void Test::compute_price(int H, double t){
 
 	/*
 	if (t==0)
-	price_theo = theo_price(MGET(past, 0, 0), strike, r, T-t, GET(sigma, 0));
+	priceTheo = theo_price(MGET(past, 0, 0), strike, r, T-t, GET(sigma, 0));
 	else
-	price_theo = theo_price(MGET(past, 0, H), strike, r, T-t, GET(sigma, 0));
+	priceTheo = theo_price(MGET(past, 0, H), strike, r, T-t, GET(sigma, 0));
 
-	printf("%f %f, %f\n", price_/500, ic_/500, price_theo);
+	printf("%f %f, %f\n", price_/500, ic_/500, priceTheo);
 	*/
 	printf("%f %f\n", price, ic);
 	pnl_mat_free(&past);
@@ -251,14 +251,13 @@ void Test::compute_delta(int H, double t){
 
 	mc_->delta(past, t, delta, ic_delta);
 
-	/*
 	if (t==0)
-	delta_th = theo_delta(MGET(past, 0, 0), strike, r, T-t, GET(sigma, 0));
+		delta_th = theo_delta(MGET(past, 0, 0), strike, r, T-t, GET(sigma, 0));
 	else
-	delta_th = theo_delta(MGET(past, 0, H), strike, r, T-t, GET(sigma, 0));
+		delta_th = theo_delta(MGET(past, 0, H), strike, r, T-t, GET(sigma, 0));
 
-	printf("Simul %f IC %f Theo %f\n", delta_/1000., ic_delta_/1000., delta_th);
-	*/
+	printf("Simul %f Theo %f\n", GET(delta, 0), delta_th);
+
 	pnl_vect_print(delta);
 	printf("\n");
 	pnl_vect_print(ic_delta);
@@ -277,36 +276,51 @@ void Test::compute_couv(int H, bool output){
 		return;
 	}
 	if (output) {
-		ofstream fichier1("couv_simulation.txt", ios::out | ios::trunc);  // ouverture en écriture avec effacement du fichier ouvert
-		ofstream fichier2("couv_theorique.txt", ios::out | ios::trunc);
-		if(fichier1 && fichier2)
+		ofstream fichier1("Data/couv_simulation.txt", ios::out | ios::trunc);  // ouverture en écriture avec effacement du fichier ouvert
+		ofstream fichier2("Data/couv_theorique.txt", ios::out | ios::trunc);
+		ofstream fichier3("Data/past.txt", ios::out | ios::trunc);
+		ofstream fichier4("Data/delta_simulation.txt", ios::out | ios::trunc);
+		ofstream fichier5("Data/delta_theorique.txt", ios::out | ios::trunc);
+		if(fichier1 && fichier2 && fichier3 && fichier4 && fichier5)
 		{
-			for (int i = 0; i < 500; i++){
+			for (int i = 0; i < 1; i++){
 				cout << i << endl;
 				PnlMat* past = pnl_mat_create(size, H+1);
-				PnlMat* summary = pnl_mat_create(H+1, 1+3*size);
-				mc_->couv(past, pl, plTheorique, H, T, summary);
+				PnlMat* summarySimul = pnl_mat_create(H+1, 2);
+				PnlMat* summaryTheo = pnl_mat_create(H+1, 2);
+
+				mc_->couv(past, pl, plTheorique, H, T, summarySimul, summaryTheo);
 
 				mc_->price(price, ic);
-				double price_theo = theo_price(100, 100, .05, 1, .2);
+				double priceTheo = theo_price(100, 100, .05, 1, .2);
 
 				cout << "P&L simule: " << pl/price << endl;
-				pnl_mat_print(summary);
-				fichier1 << pl/price << endl;
-				fichier2 << plTheorique/price_theo << endl;
+				cout << "P&L theo: " << plTheorique/priceTheo<< endl;
+
+				for (int i = 0; i < H+1; i++){
+					fichier1 << MGET(summarySimul, i, 0) << endl;
+					fichier2 << MGET(summaryTheo, i, 0) << endl;
+					fichier4 << MGET(summarySimul, i, 1) << endl;
+					fichier5 << MGET(summaryTheo, i, 1) << endl;
+					fichier3 << MGET(past, 0, i) << endl;
+				}
+
 			}
 			fichier1.close();
 			fichier2.close();
+			fichier3.close();
 		}else
 			cerr << "Impossible d'ouvrir le fichier !" << endl;
 	}else{
 		PnlMat* past = pnl_mat_create(size, H+1);
-		PnlMat* summary = pnl_mat_create(H+1, 1+3*size);
-		mc_->couv(past, pl, plTheorique, H, T, summary);
+		PnlMat* summarySimul = pnl_mat_create(H+1, 1);
+		PnlMat* summaryTheo = pnl_mat_create(H+1, 1);
+		mc_->couv(past, pl, plTheorique, H, T, summarySimul, summaryTheo);
 		mc_->price(price, ic);
-		double price_theo = theo_price(100, 100, .05, 1, .2);
+		double priceTheo = theo_price(100, 100, .05, 1, .2);
 
-		pnl_mat_print(summary);
+		cout << "P&L simule: " << pl/price << endl;
+		cout << "P&L theo: " << plTheorique/priceTheo<< endl;
 	}
 }
 double Test::theo_price(double S, double K, double r, double T, double sigma){

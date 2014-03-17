@@ -65,24 +65,25 @@ int main(){
 	float temps;
 	clock_t tbegin, tend;
 	//tbegin = clock();
-	PnlMat* past = pnl_mat_create(1, 1001);
-	mod.simul_market(past, 1000, T, rng);
-	
-	ofstream fichier("Data/past.txt", ios::out | ios::trunc);
-	for (int i = 0; i < 1001; i++){
-		fichier << MGET(past, 0, i) << endl;
-	}
-	fichier.close();
+	//PnlMat* past = pnl_mat_create(1, 1001);
+	//mod.simul_market(past, 1000, T, rng);
+	//
+	//ofstream fichier("Data/past.txt", ios::out | ios::trunc);
+	//for (int i = 0; i < 1001; i++){
+	//	fichier << MGET(past, 0, i) << endl;
+	//}
+	//fichier.close();
 
-	test.compute_price_samples(10000, true, true, past);
-	test.compute_delta_samples(10000, true, true, past);
+	//test.compute_price_samples(10000, true, true, past);
+	//test.compute_delta_samples(10000, true, true, past);
 	//test.compute_price(0 , 0.);	
-	//test.compute_delta(0, 0.);
-	//test.compute_couv(18, false);
+	//test.compute_delta(50, 0.5);
+	test.compute_couv(1000 , true);
+
 	/*tend = clock();
 	temps = (float)(tend-tbegin)/CLOCKS_PER_SEC;
 	printf("temps = %f\n", temps);*/
-	pnl_mat_free(&past);
+	//pnl_mat_free(&past);
 	system("pause"); 
 
 	return 0;
