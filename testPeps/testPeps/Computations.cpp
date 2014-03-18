@@ -78,7 +78,7 @@ int main(){
 	//test.compute_delta_samples(10000, true, true, past);
 	//test.compute_price(0 , 0.);	
 	//test.compute_delta(50, 0.5);
-	test.compute_couv(1000 , true);
+	test.compute_couv(100 , true);
 
 	/*tend = clock();
 	temps = (float)(tend-tbegin)/CLOCKS_PER_SEC;
