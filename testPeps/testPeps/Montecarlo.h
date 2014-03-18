@@ -87,7 +87,7 @@ class MonteCarlo : public MonteCarlos {
 	 *	5e	colonne: delta théorique selon B&S
 	 *	6e	colonne: nb d'actions à acheter théorique
 	 */
-	void couv (PnlMat *past, double &pl, double &plTheorique, int H, double T, PnlMat* summary);
+	void couv (PnlMat *past, double &pl, double &plTheo, int H, double T, PnlMat *summarySimul, PnlMat *summaryTheo);
 
 };
 #endif
