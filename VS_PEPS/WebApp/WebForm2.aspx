@@ -26,6 +26,7 @@
     <asp:Label ID="Label3" runat="server" Text="Fenêtre de valisation (jour)"></asp:Label>
         <asp:TextBox ID="TextBox3" runat="server"></asp:TextBox>
     </p>
+    <asp:Button ID="Button1" runat="server" Text="Tracking" />
     </div>
     
 </asp:Content>

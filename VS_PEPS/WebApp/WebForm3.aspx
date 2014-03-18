@@ -7,52 +7,59 @@
 <asp:Content ID="BodyContent" runat="server" ContentPlaceHolderID="MainContent">
 	<h2 style="text-align:center"> Tracking des indices </h2>
 	
-    <ajaxToolkit:ToolkitScriptManager runat="Server" EnablePartialRendering="true" ID="ScriptManager1" />
-    <div class="footsie" style="float:left;margin-left:10em;margin-top:5em;border: 1px solid #496077;width:50em;">
-        <div id="info" style="float:left;padding-right:10em;">
-            <div id="titre" style="float:left;padding:0em 10em 10em 0em;">
-                <p>Footsie</p>
-            </div>
-            <div id="tracking" style="float:none;padding:10em 5em 10em 5em;">
-                <asp:Label ID="Label1" runat="server" Text="Tracking error"></asp:Label>
-                <asp:TextBox ID="TextBox1" runat="server"></asp:TextBox>
-            </div>
+   <ajaxToolkit:ToolkitScriptManager runat="Server" EnablePartialRendering="true" ID="ScriptManager1" />
+   <%-- <div class="S&P" style="float:left;width:30%;height:25%;margin-left:10%;margin-top:5%;padding-bottom:5%; padding-left:5%;border: 1px solid #496077;color:Blue;">
+        <p> Modélisation de l'évolution des indices</p>
+        <br></br>
+        <div class="tracking" style="visibility:visible;padding-top:10%">
+        <asp:Label ID="tracking" runat="server" Text="tracking"></asp:Label>
+        <asp:TextBox ID="TextBox2" runat="server"></asp:TextBox>
         </div>
-        <div id="print_ftse" style="">
-            <p>Modélisation du Footsie</p>
-          <%--  <asp:Chart ID="Chart1" runat="server">
-                <Series>
-                    <asp:Series Name="Series1">
-                    </asp:Series>
-                </Series>
-                <ChartAreas>
-                    <asp:ChartArea Name="ChartArea1">
-                    </asp:ChartArea>
-                </ChartAreas>
-            </asp:Chart>--%> 
-        </div>
-    </div>
+    </div>--%>
    
     
-    <div class="nikkei" style="width:10%;margin-right:10%;margin-top:5%;padding:0% 10% 10% 15%;border: 1px solid #496077;float:right">
+    <div class="Footsie" style="width:30%;height:25%;margin-right:10%;margin-top:2%;padding-bottom:10%;padding-left:5%; color: Blue; border: 1px solid #496077;float:right;">
+        <p> Footsie</p>
+        <br></br>
+        <div class="Footsie" style="padding-left:20%">
+        </div>
+        <div class="Tracking" style="visibility:visible;padding-top:10%">
+        <asp:Label ID="Label4" runat="server" Text="Tracking"></asp:Label>
+        <asp:TextBox ID="TextBox5" runat="server"></asp:TextBox>
+        </div>
+    </div>
+
+    <div class="Nikkei" style="float:left;width:30%;height:25%;margin-left:10%;margin-top:2%;padding-bottom:10%; padding-left:5%;border: 1px solid #496077;color:Blue;">
         <p> Nikkei</p>
         <br></br>
+        <div class="Nikkei" style="padding-left:20%">
+        </div>
+        <div class="Tracking" style="visibility:visible;padding-top:10%">
+        <asp:Label ID="Label1" runat="server" Text="Tracking"></asp:Label>
+        <asp:TextBox ID="TextBox1" runat="server"></asp:TextBox>
+        </div>
     </div>
 
-    <div class="s&p" style="float:left;width:10%;margin-left:10%;margin-top:3%;padding:0% 15% 10% 10%;border: 1px solid #496077;">
-        <p>S&P</p>
+    <div class="Eurostoxx" style="width:30%;margin-right:10%;margin-top:2%;padding-bottom:10%;padding-left:5%; color: Blue; border: 1px solid #496077;float:right;">
+        <p> Eurostoxx</p>
         <br></br>
-        <ajaxToolkit:ComboBox ID="ComboBox3" runat="server">
-            <asp:ListItem Text="Constant" Value="0" />
-        </ajaxToolkit:ComboBox>
+        <div class="Eurostoxx" style="padding-left:20%">
+        </div>
+        <div class="Tracking" style="visibility:visible;padding-top:10%">
+        <asp:Label ID="Label2" runat="server" Text="Tracking"></asp:Label>
+        <asp:TextBox ID="TextBox3" runat="server"></asp:TextBox>
+        </div>
     </div>
 
-    <div class="eurostoxx" style="width:10%;margin-right:10%;margin-top:3%;padding:0% 10% 10% 15%;border: 1px solid #496077;float:right">
-        <p>Eurostoxx</p>
+    <div class="S&P" style="float:left;width:30%;height:35%;margin-left:10%;margin-top:2%;padding-bottom:10%; padding-left:5%;border: 1px solid #496077;color:Blue;">
+        <p>S&P 500</p>
         <br></br>
-        <ajaxToolkit:ComboBox ID="ComboBox4" runat="server">
-            <asp:ListItem Text="Constant" Value="0" />
-        </ajaxToolkit:ComboBox>
+        <div class="S&P 500" style="padding-left:20%">
+        </div>
+        <div class="Tracking" style="visibility:visible;padding-top:10%">
+        <asp:Label ID="Label3" runat="server" Text="Tracking"></asp:Label>
+        <asp:TextBox ID="TextBox4" runat="server"></asp:TextBox>
+        </div>
     </div>
 
 </asp:Content>
