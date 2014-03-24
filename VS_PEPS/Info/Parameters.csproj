@@ -44,6 +44,10 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\AccesBD\AccesBD.csproj">
+      <Project>{11BF916A-158C-4E42-AEE7-779E3F5DD0DC}</Project>
+      <Name>AccesBD</Name>
+    </ProjectReference>
     <ProjectReference Include="..\DBAccess\AffichageBD.csproj">
       <Project>{B9CADB4F-7103-4A57-A2D8-B35D931A8411}</Project>
       <Name>AffichageBD</Name>

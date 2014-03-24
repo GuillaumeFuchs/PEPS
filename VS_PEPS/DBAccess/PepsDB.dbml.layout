@@ -8,10 +8,10 @@
         <elementListCompartment Id="fd6b7205-9464-4546-8d07-d54d92ff5b25" absoluteBounds="5.765, 2.585, 1.9700000000000002, 1.4031982421875" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
       </nestedChildShapes>
     </classShape>
-    <classShape Id="15331f9b-6275-4101-935f-a06a288caddd" absoluteBounds="2.875, 1.375, 2, 1.9631982421875">
+    <classShape Id="2aaab23e-b87e-4591-bd54-625fa452bd42" absoluteBounds="2.75, 1.875, 2, 1.9631982421875">
       <DataClassMoniker Name="/PepsDBDataContext/Component" />
       <nestedChildShapes>
-        <elementListCompartment Id="08b5d32e-a7ea-4830-ade3-952e085bd272" absoluteBounds="2.8899999999999997, 1.835, 1.9700000000000002, 1.4031982421875" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
+        <elementListCompartment Id="d526f63c-e0bc-4745-a536-c46ec06bd82d" absoluteBounds="2.765, 2.335, 1.9700000000000002, 1.4031982421875" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
       </nestedChildShapes>
     </classShape>
   </nestedChildShapes>

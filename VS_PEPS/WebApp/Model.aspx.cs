@@ -13,7 +13,29 @@ namespace WebApp
 	{
 		protected void Page_Load(object sender, EventArgs e)
 		{
+            ComboBox1.SelectedIndexChanged += new EventHandler(ComboBox1_SelectedIndexChanged);
+            if (!Page.IsPostBack)
+            {
+                ComboBox1.Attributes.Add("onchange", "ajout_param();");
+            }
 		}
+        protected void ComboBox1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            
+        }
+
+        
+        protected void AjoutParam(object sender, EventArgs e)
+        {
+            Console.WriteLine("On arrive dans AjoutParam");
+            Console.WriteLine(ComboBox1.SelectedValue.ToString());
+            if (ComboBox1.SelectedValue.ToString().Equals("0"))
+            {
+                
+                string script = "<script type=\"text/javascript\">ajout_param();</script>";
+                ClientScript.RegisterStartupScript(typeof(Page), "script", script);
+            }
+        }
 
         //protected void Button1_Click(object sender, EventArgs e)
         //{

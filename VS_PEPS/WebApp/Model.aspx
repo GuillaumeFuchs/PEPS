@@ -6,6 +6,9 @@
 <asp:Content ID="HeaderContent" runat="server" ContentPlaceHolderID="HeadContent">
 </asp:Content>
 <asp:Content ID="BodyContent" runat="server" ContentPlaceHolderID="MainContent">
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.0/jquery.min.js"></script>
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.7.2/jquery-ui.min.js"></script>
+
 	<h2 style="text-align:center"> Paramétrage de la simulation </h2>
 
     <ajaxToolkit:ToolkitScriptManager runat="Server" EnablePartialRendering="true" ID="ScriptManager1" />
@@ -13,14 +16,16 @@
         <p> Modélisation de l'évolution des indices</p>
         <br></br>
         <div class="model" style="padding-left:20%">
-        <ajaxToolkit:ComboBox ID="ComboBox1" runat="server" on>
+        <asp:DropDownList ID="ComboBox1" runat="server" AutoPostBack="true">
             <asp:ListItem Text="Black & Scholes" Value="0" />
-            <asp:ListItem Text="Merton" Value="1" />
-        </ajaxToolkit:ComboBox>
+            <asp:ListItem Text="Merton" Value="1"/>
+        </asp:DropDownList>
         </div>
-        <div class="param1" style="visibility:visible;padding-top:10%">
-        <asp:Label ID="Label2" runat="server" Text="Label"></asp:Label>
-        <asp:TextBox ID="TextBox2" runat="server"></asp:TextBox>
+        <div class="param1" style="visibility:hidden;padding-top:10%">
+        <p><asp:Label ID="Label2" runat="server" Text="r"></asp:Label>
+        <asp:TextBox ID="TextBox2" runat="server"></asp:TextBox></p>
+        <p><asp:Label ID="Label3" runat="server" Text="spot"></asp:Label>
+        <asp:TextBox ID="TextBox3" runat="server"></asp:TextBox></p>
         </div>
     </div>
    
@@ -33,7 +38,7 @@
             <asp:ListItem Text="Constant" Value="0" />
         </ajaxToolkit:ComboBox>
         </div>
-        <div class="param1" style="visibility:visible;padding-top:10%">
+        <div class="param1" style="visibility:hidden;padding-top:10%">
         <asp:Label ID="Label1" runat="server" Text="Label"></asp:Label>
         <asp:TextBox ID="TextBox1" runat="server"></asp:TextBox>
         </div>
@@ -57,6 +62,18 @@
             <asp:ListItem Text="Constant" Value="0" />
         </ajaxToolkit:ComboBox>
         </div>
+        <div class="param1" style="visibility:hidden;padding-top:10%">
+        <asp:Label ID="Label4" runat="server" Text="Volatilité"></asp:Label>
+        <asp:TextBox ID="TextBox4" runat="server"></asp:TextBox>
+        </div>
     </div>
+
+    <script type="text/javascript">
+        function ajout_param() {
+            if ($(".param1").css('visibility') == 'hidden' && $("#<%=div_parameters.ClientID%>") {
+                $(".param1").css('visibility', 'visible');
+            }else{
+        }
+    </script>
 
 </asp:Content>

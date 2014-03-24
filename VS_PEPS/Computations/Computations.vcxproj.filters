@@ -31,6 +31,36 @@
     <Filter Include="Fichiers sources\Option">
       <UniqueIdentifier>{89cbb9c8-6013-4374-8ce8-364e1a3399eb}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Fichiers sources\Couverture">
+      <UniqueIdentifier>{b15e7064-4704-40fa-967b-62754f8863d7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Fichiers d%27en-tête\Couverture">
+      <UniqueIdentifier>{7ac4930b-8c7b-4b59-acec-16d514ec6014}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Fichiers sources\Parametres">
+      <UniqueIdentifier>{c55a901c-d2e5-4242-8bf8-f5a1a2369746}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Fichiers sources\Parametres\ModelVolat">
+      <UniqueIdentifier>{18e5651d-8511-44a0-9edd-ad2d50fc38f2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Fichiers sources\Parametres\ModelTauxChange">
+      <UniqueIdentifier>{14d8837e-a58e-4f20-b250-3056def50d3d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Fichiers sources\Parametres\ModelTaux">
+      <UniqueIdentifier>{0d8f6be2-1cc7-4ce5-8666-6f793214b11b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Fichiers d%27en-tête\Parametres">
+      <UniqueIdentifier>{68e01488-a5c1-48d0-97d1-25848d2491f7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Fichiers d%27en-tête\Parametres\ModelVolat">
+      <UniqueIdentifier>{48f1401d-9a8e-4e68-9fd7-32c5a822dfd4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Fichiers d%27en-tête\Parametres\ModelTaux">
+      <UniqueIdentifier>{cad2cf0e-ec6e-4e3c-951f-07e77983dfb1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Fichiers d%27en-tête\Parametres\ModelTauxChange">
+      <UniqueIdentifier>{239b2777-45f4-432b-a214-48ba8f2fb579}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Computations.h">
