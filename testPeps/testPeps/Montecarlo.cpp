@@ -333,8 +333,7 @@ void MonteCarlo::couv(PnlMat *past, double &pl, double &plTheo, int H, double T,
 		delta(past_sub, timeH*i, delta1, ic_vect);
 
 		delta1Theo = Test::theo_delta(MGET(past, 0, i), 100, 0.05, T-timeH*i, 0.2);
-		MLET(summarySimul, i, 1) = GET(delta1, 0);
-		MLET(summaryTheo, i, 1) = delta1Theo;
+		
 		result = pnl_vect_copy(delta1);
 		resultTheo = delta1Theo;
 
@@ -345,6 +344,8 @@ void MonteCarlo::couv(PnlMat *past, double &pl, double &plTheo, int H, double T,
 		LET(pFTheo, i) = GET(pFTheo,i-1) * exp(r*T/H) - resultTheo*spot;
 		MLET(summarySimul, i, 0) = GET(pF, i);
 		MLET(summaryTheo, i, 0) = GET(pFTheo, i);
+		MLET(summarySimul, i, 1) = pnl_vect_scalar_prod(result, S);
+		MLET(summaryTheo, i, 1) = resultTheo*spot;
 
 		pnl_vect_free(&delta2);
 	}

@@ -595,19 +595,19 @@ C'est ainsi que nous avons commencé par calculer les différentes performances 
 \begin{center}
 \begin{tabular}{|c|c|c|c|c|}
   \hline
-   & Footsie 100 & Eurostoxx 50 & Nikkei 225 & S\& P 500 \\
+   & Footsie 100 & Eurostoxx 50 & Nikkei 225 & S\&P 500 \\
   \hline
   Footsie 100 & 1 & 0.568 & 0.848 & 0.894\\
   Eurostoxx 50 & 0.568 & 1 & 0.507 & 0.278 \\
   Nikkei 225 & 0.848 & 0.507 & 1 & 0.822\\
-  S \& P 500 & 0.894 & 0.278 & 0.822 & 1\\
+  S\&P 500 & 0.894 & 0.278 & 0.822 & 1\\
   \hline
 \end{tabular}
 \end{center}
 \end{spacing}
 
 Afin d'observer au mieux les corrélations relevées ci dessus, nous avons décidé de tracer les performances de chaque indice jour par jour en prenant comme point de référence les valeurs des cours le 29/04/2010 et le 30/04/2010 pour le Nikkei 225 puisque celui ci n'était pas côté le 29/04/2010.
-Aux vues des corrélations obtenues précédemment, nous devrions observé des rentabilités évoluant la plupart du temps dans le même sens et les mêmes proportions pour les couples (Footsie,Nikkei), (Footsie,S \& P) et finalement de manière un peu moindre entre (Nikkei, S \& P).
+Aux vues des corrélations obtenues précédemment, nous devrions observé des rentabilités évoluant la plupart du temps dans le même sens et les mêmes proportions pour les couples (Footsie, Nikkei), (Footsie, S\&P) et finalement de manière un peu moindre entre (Eurostoxx, S\&P).
 
 
 \begin{center}
@@ -621,15 +621,15 @@ Aux vues des corrélations obtenues précédemment, nous devrions observé des r
 \includegraphics[scale=0.5]{Correlations_indices.jpg}
 \end{center}
 
-On constate suite à l'observation de ce graphique que l'évolution des performances du Footsie 100 et du S \& P 500 sont souvent dans les mêmes proportions et on observe les mêmes pics ainsi que les mêmes creux dans la plupart des cas comme par exemple au niveau du 30/06/2012.
-Ceci offre donc de l'information à l'investisseur puisque celui-ci en anticipant une forte hausse du S \& P par exemple saura que le Footsie et le Nikkei toutes proportions gardées, devraient sentir une hausse sensiblement identique or comme les performances sont évalués sur 3 indices et que les meilleurs taux de rendements actuariels sont obtenus pour des échéances de un et deux ans. Ceci implique que l'investisseur pourra espérer obtenir le meilleur rendement actuariel possible avec ce produit.
+On constate suite à l'observation de ce graphique que l'évolution des performances du Footsie 100 et du S\&P 500 sont souvent dans les mêmes proportions et on observe les mêmes pics ainsi que les mêmes creux dans la plupart des cas comme par exemple au niveau du 30/06/2012.
+Ceci offre donc de l'information à l'investisseur puisque celui-ci en anticipant une forte hausse du S\&P par exemple saura que le Footsie et le Nikkei toutes proportions gardées, devraient sentir une hausse sensiblement identique or comme les performances sont évalués sur 3 indices et que les meilleurs taux de rendements actuariels sont obtenus pour des échéances de un et deux ans. Ceci implique que l'investisseur pourra espérer obtenir le meilleur rendement actuariel possible avec ce produit.
 
 \newpage
 
 
 
 \section{Modèles Mathématiques}
-Afin de proposer le produit Playlist aux clients, il faut en déterminer le prix. L'importance de la modélisation est donc capitale. En effet, nous devons faire des prévisions sur l'évolution des différents éléments financiers qui vont impacter sur le prix du produit. Le payoff du produit Playlist est directement lié à l'évolution des 4 indices présentés plus haut. Nous allons voir que pour modéliser l'évolution de ces indices, il nous faudra aussi modéliser l'évolution du taux sans risque, ainsi que la volatilité. Or il existe plusieurs modèles, plus ou moins raffinés, permettant de décrire la dynamique des actifs sous-jacents qui nous concernent et ces deux paramètres. Il convient donc de les présenter, et de faire un choix de modélisation.
+Afin de proposer le produit Playlist 2 aux clients, il faut en déterminer le prix. L'importance de la modélisation est donc capitale. En effet, les prévisions sur l'évolution des différents éléments financiers vont impacter le prix du produit. Le payoff de Playlist 2 est directement lié à l'évolution des 4 indices présentés plus haut. Pour modéliser l'évolution de ces indices, il faudra aussi modéliser l'évolution du taux sans risque, ainsi que la volatilité. Or il existe plusieurs modèles, plus ou moins raffinés, permettant de décrire la dynamique des indices concernés et ces deux paramètres. Il convient donc de les présenter, et de faire un choix de modélisation.
 
 \subsection{Modélisation des indices}
 
@@ -652,7 +652,7 @@ avec $W_{t}$ un processus de Wiener, $ W_{t} \rightarrow \mathcal{N}(0,\sqrt{t})
 On obtient avec Itô : \\
 $$ d(ln(S))=(\mu - \frac{\sigma^{2}}{2})dt + \sigma dW $$ \\
 Soit \\
-$$ S(t) = S_{0} exp \left[(\mu - \frac{\sigma^{2}}{2})t + \sigma W \right] $$ \\
+$$ S(t) = S_{0} * exp \left[(\mu - \frac{\sigma^{2}}{2})t + \sigma W \right] $$ \\
 
 Le principal problème avec le modèle de Black-Scholes est qu'il ne présente pas une queue de distribution suffisamment lourde par rapport à la réalité : il ne prend pas en compte la possibilité de saut d'un cours boursier. Le modèle qui suit est le modèle de Merton. Celui-ci permet de prendre en compte cette possibilité.\\
 
@@ -677,7 +677,7 @@ $$ \frac{dS(t)}{S(t)} = rdt + \sqrt{V(t)}dW_{s}(t) $$ \\
 Où r est le taux sans risque, V la volatilité, K un paramètre de retour à la moyenne, $\theta$ la variance long terme, $\sigma$ la volatilité de la volatilité, et  $W_{s}$ et $W_{v}$ sont deux mouvements browniens corrélés.\\
 
 \subsubsection{Choix du modèle et validité du modèle de Black-Scholes pour les indices}
-Le modèle de Heston est reconnu comme étant le plus précis. Cependant, le nombre de paramètres étant très important, le calibrage de ces paramètres est très difficile à partir des ressources dont nous disposons. Le modèle de Black-Scholes étant le plus simple à implémenter, nous nous concentrerons tout d'abord sur celui-ci. L'implémentation du modèle de Merton pourrait représenter une bonne voie d'approfondissement, si le temps nous le permettait. \\ \\
+Le modèle de Heston est reconnu comme étant le plus précis. Cependant, le nombre de paramètres étant très important, le calibrage de ces paramètres est très difficile sans des données réelles utilisables. Le modèle de Black-Scholes étant le plus simple à implémenter, l'évaluation du produit et ce qui en découle (grecques, couvertures...) sera faite à partir de ce modèle. L'implémentation du modèle de Merton pourrait représenter une bonne voie d'approfondissement. \\ \\
 Le modèle de Black-Scholes est le plus souvent utilisé pour modéliser la dynamique du cours d'une action boursière. Montrons qu'il peut aussi modéliser l'évolution d'un indice boursier. \\
 Un indice peut être assimilé à un portefeuille d'actions. On note :
 \begin{itemize}
@@ -724,6 +724,7 @@ où $\rho_{i,j}$ est le coefficient de corrélation entre $U_i$ et $U_j$. \\\\
 On peut donc écrire :
 $$ \frac{dP_t}{P_t} = \mu dt + \sigma U \sqrt{dt} $$
 En posant $dW = U \sqrt{dt}$, on a $dW \rightarrow \mathcal{N}(0,\sqrt{dt})$ est un processus de Wiener. \\ \\
+\textbf{Conclusion:}\\
 On peut donc légitimement modéliser l'évolution de la valeur d'un indice boursier avec la méthode de Black-Scholes, en supposant que le cours de chacune des actions qui le composent suivent une dynamique de Black-Scholes.
 
 \subsection{Modélisation de la volatilité}
@@ -1163,6 +1164,24 @@ flux(var ValNom, var temps){
    On renvoie 0;
 }
 \end{verbatim}
+
+\section{Simulation de la couverture}
+La répartition du \textit{P&L} (Profit and Loss, ie erreur de couverture) joue un rôle central. Un modèle est jugé sur sa bonne capacité à couvrir les produits exotiques.\\
+Considérons un actif dont la valeur du sous-jacent est noté $S_{t}$. Son évolution se fait sur une grille de temps \{$t_{0}$,...,$t_{N}$\} de pas $T/N$ où ${t_{0}$ = $0$, le début de l'option et ${t_{N}$ = $T$, la maturité de l'option sur le sous-jacent.\\
+La méthode \lstinline!simul_market! de la classe \lstinline!BS! renvoi une simulation du marché avec un nombre de dates $H$. On considère la grille de discrétisation de pas $T/H$ \{$\tau_{0}$,...,$\tau_{N}$\} \supset  \{$t_{0}$,...,$t_{N}$\} où $\tau_{0}$ = $0$ et $\tau_{N}$ = $T$.\\
+Le long de cette trajectoire, la construction du portefeuille de couverture se fait par le calcul du prix $p_{i}$ et du delta $\delta_{i}$ à chaque date $\tau_{i}$. L'évolution de la part investie au taux sans risque s'écrit:\\
+\begin{equation} % variante :equation*
+  \left\{%
+     \vspace{-3ex}
+        \begin{align}%
+          & V_{0} = p_{0}-\delta_{0}.S_{0} \\
+          & V_{i} = V_{i-1}*\exp^{\frac{r*T}{H}}-(\delta_{i}-\delta_{i-1}).S_{\tau_{i}}, \hspace{7 mm}  i=1,...,H 
+        \end{align}%
+ \right.
+\end{equation}
+
+L'erreur de couverture est donnée par:
+ $$P\&L = V_{H}+\delta_{H}.S_{\tau_{H}}-\lstinline!payoff!$$
 
 
 \end{document}
