@@ -30,7 +30,7 @@ GO
 
 BULK 
 INSERT dbo.PepsDB
-FROM 'C:\Users\guillaume\Desktop\donnes_peps.csv'
+FROM 'C:\Users\Fuchsg\Documents\GitHub\PEPS\script_SQL\donnes_peps.csv'
 WITH (
 FIELDTERMINATOR = ';',
 ROWTERMINATOR = '0x0A'
