@@ -10,141 +10,132 @@
 namespace WebApp {
     
     
-    public partial class _Default {
+    public partial class WebForm4 {
         
         /// <summary>
-        /// Contrôle ScriptManager1.
+        /// Contrôle simulation.
         /// </summary>
         /// <remarks>
         /// Champ généré automatiquement.
         /// Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
         /// </remarks>
-        protected global::AjaxControlToolkit.ToolkitScriptManager ScriptManager1;
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl simulation;
         
         /// <summary>
-        /// Contrôle ComboBox1.
+        /// Contrôle Button1.
         /// </summary>
         /// <remarks>
         /// Champ généré automatiquement.
         /// Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
         /// </remarks>
-        protected global::AjaxControlToolkit.ComboBox ComboBox1;
+        protected global::System.Web.UI.WebControls.Button Button1;
         
         /// <summary>
-        /// Contrôle param1.
+        /// Contrôle Stoxx.
         /// </summary>
         /// <remarks>
         /// Champ généré automatiquement.
         /// Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
         /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlGenericControl param1;
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl Stoxx;
         
         /// <summary>
-        /// Contrôle Label2.
+        /// Contrôle Chart1.
         /// </summary>
         /// <remarks>
         /// Champ généré automatiquement.
         /// Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label Label2;
+        protected global::System.Web.UI.DataVisualization.Charting.Chart Chart1;
         
         /// <summary>
-        /// Contrôle TextBox2.
+        /// Contrôle Perf_Euro.
         /// </summary>
         /// <remarks>
         /// Champ généré automatiquement.
         /// Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox TextBox2;
+        protected global::System.Web.UI.WebControls.TextBox Perf_Euro;
         
         /// <summary>
-        /// Contrôle Label3.
+        /// Contrôle Ftse.
         /// </summary>
         /// <remarks>
         /// Champ généré automatiquement.
         /// Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label Label3;
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl Ftse;
         
         /// <summary>
-        /// Contrôle TextBox3.
+        /// Contrôle Chart2.
         /// </summary>
         /// <remarks>
         /// Champ généré automatiquement.
         /// Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox TextBox3;
+        protected global::System.Web.UI.DataVisualization.Charting.Chart Chart2;
         
         /// <summary>
-        /// Contrôle ComboBox2.
+        /// Contrôle Perf_Footsie.
         /// </summary>
         /// <remarks>
         /// Champ généré automatiquement.
         /// Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
         /// </remarks>
-        protected global::AjaxControlToolkit.ComboBox ComboBox2;
+        protected global::System.Web.UI.WebControls.TextBox Perf_Footsie;
         
         /// <summary>
-        /// Contrôle Label1.
+        /// Contrôle N225.
         /// </summary>
         /// <remarks>
         /// Champ généré automatiquement.
         /// Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label Label1;
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl N225;
         
         /// <summary>
-        /// Contrôle TextBox1.
+        /// Contrôle Chart3.
         /// </summary>
         /// <remarks>
         /// Champ généré automatiquement.
         /// Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox TextBox1;
+        protected global::System.Web.UI.DataVisualization.Charting.Chart Chart3;
         
         /// <summary>
-        /// Contrôle ComboBox3.
+        /// Contrôle Perf_Nikkei.
         /// </summary>
         /// <remarks>
         /// Champ généré automatiquement.
         /// Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
         /// </remarks>
-        protected global::AjaxControlToolkit.ComboBox ComboBox3;
+        protected global::System.Web.UI.WebControls.TextBox Perf_Nikkei;
         
         /// <summary>
-        /// Contrôle ComboBox4.
+        /// Contrôle SP.
         /// </summary>
         /// <remarks>
         /// Champ généré automatiquement.
         /// Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
         /// </remarks>
-        protected global::AjaxControlToolkit.ComboBox ComboBox4;
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl SP;
         
         /// <summary>
-        /// Contrôle param4.
+        /// Contrôle Chart4.
         /// </summary>
         /// <remarks>
         /// Champ généré automatiquement.
         /// Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
         /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlGenericControl param4;
+        protected global::System.Web.UI.DataVisualization.Charting.Chart Chart4;
         
         /// <summary>
-        /// Contrôle Label4.
+        /// Contrôle Perf_SP.
         /// </summary>
         /// <remarks>
         /// Champ généré automatiquement.
         /// Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label Label4;
-        
-        /// <summary>
-        /// Contrôle TextBox4.
-        /// </summary>
-        /// <remarks>
-        /// Champ généré automatiquement.
-        /// Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox TextBox4;
+        protected global::System.Web.UI.WebControls.TextBox Perf_SP;
     }
 }

@@ -1,0 +1,28 @@
+﻿.AjaxToolkitStyle .ajax__combobox_inputcontainer .ajax__combobox_textboxcontainer input
+{
+    background-image: url(ComboBox/images/toolkit-bg.gif);
+    background-position: top left;
+    border: 0px none;
+    color: #FFFFFF;
+    padding: 2px 0px 2px 3px;
+    font-size: 13px;
+    height: 16px;
+    width: 240px;
+    position: relative;
+    top: -2px;
+}
+.AjaxToolkitStyle .ajax__combobox_inputcontainer .ajax__combobox_buttoncontainer button
+{
+    background-image: url(ComboBox/images/toolkit-arrow.gif);
+    /*background-position: top left;*/
+    /*border: 0px none;*/
+    height: 23px;
+    width: 25px;
+    margin-bottom: 5px;
+    margin-left: -2px;
+}
+.AjaxToolkitStyle .ajax__combobox_itemlist
+{
+    border-color: #0F2543;
+    background-color: #EFEFEF;
+}
