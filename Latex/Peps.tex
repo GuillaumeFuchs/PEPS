@@ -107,7 +107,7 @@ Louis \textsc{Perfumo}
 
 \section{Introduction}
 
-Ce rapport est l'objet d'une analyse du produit structuré nommé \lstinline!Playlist 2! déposé par  la CACEIS Bank, commercialisé par le réseau des caisses d'épargne et géré par Natixis Asset Management.
+Ce rapport est l'objet d'une analyse du produit structuré nommé \textbf{Playlist 2} déposé par  la CACEIS Bank, commercialisé par le réseau des caisses d'épargne et géré par Natixis Asset Management.
 Ce produit est un OPCVM français qui pouvait être acheté entre le 14 janvier 2010 et le 28 juin 2010 avec pour valeur nominale liquidative de référence la valeur le maximale parmi toutes les valeurs liquidatives entre le 14 janvier et le 28 juin 2010. L'objectif de gestion du FCP est de permettre au porteur de recevoir la valeur liquidative de référence majorée d'un gain final à une date donnée dépendant des performances de 4 indices boursiers. 
 
 
@@ -922,6 +922,7 @@ Si une fonction quelconque $ v(t,S_t) $ satisfait la dernière équation, et c'e
 C'est ce qu'on appelle la couverture en Delta.
 
 \subsection{Vers une modification des paramètres?}
+
 Le cadre du modèle de Black-Scholes constant est assez restrictif. Le calcul des deltas de couverture se fera dans notre application par simulation de Monte Carlo, ce qui suppose de simuler l’évolution des cours futurs des sous-jacents. Ainsi, une remarque vient alors naturellement à l'esprit : les années passant, la connaissance des paramètres, notamment la volatilité historique du sous-jacents s’améliore, pourquoi alors ne pas simuler ces mêmes trajectoires historiques avec des paramètres nouveaux, recalibrés sur une plage de temps plus récente? On collerait alors plus à la réalité de l'évolution futur du sous-jacents.\\
 
 En réalité, une telle supposition ne trouve aucune justification théorique et va même à l'encontre du raisonnement présenté dans la partie précédente. Montrons ceci dans le cadre d'un produit dérivé sur un seul sous-jacent, donc la dynamique s’écrit : 
@@ -931,14 +932,13 @@ $$\frac{d\mathbb{Q}}{d\mathbb{P}}= \textbf{exp}(\lambda * W_{t} - \frac{\lambda^
 
 avec $\lambda$ solution de $$ \sigma * \lambda + r = \mu $$ \\
 
-Dès lors, on se rend compte que si on change de valeur de volatilité ($\sigma$) pour la simulation, le portefeuille actualisé ne sera plus une martingale sous $\mathbb{Q}$. En fait, changer de volatilité revient à modifier l'évaluation que l'on fait du prix du produit, et à commencer une nouvelle couverture sous une nouvelle de mesure de probabilités : constituer un nouveau portefeuille de réplication. Rien ne dit que le prix que l'on trouve soit égale à celui obtenu précédemment (il est même forcement différent). Dès lors, si on ne veut pas réajuster la valeur du portefeuille par un réinvestissement qui pourrai occasionner une perte de la propriété d'auto-financement supposée dans la partie précédente, on enregistre une erreur de couverture immédiatement, qui perdurera durant tout le restant de la vie du produit dérivé.\\
+Dès lors, on se rend compte que si on change de valeur de volatilité ($\sigma$) pour la simulation, le portefeuille actualisé ne sera plus une martingale sous $\mathbb{Q}$. En fait, changer de volatilité revient à modifier l'évaluation que l'on fait du prix du produit, et à commencer une nouvelle couverture sous une nouvelle de mesure de probabilités : constituer un nouveau portefeuille de réplication. Rien ne dit que le prix que l'on trouve soit égal à celui obtenu précédemment (il est même forcement différent). Dès lors, si l'on ne peut pas réajuster la valeur du portefeuille par un réinvestissement issu de fonds disponibles par ailleurs, c'est à dire hors du cadre du portefeuille de réplication, on enregistre une erreur de couverture immédiatement, qui perdurera durant tout le restant de la vie du produit dérivé.\\
 
 Illustrons ce propos dans un cas simple : le cas d'un call sur un sous-jacent. On suppose qu'on rebalance notre portefeuille aujourd'hui ($t_{1}$) et demain ($t_{2}$) en ayant changé de volatilité, ayant $\sigma_{1}<\sigma_{2}$. Il se trouve que $S_{t_{1}}=S_{t_{2}}$. On a néanmoins, d'après les propriétés du call : \\
 $$C_{1}<C_{2}$$\\ et $$\Delta_{1}<\Delta_{2}$$ \\
 Pour respecter la couverture, on doit investir plus dans le sous-jacent, sachant que notre portefeuille n'a pas changé de valeur, ou très peu ( composition de l'actif sans risque pendant dt), et que si on apporte pas la différence, le portefeuille n'aura plus la valeur du prix calculé (C_{2}).\\
 
-En conclusion, il sera nécessaire dans notre démarche de couverture, de conserver les paramètres évalués avant le début de la simulation, et ce tout au long de celle-ci.
-  
+En conclusion, il n'est possible de réévaluer les paramètres en cours de simulation que sous certaines conditions.Si cette réévaluation conduit à une diminution du prix du produit, il n'y a pas de problème, en revanche, si elle conduit à une augmentation de l'estimation du prix du produit, elle n'est possible que si l'on a vendu les parts du produit, au début de sa vie, à un prix qui reste supérieur à cette nouvelle estimation.
 
 
 
@@ -1182,6 +1182,21 @@ Le long de cette trajectoire, la construction du portefeuille de couverture se f
 
 L'erreur de couverture est donnée par:
  $$P\&L = V_{H}+\delta_{H}.S_{\tau_{H}}-\lstinline!payoff!$$
+
+Il s'agit à présent de déterminer les propriétés statistiques de l'erreur de couverture. Pour cette étude, on se place dans le cadre de l'étude des actifs actualisés, ce qui revient a considérer $$r=0$$.
+D'après la formule précédente, on a :
+$$dP\&L_{t}= (\frac{\partial C(t, S_{t})}{\partial S} -\frac{\partial C(\tau_{[t/H]}, S_{\tau_{[t/H]})}}{\partial S})dS_{t}$$
+
+En notant $$ P\&L_{t}^{*} = \frac{1}{\sqrt{h}} P\&L_{t} $$ . Il est possible de démontrer que le processus converge en distribution vers un autre processus.
+$$P\&L_{t}^{*} \underset{h\rightarrow \infty}{\overset{d}{\rightarrow}}  \frac{1}{\sqrt{2}}(\int_{0}^t \frac{\partial^2 C(u, S_{u})}{\partial S^{2}} \sigma^2 S_{u}^2 dW_{u}^{'})$$
+Le mouvement brownien $W^{'}$ étant indépendant de $W$, régissant la dynamique de $S$.
+La démonstration de ce résultat se trouve dans l'article EVALUATING HEDGING ERRORS: AN ASYMPTOTIC APPROACH de Takaki Hayashi Per A. Mykland.\\
+
+On en retient plusieurs élément : \\
+L’erreur de couverture est proportionnelle à la racine du pas $T/H$, elle est également  d’autant plus grande que le gamma
+de l’option est grand. Il s'agit d'une loi gaussienne.\\
+
+Il est à présent nécessaire de confronter les résultats obtenus à partir de notre pricer.
 
 
 \end{document}
