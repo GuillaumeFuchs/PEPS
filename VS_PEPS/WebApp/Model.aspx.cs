@@ -4,6 +4,8 @@ using System.Linq;
 using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
+using System.Web.UI.HtmlControls;
+using System.Windows.Forms.DataVisualization.Charting;
 using Wrapper;
 using Parameters;
 
@@ -13,29 +15,49 @@ namespace WebApp
 	{
 		protected void Page_Load(object sender, EventArgs e)
 		{
-            ComboBox1.SelectedIndexChanged += new EventHandler(ComboBox1_SelectedIndexChanged);
-            if (!Page.IsPostBack)
-            {
-                ComboBox1.Attributes.Add("onchange", "ajout_param();");
-            }
+            //if (!Page.IsPostBack)
+            //{
+            //    ComboBox1.Attributes.Add("onchange", "ajout_param();");
+            //}
 		}
         protected void ComboBox1_SelectedIndexChanged(object sender, EventArgs e)
         {
+            if (ComboBox1.SelectedValue.ToString().Equals("0"))
+            {
+                param1.Style.Add(HtmlTextWriterStyle.Visibility, "visible");
+            }
+            else
+            {
+                param1.Style.Add(HtmlTextWriterStyle.Visibility, "hidden");
+            }
             
         }
 
-        
-        protected void AjoutParam(object sender, EventArgs e)
+        protected void ComboBox4_SelectedIndexChanged(object sender, EventArgs e)
         {
-            Console.WriteLine("On arrive dans AjoutParam");
-            Console.WriteLine(ComboBox1.SelectedValue.ToString());
-            if (ComboBox1.SelectedValue.ToString().Equals("0"))
+            if (ComboBox4.SelectedValue.ToString().Equals("0"))
             {
-                
-                string script = "<script type=\"text/javascript\">ajout_param();</script>";
-                ClientScript.RegisterStartupScript(typeof(Page), "script", script);
+                param4.Style.Add(HtmlTextWriterStyle.Visibility, "visible");
             }
+            else
+            {
+                param4.Style.Add(HtmlTextWriterStyle.Visibility, "hidden");
+            }
+
         }
+
+        
+        //protected void AjoutParam(object sender, EventArgs e)
+        //{
+        //Console.WriteLine("On arrive dans AjoutParam");
+        //    Console.WriteLine(ComboBox1.SelectedValue.ToString());
+        //    if (ComboBox1.SelectedValue.ToString().Equals("0"))
+        //    {
+                
+        //        string script = "<script type=\"text/javascript\">ajout_param();</script>";
+        //        ClientScript.RegisterStartupScript(typeof(Page), "script", script);
+        //    }
+        //}
 
         //protected void Button1_Click(object sender, EventArgs e)
         //{

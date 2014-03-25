@@ -982,7 +982,7 @@ Si l'on rentre un peu plus dans le détails, on peut modéliser l'architecture d
 \end{center}
 
 \begin{center}
-\includegraphics[scale=0.6]{../MAXI_ARCHI.png}
+\includegraphics[scale=0.6]{../Images/MAXI_ARCHI.png}
 \end{center}
 
 On constate dans cette architecture que l'intégralité de la partie calcul s'effectuera en C++ grâce à l'utilisation de deux modules C++/CLI. C'est pourquoi, on aura deux packages de traitement de la base de données, en effet le premier \lstinline!AffichageBD! sera directement relié à l'application web pour afficher notamment le cours actuel des indices. L'autre \lstinline!AccesBD! permettra de transmettre le nécessaire au calcul des paramètres et donc au calibrage de notre modèle. Les différents paramètres étant calculés, \lstinline!Moteur! interviendra pour réaliser les différentes simulations, et donc calculer le prix ainsi que le vecteur associé à la couverture ainsi que le P\&L. Les relations sont dans les deux sens entre \lstinline!InterfaceWeb! et le \lstinline!Communicateur! ainsi que entre le \lstinline!Communicateur! et le \lstinline!Moteur! car comme précisé précédemment le gestionnaire à par exemple la possibilité de donner la composition de son portefeuille, les informations relatives doivent donc redescendre jusqu'au \lstinline!Moteur! pour que cela soit pris en compte.
@@ -995,7 +995,7 @@ De façon plus précise, l'architecture précédente peut être explicité comme
 \begin{center}
 \begin{figure}[h!]
     \caption{Architecture détaillée.}
-    \includegraphics[angle=90, height = 20cm, width = 17cm]{../MAXI_ARCHI2.png}
+    \includegraphics[angle=90, height = 20cm, width = 17cm]{../Images/MAXI_ARCHI2.png}
     \label{fig:PropProf}
 \end{figure}
 \end{center}
@@ -1036,26 +1036,26 @@ Par la suite, nous considérerons des modèles plus compliqués, c'est pourquoi 
  
 
 \begin{center}
-\includegraphics[scale=0.4]{../Maquette_3.png}
+\includegraphics[scale=0.4]{../Images/Maquette_3.png}
 \end{center}
 
 Dans un premier temps, le gestionnaire avant de vendre son produit, va choisir le modèle qu'il souhaite adopter pour réaliser un backtest. Ainsi par ce biais, le gestionnaire va choisir la modélisation de l'évolution de ses sous jacents, des taux d'intérêts, des taux de change ainsi que de la volatilité. Une fois ces différents paramètres choisi, le gestionnaire peut alors se rendre sur la fenêtre du backtest
 
 
 \begin{center}
-\includegraphics[scale=0.4]{../Maquette_7.png}
+\includegraphics[scale=0.4]{../Images/Maquette_7.png}
 \end{center} 
  
  Sur cette fenêtre et en fonction des paramètres que le gestionnaire a choisi précedemment, il peut normalement choisir la période d'estimation des paramètres si pour le modèle considéré on peut estimer des paramètres, choisir la fenêtre de validation et enfin choisir la date à partir de laquelle on commence le backtest sachant que le calendrier débute lors de la dernière des premières dates de cotation des indices.
 
 \begin{center}
-\includegraphics[scale=0.4]{../Maquette_8.png}
+\includegraphics[scale=0.4]{../Images/Maquette_8.png}
 \end{center}
 
 Le gestionnaire peut alors voir selon les modèles qu'il a choisi l'évolution de son cours théorique par rapport au cours réel pour chaque indices ainsi que obtenir la tracking error pour qu'il puisse voir si son modèle d'évolution des sous jacents est correct ou non.
 
 \begin{center}
-\includegraphics[scale=0.4]{../Maquette_5.png}
+\includegraphics[scale=0.4]{../Images/Maquette_5.png}
 \end{center}
 
 Enfin on arrive sur un onglet de simulation qui reprend la modélisation choisit précédemment, on a alors la possibilité de choisir de nombre de date de rebalancement parmi une plage données car dans notre pricer le nombre de date de rebalancement  doit être un multiple du nombre de date de rebalancement des indices et il pourra choisir le nombre de P&L a calculer. L'objectif étant pour le gestionnaire de voir la distribution des P&L qu'il obtient avec le modèle choisit. Ainsi que la composition de son portefeuille de couverture moyen.
@@ -1064,7 +1064,7 @@ Une fois que tout ceci a été réalisé préalablement au début du cycle de vi
 
 
 \begin{center}
-\includegraphics[scale=0.4]{../Maquette_1.png}
+\includegraphics[scale=0.4]{../Images/Maquette_1.png}
 \end{center}
 
 
@@ -1073,20 +1073,20 @@ Nous avons modéliser dans un premier temps la navigation par des boutons mais e
 
 
 \begin{center}
-\includegraphics[scale=0.4]{../Maquette_2.png}
+\includegraphics[scale=0.4]{../Images/Maquette_2.png}
 \end{center}
 
 Le second onglet présentera l'évolution des différents cours des indices ainsi que l'évolution du cours d'un tracker sur les différents indices afin de pouvoir comparer la performance de notre fonds qui sera décrite à droite là où il est indiqué performance et la performance d'un portefeuille composé des quatre indices.
 
 
 \begin{center}
-\includegraphics[scale=0.4]{../Maquette_4.png}
+\includegraphics[scale=0.4]{../Images/Maquette_4.png}
 \end{center}
 
 On obtient alors la couverture obtenu du fait du modèle choisi, on doit alors avoir la possibilité de voir la composition nécessaire de notre portefeuille pour être couvert, la valeur liquidative de notre produit aujourd'hui ainsi que la différence avec notre ancien portefeuille pour connaître réellement les opérations que l'on doit effectuer pour obtenir le nouveau portefeuille de couverture.
 
 \begin{center}
-\includegraphics[scale=0.4]{../Maquette_6.png}
+\includegraphics[scale=0.4]{../Images/Maquette_6.png}
 \end{center}
 
 Enfin le gestionnaire à la possibilité d'entrer lui même la composition de son portefeuille si il décide de ne pas suivre les conseils de notre outils d'aide. Cela permet au logiciel de rester en cohérence avec le portefeuille du gestionnaire et de continuer à lui indiquer la quantité à acheter et vendre pour chaque indice.
@@ -1095,7 +1095,7 @@ Enfin le gestionnaire à la possibilité d'entrer lui même la composition de so
 \newpage
 
 \begin{center}
-\includegraphics[scale=0.4]{../POPUP_1.png}
+\includegraphics[scale=0.4]{../Images/POPUP_1.png}
 \end{center}
 
 Une pop up s'affichera alors pour confirmer la bonne prise en compte de l'information, comme on peut le voir ci dessous.
