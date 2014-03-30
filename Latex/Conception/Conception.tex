@@ -177,18 +177,81 @@ La méthode \lstinline!simul_market! de la classe \lstinline!BS! renvoi une simu
 $$(\tau_{0},...,\tau_{N}) \supset (t_{0},...,t_{N})$$ 
 où
  $\tau_{0}$ = $0$ et $\tau_{N}$ = $T$.\\
-Le long de cette trajectoire, la construction du portefeuille de couverture se fait par le calcul du prix $p_{i}$ et du delta $\delta_{i}$ à chaque date $\tau_{i}$. L'évolution de la part investie au taux sans risque s'écrit:\\
+ 
+Le long de cette trajectoire, la construction du portefeuille de couverture se fait par le calcul d'un portefeuille constitué d'actifs sans risques et d'un portefeuille d'actifs risqués.\\
+Soit le prix $p_{i}$ et $\delta_{i}$ à chaque date $\tau_{i}$. \\
+Le portefeuille d'actifs risqué est calculé à partir de l'achat du sous-jacent de l'option. L'évolution du portefeuille d'actifs risqués s'écrit:\\
+$$
+     \vspace{-3ex}
+        \begin{aligned}
+          & V^{risk}_{i} = \delta_{i}.S_{\tau_{i}}, \hspace{7 mm}  i=0,...,H 
+        \end{aligned}
+ $$
+\\
+Le portefeuille d'actifs sans risques est calculé à partir de la vente à l'instant 0 de l'option et de la composition du portefeuille d'actifs risqués. L'évolution du portefeuille d'actifs sans risques s'écrit:\\
 $$
   \left\{%
      \vspace{-3ex}
         \begin{aligned}
-          & V_{0} = p_{0}-\delta_{0}.S_{0} \\
-          & V_{i} = V_{i-1}*\exp^{\frac{r*T}{H}}-(\delta_{i}-\delta_{i-1}).S_{\tau_{i}}, \hspace{7 mm}  i=1,...,H 
+          & V^{risk free}_{0} = p_{0}-\delta_{0}.S_{0} \\
+          & V^{risk free}_{i} = V^{risk free}_{i-1}*\exp^{\frac{r*T}{H}}-(\delta_{i}-\delta_{i-1}).S_{\tau_{i}}, \hspace{7 mm}  i=1,...,H 
         \end{aligned}
  \right.
  $$
 \\
-L'erreur de couverture est donnée par:
- $$P\&L = V_{H}+\delta_{H}.S_{\tau_{H}}-payoff$$
-\end{document}
 
+Le portefeuille de couverture est donné par la somme des deux portefeuilles:
+$$
+	\vspace{-3ex}
+        \begin{aligned}
+          & V^{hedge}_{i} = V^{risk free}_{i} + V^{risk}_{i}, \hspace{7 mm}  i=0,...,H 
+        \end{aligned}
+$$
+\\
+L'erreur de couverture est donnée par:
+ $$P\&L = V^{risk free}_{H}+\delta_{H}.S_{\tau_{H}}-payoff$$
+
+\subsection{Algorithme du payoff de \textbf{Playlist 2}}
+Le produit \textbf{Playlist 2} permet au porteur de recevoir à l'une des Dates d'Echéances Anticipées ou à la Date d'Echéance Maximum, la Valeur Liquidative de Référence majorée d'un Gain Final compris entre 0\% et 27\%.\\
+Le Gain Final est conditionné à l'évolution des 4 Indices du Panier. Ainsi, chaque année, aux Dates de Constatations Intermédiaires et à la Date de Constatation Finale, si au moins 3 des 4 indices du Panier ont progressé de 10\% ou plus, par rapport à leur Niveau d'Origine, un Gain Annuel de 4,5\% est acquis. Le Gain Final est égale à la somme des Gains Annuels.\\
+De plus, la formule peut s'arrêter par anticipation. Si à l'un des deux premières Dates de Constatations Intermédiaires, 3 des 4 Indices du Panier ont progressé de 20\% ou plus par rapport à leur Niveau d'Origine, le porteur recevra la Valeur Liquidative de Référence majorée du Gain Final.\\
+
+\begin{verbatim}
+
+payoff(var ValNom, var temps){
+   Pour les dates t = 1 an et t = 2 ans
+      compteur_10 = 0
+      compteur_20 = 0
+   		
+      Pour chaque Indice du Panier
+         si (valeur_indice[t]/valeur_indice[0] - 1) > 10%
+            compteur_10++
+   				
+            si (Valeur_indice[t]/Valeur_indice[0] - 1) > 20%
+               compteur_20++
+   				
+               si compteur_20 > 2
+                  gain += 4,5%
+                  retourne exp(-r*t)*150*(1+gain)
+   					
+            si compteur_10 > 2
+               gain += 4,5%
+               stop boucle sur indice
+   				
+   				
+   Pour les date t = 3 an à t = 6 ans
+      compteur_10 = 0;
+   		
+      Pour chaque Indice du Panier
+         si (valeur_indice[t]/valeur_indice[0] - 1) > 10%
+            compteur_10++;
+   				
+            si compteur_10 > 2
+               gain += 4,5%
+               stop boucle sur indice
+
+   retourne exp(-r*t)*150*(1+gain)
+}
+\end{verbatim}
+
+\end{document}

@@ -38,10 +38,10 @@ void Test::compute_price_samples(int samples, bool display, bool output, PnlMat*
 	int temp_H;
 
 	if (output) {
-		ofstream fichier1("Data/price_simul.txt", ios::out | ios::trunc);  // ouverture en écriture avec effacement du fichier ouvert
-		ofstream fichier2("Data/priceTheo.txt", ios::out | ios::trunc);
-		ofstream fichier3("Data/time.txt", ios::out | ios::trunc);
-		if(fichier1 && fichier2)
+		ofstream file1("Data/price_simul.txt", ios::out | ios::trunc);  // ouverture en écriture avec effacement du file ouvert
+		ofstream file2("Data/priceTheo.txt", ios::out | ios::trunc);
+		ofstream file3("Data/time.txt", ios::out | ios::trunc);
+		if(file1 && file2)
 		{
 			for (int k = 0; k < 1001; k++){
 				cout << k << endl;
@@ -65,12 +65,12 @@ void Test::compute_price_samples(int samples, bool display, bool output, PnlMat*
 				priceTheo = (int)(priceTheo*1000)/1000.;
 				price = (int)(price*1000)/1000.;
 
-				fichier1 << price << endl;
-				fichier2 << priceTheo << endl;
-				fichier3 << t << endl;
+				file1 << price << endl;
+				file2 << priceTheo << endl;
+				file3 << t << endl;
 			}
-			fichier1.close();
-			fichier2.close();
+			file1.close();
+			file2.close();
 		}else
 			cerr << "Fail to open files !" << endl;
 	}else{
@@ -126,9 +126,9 @@ void Test::compute_delta_samples(int samples, bool display, bool output, PnlMat*
 	int temp_H;
 
 	if (output) {
-		ofstream fichier1("Data/delta_simul.txt", ios::out | ios::trunc);  // ouverture en écriture avec effacement du fichier ouvert
-		ofstream fichier2("Data/delta_theo.txt", ios::out | ios::trunc);
-		if(fichier1 && fichier2)
+		ofstream file1("Data/delta_simul.txt", ios::out | ios::trunc);  // ouverture en écriture avec effacement du file ouvert
+		ofstream file2("Data/delta_theo.txt", ios::out | ios::trunc);
+		if(file1 && file2)
 		{
 			for (int k = 0; k < 1001; k++){
 				cout << k << endl;
@@ -151,11 +151,11 @@ void Test::compute_delta_samples(int samples, bool display, bool output, PnlMat*
 				delta_th = (int)(delta_th*10000)/10000.;
 				LET(delta, 0) = (int)(GET(delta, 0)*10000)/10000.;
 
-				fichier1 << GET(delta, 0) << endl;
-				fichier2 << delta_th << endl;
+				file1 << GET(delta, 0) << endl;
+				file2 << delta_th << endl;
 			}
-			fichier1.close();
-			fichier2.close();
+			file1.close();
+			file2.close();
 		}else
 			cerr << "Fail to open files !" << endl;
 	}else{
@@ -267,7 +267,7 @@ void Test::compute_delta(int H, double t){
 void Test::compute_couv(int H, bool output){
 	double N = mc_->get_opt()->get_timeStep();
 	double T = mc_->get_opt()->get_T();
-	double pl, plTheorique, price, ic;
+	double pl, price, ic;
 	int size = mc_->get_opt()->get_size();
 
 	if (fmod((double)H, (double)N) > 0.0001){
@@ -275,52 +275,60 @@ void Test::compute_couv(int H, bool output){
 		system("pause");
 		return;
 	}
+
+
+	PnlMat* past = pnl_mat_create(size, H+1);
+	PnlMat* summarySimul = pnl_mat_create(H+1, 5+4+4);
+
 	if (output) {
-		ofstream fichier1("Data/couv_simulation.txt", ios::out | ios::trunc);  // ouverture en écriture avec effacement du fichier ouvert
-		ofstream fichier2("Data/couv_theorique.txt", ios::out | ios::trunc);
-		ofstream fichier3("Data/past.txt", ios::out | ios::trunc);
-		ofstream fichier4("Data/delta_simulation.txt", ios::out | ios::trunc);
-		ofstream fichier5("Data/delta_theorique.txt", ios::out | ios::trunc);
-		if(fichier1 && fichier2 && fichier3 && fichier4 && fichier5)
+		ofstream file1("../Data/s1.txt", ios::out | ios::trunc);  // ouverture en écriture avec effacement du file ouvert
+		ofstream file2("../Data/s2.txt", ios::out | ios::trunc);
+		ofstream file3("../Data/s3.txt", ios::out | ios::trunc);
+		ofstream file4("../Data/s4.txt", ios::out | ios::trunc);
+		ofstream file5("../Data/d1.txt", ios::out | ios::trunc);  // ouverture en écriture avec effacement du file ouvert
+		ofstream file6("../Data/d2.txt", ios::out | ios::trunc);
+		ofstream file7("../Data/d3.txt", ios::out | ios::trunc);
+		ofstream file8("../Data/d4.txt", ios::out | ios::trunc);
+		ofstream file9("../Data/price.txt", ios::out | ios::trunc);
+		ofstream file10("../Data/risk.txt", ios::out | ios::trunc);
+		ofstream file11("../Data/risk_free.txt", ios::out | ios::trunc);
+		ofstream file12("../Data/total.txt", ios::out | ios::trunc);
+
+		if(file1 && file2 && file3 && file4)
 		{
-			for (int i = 0; i < 1; i++){
-				cout << i << endl;
-				PnlMat* past = pnl_mat_create(size, H+1);
-				PnlMat* summarySimul = pnl_mat_create(H+1, 2);
-				PnlMat* summaryTheo = pnl_mat_create(H+1, 2);
-
-				mc_->couv(past, pl, plTheorique, H, T, summarySimul, summaryTheo);
-
-				mc_->price(price, ic);
-				double priceTheo = theo_price(100, 100, .05, 1, .2);
-
-				cout << "P&L simule: " << pl/price << endl;
-				cout << "P&L theo: " << plTheorique/priceTheo<< endl;
-
-				for (int i = 0; i < H+1; i++){
-					fichier1 << MGET(summarySimul, i, 0) << endl;
-					fichier2 << MGET(summaryTheo, i, 0) << endl;
-					fichier4 << MGET(summarySimul, i, 1) << endl;
-					fichier5 << MGET(summaryTheo, i, 1) << endl;
-					fichier3 << MGET(past, 0, i) << endl;
-				}
-
+			mc_->couv(past, pl, H, T, summarySimul);
+			mc_->price(price, ic);
+			
+			cout << "P&L simule: " << pl/price << endl;
+			
+			for (int i = 0; i < H+1; i++){
+				file1 << MGET(summarySimul, i, 1) << endl;
+				file2 << MGET(summarySimul, i, 2) << endl;
+				file3 << MGET(summarySimul, i, 3) << endl;
+				file4 << MGET(summarySimul, i, 4) << endl;
+				file5 << MGET(summarySimul, i, 5) << endl;
+				file6 << MGET(summarySimul, i, 6) << endl;
+				file7 << MGET(summarySimul, i, 7) << endl;
+				file8 << MGET(summarySimul, i, 8) << endl;
+				file9 << MGET(summarySimul, i, 9) << endl;
+				file10 << MGET(summarySimul, i, 10) << endl;
+				file11 << MGET(summarySimul, i, 11) << endl;
+				file12 << MGET(summarySimul, i, 12) << endl;
 			}
-			fichier1.close();
-			fichier2.close();
-			fichier3.close();
+
+			file1.close();
+			file2.close();
+			file3.close();
+			file4.close();
 		}else
-			cerr << "Impossible d'ouvrir le fichier !" << endl;
+			cerr << "Impossible d'ouvrir le file !" << endl;
 	}else{
-		PnlMat* past = pnl_mat_create(size, H+1);
-		PnlMat* summarySimul = pnl_mat_create(H+1, 1);
-		PnlMat* summaryTheo = pnl_mat_create(H+1, 1);
-		mc_->couv(past, pl, plTheorique, H, T, summarySimul, summaryTheo);
+		mc_->couv(past, pl, H, T, summarySimul);
 		mc_->price(price, ic);
-		double priceTheo = theo_price(100, 100, .05, 1, .2);
+
+		pnl_mat_print(summarySimul);
 
 		cout << "P&L simule: " << pl/price << endl;
-		cout << "P&L theo: " << plTheorique/priceTheo<< endl;
 	}
 }
 double Test::theo_price(double S, double K, double r, double T, double sigma){

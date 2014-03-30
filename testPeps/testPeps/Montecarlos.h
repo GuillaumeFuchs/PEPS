@@ -181,7 +181,7 @@ public:
 	 *	5e	colonne: delta théorique selon B&S
 	 *	6e	colonne: nb d'actions à acheter théorique
 	*/
-	virtual void couv (PnlMat *past, double &pl, double &plTheo, int H, double T, PnlMat* summarySimul, PnlMat* summaryTheo) = 0;
+	virtual void couv (PnlMat *past, double &pl, int H, double T, PnlMat *summary_simul) = 0;
 
 };
 #endif
