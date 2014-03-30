@@ -263,102 +263,110 @@ void MonteCarlo::delta (const PnlMat *past, double t, PnlVect *delta, PnlVect *i
 	pnl_vect_free(&grid);
 }
 
-void MonteCarlo::couv(PnlMat *past, double &pl, double &plTheo, int H, double T, PnlMat *summarySimul, PnlMat *summaryTheo)
+void MonteCarlo::couv(PnlMat *past, double &pl, int H, double T, PnlMat *summary_simul)
 {
-	//Simulation du modèle sous la probabilité historique
-	mod_->simul_market(past, H, T, rng);
-	printf("%f\n", MGET(past, 0, H));
-
-	double r = mod_->get_r();
 	int size = opt_->get_size();
 	int timeStep = opt_->get_timeStep();
-	double timeH = T/H;
-
-	//delta1: vecteur contenant le delta à un instant donné
-	PnlVect* delta1 = pnl_vect_create(size);
+	double r = mod_->get_r();
+	double timeH = T/H; //timestep of the hedging
+	double update = exp(r*timeH); //term of actualisation
+	double priceVal;
+	double ic;
+	PnlVect* delta_i = pnl_vect_create(size);
+	PnlVect* delta_i_1 = pnl_vect_create(size); 
 	PnlVect* ic_vect = pnl_vect_create(size);
 	PnlMat* past_sub = pnl_mat_create(size, 1);
 	PnlVect* past_extract = pnl_vect_create(H+1);
-	//S: vecteur contenant le prix dusous-jacent à un instant donné
-	PnlVect* S = pnl_vect_create(size);
-	//result: vecteur contenant le résultat de la soustraction entre delta1 et delta2
+	PnlVect* S = pnl_vect_create(size); 	//spot
 	PnlVect* result;
-	PnlVect* pF = pnl_vect_create(H+1);
-	
-	//Theorique
-	PnlVect* pFTheo = pnl_vect_create(H+1);
-	double delta1Theo, delta2Theo;	
-	double priceTheo;
-	double resultTheo;
-	double spot;
+	double pF; //portfolio value (simualte)
+	double pF_risk; //risked portfolio value (simulate)
+	double pF_risk_free; //risk-free portfolio value (simulate)
+	double pF_risk_free_ant; //risk-free portfolio previous value (simulate)
+	double trade; //trade of asset
+
 	//
-
-	//prix: prix du sous-jacent à l'instant 0
-	double prix;
-	double ic;
-	price(prix, ic);
-	priceTheo = Test::theo_price(MGET(past, 0, 0), 100., 0.05, 1., 0.2);
-
-	//Calcul à l'instant 0 de la composition du portefeuille
+	//SIMULATION OF AN ASSET TO HEDGE
+	//
+	mod_->simul_market(past, H, T, rng);
+	printf("%f\n", MGET(past, 0, H));
+	//
+	//COMPUTE IN 0
+	//
+	//Price
+	price(priceVal, ic);
+	
+	//Delta
 	pnl_mat_get_col(S, past, 0);
 	pnl_mat_set_col(past_sub, S, 0);
+	delta(past_sub, 0, delta_i, ic_vect);
+	
+	//Compute portfolios (risk and risk-free)
+	//simulate
+	pF = priceVal;
+	pF_risk = pnl_vect_scalar_prod(delta_i, S);
+	pF_risk_free = priceVal - pF_risk;
+	
+	//Add informations in summary matrix
+	//simulate
+	MLET(summary_simul, 0, 0) = 0;
+	for (int d = 0; d < size; d++){
+		pnl_mat_get_row(past_extract, past, d);
+		pnl_mat_set_col(summary_simul, past_extract, 1+d);
+		MLET(summary_simul, 0, 1+size+d) = GET(delta_i, d);
+	}
+	MLET(summary_simul, 0, 2*size+1) = priceVal;
+	MLET(summary_simul, 0, 2*size+2) = pF_risk;
+	MLET(summary_simul, 0, 2*size+3) = pF_risk_free;
+	MLET(summary_simul, 0, 2*size+4) = pF;
 
-	delta(past_sub, 0, delta1, ic_vect);
-	delta1Theo = Test::theo_delta(MGET(past, 0, 0), 100., 0.05, 1., 0.2);
-
-	LET(pF, 0) = prix - pnl_vect_scalar_prod(delta1, S);
-	LET(pFTheo, 0) = priceTheo - delta1Theo*MGET(past, 0, 0);
-
-	//Ajout dans summarySimul de la date, du delta & du nombre d'actions à acheter, du delta théorique & du nombre d'actions théorique à acheter
-	MLET(summarySimul, 0, 0) = GET(pF, 0);
-	MLET(summaryTheo, 0, 0) = GET(pFTheo, 0);
-	MLET(summarySimul, 0, 1) = GET(delta1, 0);
-	MLET(summaryTheo, 0, 1) = delta1Theo;
-	//delta2: vecteur contenant le delta à une date de constation précédente de delta1
+	//
+	//COMPUTE IN t>0
+	//
 	for (int i=1; i<H+1; i++)
 	{
 		printf("%d\n", i);
-		//On met dans delta2 la valeur du delta à l'instant i-1
-		PnlVect* delta2 = pnl_vect_copy(delta1);
-		delta2Theo = delta1Theo;
+		//Save delta at i-1
+		delta_i_1 = pnl_vect_copy(delta_i);
+		//Save portfolio risk free value at i-1
+		pF_risk_free_ant = pF_risk_free;
 
-		//Calcul du delta à l'instant tau_i
+		//Compute delta at tau_i
 		pnl_mat_resize(past_sub, size, i+1);
 		for (int j=0; j<i+1; j++){
 			pnl_mat_get_col(S, past, j);
 			pnl_mat_set_col(past_sub, S, j);
 		}
-		spot = MGET(past_sub, 0, i);
+		delta(past_sub, timeH*i, delta_i, ic_vect);
 
-		delta(past_sub, timeH*i, delta1, ic_vect);
+		//Compute price at tau_i
+		price(past_sub, timeH*i, priceVal, ic);
 
-		delta1Theo = Test::theo_delta(MGET(past, 0, i), 100, 0.05, T-timeH*i, 0.2);
-		
-		result = pnl_vect_copy(delta1);
-		resultTheo = delta1Theo;
+		//Compute portfolios
+		//simulate
+		trade = GET(delta_i, 0) - GET(delta_i_1, 0);
+		pF_risk = pnl_vect_scalar_prod(delta_i, S);
+		pF_risk_free = pF_risk_free_ant*update + pnl_vect_scalar_prod(delta_i_1, S) - pF_risk;
+		pF = pF_risk + pF_risk_free;
 
-		pnl_vect_minus_vect(result, delta2);
-		resultTheo = delta1Theo - delta2Theo;
-
-		LET(pF, i) = GET(pF,i-1) * exp(r*T/H) - pnl_vect_scalar_prod(result , S);
-		LET(pFTheo, i) = GET(pFTheo,i-1) * exp(r*T/H) - resultTheo*spot;
-		MLET(summarySimul, i, 0) = GET(pF, i);
-		MLET(summaryTheo, i, 0) = GET(pFTheo, i);
-		MLET(summarySimul, i, 1) = pnl_vect_scalar_prod(result, S);
-		MLET(summaryTheo, i, 1) = resultTheo*spot;
-
-		pnl_vect_free(&delta2);
+		//Add informations in summary matrix
+		//simulate
+		MLET(summary_simul, i, 0) = timeH*i;
+		for (int d = 0; d < size; d++)
+			MLET(summary_simul, i, 1+size+d) = GET(delta_i, d);
+		MLET(summary_simul, i, 2*size+1) = priceVal;
+		MLET(summary_simul, i, 2*size+2) = pF_risk;
+		MLET(summary_simul, i, 2*size+3) = pF_risk_free;
+		MLET(summary_simul, i, 2*size+4) = pF;
 	}
-	price(past, T, prix, ic);
-	priceTheo = Test::theo_price(MGET(past, 0, H), 100., 0.05, 0., 0.2);
+	price(past, T, priceVal, ic);
 
 	//Calcul de l'erreur de couverture
-	pl = GET(pF, H) + pnl_vect_scalar_prod(delta1, S) - prix;
-	plTheo = GET(pFTheo, H) + delta1Theo*spot - priceTheo;
+	pl = pF_risk_free + pnl_vect_scalar_prod(delta_i, S) - priceVal;
 
-	pnl_vect_free(&pF);
 	pnl_vect_free(&S);
-	pnl_vect_free(&delta1);
+	pnl_vect_free(&delta_i_1);
+	pnl_vect_free(&delta_i);
 	pnl_vect_free(&ic_vect);
 	pnl_vect_free(&past_extract);
 }

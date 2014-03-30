@@ -22,153 +22,45 @@
 
 using namespace std;
 
-void Computations::compute_price(double &px, double &ic, double &pxBS, double t, int size, double *spot, double K, double *sigma, double r, double *coeff, double *rho, double T, int N, int H, int M){
-	PnlRng *rng = pnl_rng_create(PNL_RNG_MERSENNE);
-	pnl_rng_sseed(rng, time(NULL));
-
-	Bs mod(size, r, rho, sigma, spot, NULL);
-	Playlist opt(T, N, size, r, coeff);
-	MonteCarlo mc(&mod, &opt, rng, 0.01, M);
-
+void Computations::compute_price(double &px, double &ic, double t, int size, double *spot, double K, double *sigma, double r, double *coeff, double *rho, double T, int N, int H, int M){
 	if (fmod(T/(double)N, t/(double)H) > 0.0001)
 		return;
 
+	PnlRng *rng = pnl_rng_create(PNL_RNG_MERSENNE);
+	Bs mod(size, r, rho, sigma, spot, NULL);
+	Playlist opt(T, N, size, r, coeff);
+	MonteCarlo mc(&mod, &opt, rng, 0.01, M);
 	PnlMat* past = pnl_mat_create(size, H+1);
+
+	pnl_rng_sseed(rng, time(NULL));
 	
 	mod.simul_market(past, H, T, rng);
 	mc.price(past, t, px, ic);
 
-/*	if (t==0)
-		pxBS = Test::theo_price(MGET(past, 0, 0), K, r, T-t, sigma[0]);
-	else
-		pxBS = Test::theo_price(MGET(past, 0, H), K, r, T-t, sigma[0]);
-*/ 
 	pnl_mat_free(&past);
 	pnl_rng_free(&rng);
 }
 
-void Computations::compute_delta(double &delt, double &icd, double &deltBS, double t, int size, double *spot, double K, double *sigma, double r, double *coeff, double *rho, double T, int N, int H, int M){
-	PnlRng *rng = pnl_rng_create(PNL_RNG_MERSENNE);
-	pnl_rng_sseed(rng, time(NULL));
-
-	Bs mod(size, r, rho, sigma, spot, NULL);
-	Playlist opt(T, N, size, r, coeff);
-	MonteCarlo mc(&mod, &opt, rng, 0.01, M);
-
-	PnlVect* delta = pnl_vect_create(size);
-	PnlVect* ic_delta = pnl_vect_create(size);
-
+void Computations::compute_delta(double &delt, double &icd, double t, int size, double *spot, double K, double *sigma, double r, double *coeff, double *rho, double T, int N, int H, int M){
 	if (fmod(T/(double)N, t/(double)H) > 0.0001)
 		return;
 
-	PnlMat* past = pnl_mat_create(size, H+1);
-	mod.simul_market(past, H, T, rng);
-	mc.delta(past, t, delta, ic_delta);
-/*
-	if (t==0)
-		deltBS = Test::theo_delta(MGET(past, 0, 0), K, r, T-t, sigma[0]);
-	else
-		deltBS = Test::theo_delta(MGET(past, 0, H), K, r, T-t, sigma[0]);
-*/	 
-	delt = GET(delta, 0);
-	icd = GET(ic_delta, 0);
-
-	pnl_vect_free(&delta);
-	pnl_vect_free(&ic_delta);
-	pnl_mat_free(&past);
-	pnl_rng_free(&rng);
-}
-
-void Computations::compute_price_samples(double &max, double &var, int size, double *spot, double K, double *sigma, double r, double *coeff, double *rho, double T, int N, int M, int samples){
-	max = 0;
-	double prix, ic, prix_th;
-	
 	PnlRng *rng = pnl_rng_create(PNL_RNG_MERSENNE);
-	pnl_rng_sseed(rng, time(NULL));
-
 	Bs mod(size, r, rho, sigma, spot, NULL);
 	Playlist opt(T, N, size, r, coeff);
 	MonteCarlo mc(&mod, &opt, rng, 0.01, M);
-
-	double sspread, t, mean = 0, mean_th = 0;
-	int H;
-
-	PnlMat* past = pnl_mat_create(0, 0);
-	for (int k = 0; k < samples; k++){
-		t = pnl_rng_uni(rng);
-		t = (int)(t*100)/100.;
-		H = (int)(t*100);
-		pnl_mat_resize(past, 1, H+1);
-
-		mod.simul_market(past, H, t, rng);
-		mc.price(past, t, prix, ic);
-
-		if (t==0)
-			prix_th = Test::theo_price(MGET(past, 0, 0), K, r, T-t, sigma[0]);
-		else
-			prix_th = Test::theo_price(MGET(past, 0, H), K, r, T-t, sigma[0]);
-
-		prix_th = (int)(prix_th*1000)/1000.;
-		prix = (int)(prix*1000)/1000.;
-		mean += prix;
-		mean_th += prix_th;
-
-		sspread = fabs(prix_th-prix);
-		if (sspread > max)
-			max = sspread;
-	}
-	var = (fabs(mean-mean_th)/mean_th)*100.;
-	pnl_mat_free(&past);
-	pnl_rng_free(&rng);
-}
-
-void Computations::compute_delta_samples(double &max, double &var, int size, double *spot, double K, double *sigma, double r, double *coeff, double *rho, double T, int N, int M, int samples){
-	max = 0;
-	
-	PnlRng *rng = pnl_rng_create(PNL_RNG_MERSENNE);
-	pnl_rng_sseed(rng, time(NULL));
-
 	PnlVect* delta = pnl_vect_create(size);
 	PnlVect* ic_delta = pnl_vect_create(size);
-	double delta_th;
+	PnlMat* past = pnl_mat_create(size, H+1);
 
-	Bs mod(size, r, rho, sigma, spot, NULL);
-	Playlist opt(T, N, size, r, coeff);
-	MonteCarlo mc(&mod, &opt, rng, 0.01, M);
+	pnl_rng_sseed(rng, time(NULL));
 
-	double sspread, t, mean = 0, mean_th = 0;
-	int H;
+	mod.simul_market(past, H, T, rng);
+	mc.delta(past, t, delta, ic_delta);
 
-	PnlMat* past = pnl_mat_create(0, 0);
-	for (int k = 0; k < samples; k++){
-		t = pnl_rng_uni(rng);
-		t = (int)(t*100)/100.;
-		H = (int)(t*100);
-		pnl_mat_resize(past, 1, H+1);
-
-		mod.simul_market(past, H, t, rng);
-		mc.delta(past, t, delta, ic_delta);
-
-		if (t==0)
-			delta_th = Test::theo_delta(MGET(past, 0, 0), K, r, T-t, sigma[0]);
-		else
-			delta_th = Test::theo_delta(MGET(past, 0, H), K, r, T-t, sigma[0]);
-
-		delta_th = (int)(delta_th*1000)/1000.;
-		LET(delta, 0) = (int)(GET(delta, 0)*1000)/1000.;
-
-		sspread = fabs(delta_th-GET(delta, 0));
-		mean += GET(delta, 0);
-		mean_th += delta_th;
-
-
-		if (sspread > max)
-			max = sspread;
-	}
-	var = (fabs(mean-mean_th)/mean_th)*100.;
-	pnl_mat_free(&past);
 	pnl_vect_free(&delta);
 	pnl_vect_free(&ic_delta);
+	pnl_mat_free(&past);
 	pnl_rng_free(&rng);
 }
 
@@ -176,34 +68,29 @@ void Computations::compute_couv(double &pl, double *summary, int size, double *s
 	if (fmod((double)H, (double)N) > 0.0001){
 		return;
 	}
-	double plt;
-	pl = 0.;
-	
-	double prix, ic;
-
+	double prix;
+	double ic;
 	PnlRng *rng = pnl_rng_create(PNL_RNG_MERSENNE);
-	pnl_rng_sseed(rng, time(NULL));
-
 	Bs mod(size, r, rho, sigma, spot, NULL);
 	Playlist opt(T, N, size, r, coeff);
 	MonteCarlo mc(&mod, &opt, rng, 0.01, M);
-
 	PnlMat* past = pnl_mat_create(size, H+1);
 	PnlMat* summaryV = pnl_mat_create(H+1, size*3+1);
-
     clock_t tbegin, tend;
+
+	pnl_rng_sseed(rng, time(NULL));
+
 	tbegin = clock();
-	mc.couv(past, pl, plt, H, T, summaryV);
+	mc.couv(past, pl, H, T, summaryV);
 	tend = clock();
 	execTime = (float)(tend-tbegin)/CLOCKS_PER_SEC;
 
 	mc.price(prix, ic);
 	pl /= prix;
 
-	int compteur = -1;
 	for (int i = 0; i<H+1; i++){
-		for (int d = 0; d<(3*size+1); d++){
-			summary[++compteur] = MGET(summaryV, i, d);
+		for (int j = 0; j<2*size+5; j++){
+			summary[i*(2*size+5)+j] = MGET(summaryV, i, j);
 		}
 	}
 	pnl_rng_free(&rng);

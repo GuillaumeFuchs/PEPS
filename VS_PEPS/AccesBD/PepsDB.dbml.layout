@@ -1,17 +1,17 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<ordesignerObjectsDiagram dslVersion="1.0.0.0" absoluteBounds="0, 0, 11, 8.5" name="PepsDB">
+<ordesignerObjectsDiagram dslVersion="1.0.0.0" absoluteBounds="0, 0, 11.375, 8.5" name="PepsDB">
   <DataContextMoniker Name="/PepsDBDataContext" />
   <nestedChildShapes>
-    <classShape Id="a9ac4292-88ca-4f9d-b8d0-d903a5a2317f" absoluteBounds="2.875, 1.875, 2, 1.9631982421875">
-      <DataClassMoniker Name="/PepsDBDataContext/PepsDB" />
-      <nestedChildShapes>
-        <elementListCompartment Id="efab7aa0-5629-42d1-9930-1d9c37a6b7bb" absoluteBounds="2.8899999999999997, 2.335, 1.9700000000000002, 1.4031982421875" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
-      </nestedChildShapes>
-    </classShape>
-    <classShape Id="e02a08b2-6ed8-4f3a-afad-5dc9f9e67412" absoluteBounds="7.5, 2.75, 2, 1.9631982421875">
+    <classShape Id="a407f8ef-bcd6-4615-8dd2-35260587e45d" absoluteBounds="4.125, 1.625, 2, 1.9631982421875">
       <DataClassMoniker Name="/PepsDBDataContext/Component" />
       <nestedChildShapes>
-        <elementListCompartment Id="0cf4460e-e4bf-429f-9883-833a3a1f7f31" absoluteBounds="7.515, 3.21, 1.9700000000000002, 1.4031982421875" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
+        <elementListCompartment Id="4cb516e7-dd31-4cf0-a57f-d3f8b39e18c6" absoluteBounds="4.14, 2.085, 1.9700000000000002, 1.4031982421875" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
+      </nestedChildShapes>
+    </classShape>
+    <classShape Id="ebc476fd-4480-4287-8f48-9eecc3b8287c" absoluteBounds="9.125, 2.875, 2, 1.9631982421875">
+      <DataClassMoniker Name="/PepsDBDataContext/PepsDB" />
+      <nestedChildShapes>
+        <elementListCompartment Id="2ba3d428-3b0a-4977-8008-088a2ec29bdf" absoluteBounds="9.14, 3.335, 1.9700000000000002, 1.4031982421875" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
       </nestedChildShapes>
     </classShape>
   </nestedChildShapes>
