@@ -57,7 +57,9 @@ namespace Wrapper {
 		int H,
 		double T, 
 		double t, 
-		double r, 
+		double r,
+		double risk,
+		double risk_free,
 		array<double> ^sigma, 
 		array<double> ^rho, 
 		array<double> ^coeff, 
@@ -65,8 +67,6 @@ namespace Wrapper {
 		array<double> ^delta_ant){
 
 			double pl;
-			double risk;
-			double risk_free;
 
 			pin_ptr<double> pSigma = &sigma[0];
 			pin_ptr<double> pRho = &rho[0];
@@ -77,8 +77,6 @@ namespace Wrapper {
 			compute_portfolio(past_size, size, N, M, H, T, t, r, pSigma, pRho, pCoeff, pPast, pDeltaAnt, pl, risk, risk_free);
 
 			this->pl = pl;
-			this->risk = risk;
-			this->risk_free = risk_free;
 	}
 
 
