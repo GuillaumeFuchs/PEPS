@@ -22,7 +22,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -85,6 +85,7 @@
     <Content Include="Account\ChangePasswordSuccess.aspx" />
     <Content Include="Account\Login.aspx" />
     <Content Include="Account\Register.aspx" />
+    <Content Include="AffichagePortCouv.aspx" />
     <Content Include="Styles\Model.css" />
     <Content Include="Styles\Site.css" />
     <Content Include="Model.aspx" />
@@ -142,6 +143,13 @@
     </Compile>
     <Compile Include="Account\Register.aspx.designer.cs">
       <DependentUpon>Register.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="AffichagePortCouv.aspx.cs">
+      <DependentUpon>AffichagePortCouv.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="AffichagePortCouv.aspx.designer.cs">
+      <DependentUpon>AffichagePortCouv.aspx</DependentUpon>
     </Compile>
     <Compile Include="ComboBox.cs" />
     <Compile Include="Model.aspx.cs">

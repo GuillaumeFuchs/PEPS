@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?><Database Name="master" Class="PepsDBDataContext" xmlns="http://schemas.microsoft.com/linqtosql/dbml/2007">
-  <Connection Mode="AppSettings" ConnectionString="Data Source=(local)\SQLEXPRESS;Initial Catalog=master;Integrated Security=True" SettingsObjectName="AccesBD.Properties.Settings" SettingsPropertyName="masterConnectionString1" Provider="System.Data.SqlClient" />
+  <Connection Mode="AppSettings" ConnectionString="Data Source=PC-GP\Base;Initial Catalog=master;Integrated Security=True" SettingsObjectName="AccesBD.Properties.Settings" SettingsPropertyName="masterConnectionString" Provider="System.Data.SqlClient" />
   <Table Name="dbo.Component" Member="Component">
     <Type Name="Component">
       <Column Name="Date" Type="System.String" DbType="VarChar(255) NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
