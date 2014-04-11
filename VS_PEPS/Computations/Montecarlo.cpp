@@ -20,24 +20,27 @@ MonteCarlo::~MonteCarlo(){
 * Price
 *
 */
-void MonteCarlo::price(double &prix, double &ic){
+void MonteCarlo::price(
+	double &prix, 
+	double &ic)
+{
 	int size = opt_->get_size();
-	int TimeSteps = opt_->get_timeStep();
+	int N = opt_->get_timeStep();
 	double r = mod_->get_r();
 	double T = opt_->get_T();
 	//path: matrice représentant l'évolution du sous-jacent sur l'ensemble des pas de temps
-	PnlMat *path = pnl_mat_create(size, TimeSteps+1);
+	PnlMat *path = pnl_mat_create(size, N+1);
 	//G: matrice de dimension N*d pour générer une suite iid selon la loi normale centrée réduite
-	PnlMat *G = pnl_mat_create(TimeSteps, size);
+	PnlMat *G = pnl_mat_create(N, size);
 	//grid: vecteur de taille N+1 pour générer la grille de temps (t_0=0, ..., t_N)
-	PnlVect *grid = pnl_vect_create(TimeSteps+1);
+	PnlVect *grid = pnl_vect_create(N+1);
 	//tirages: vecteur de taille samples_ contenant les valeurs des M payoff
 	PnlVect *tirages = pnl_vect_create(samples_);
 	//temps: incrémentation pour chaque date de constation
-	double temps = T/TimeSteps;
+	double temps = T/N;
 
 	//Calcule de chaque date de constatation;
-	for (int t=0; t<TimeSteps+1; t++){
+	for (int t=0; t<N+1; t++){
 		LET(grid, t) = temps*t;
 	}
 
@@ -46,9 +49,9 @@ void MonteCarlo::price(double &prix, double &ic){
 
 	for (int j=0; j<samples_; j++){
 		//Génération de la trajectoire du modèle de Black Scholes
-		mod_->asset(path, T, TimeSteps, rng, G, grid);
+		mod_->asset(N, T, grid, path, G, rng);
 		//Ajout du payoff dans tirages
-		LET(tirages, j) = opt_->payoff(path, 0.);
+		LET(tirages, j) = opt_->payoff(0., path);
 	}
 
 	//Calcul du prix à l'aide de la formule de MC
@@ -62,15 +65,20 @@ void MonteCarlo::price(double &prix, double &ic){
 	pnl_mat_free(&G);
 }
 
-void MonteCarlo::price(const PnlMat *past, double t, double &prix, double &ic){
+void MonteCarlo::price(
+	double t, 
+	double &prix, 
+	double &ic, 
+	const PnlMat* past)
+{
 	double T = opt_->get_T();
 	int size = opt_->get_size();
-	int timeStep = opt_->get_timeStep();
+	int N = opt_->get_timeStep();
 	double r = mod_->get_r();
 	//path: matrice représentant l'évolution du sous-jacent sur l'ensemble des pas de temps
-	PnlMat *path = pnl_mat_create(size, timeStep+1);
+	PnlMat *path = pnl_mat_create(size, N+1);
 	//dt: pas d'incrémentation
-	double dt = T/timeStep;
+	double dt = T/N;
 	//extractPast: vecteur de taille size servant à extraire de la matrice past les colonnes pour les insérer dans path
 	PnlVect *extractPast = pnl_vect_create(size);
 	//H: nombre de pas d'incrémentation de past
@@ -104,7 +112,7 @@ void MonteCarlo::price(const PnlMat *past, double t, double &prix, double &ic){
 	//donc on a besoin d'aucune simulation
 	//et l'intervalle de confiance est de 0 car on est dans un calcul du prix déterministe
 	if (t == T){
-		prix = opt_->payoff(path, T);
+		prix = opt_->payoff(T, path);
 		ic = 0;
 		pnl_mat_free(&path);
 		pnl_vect_free(&extractPast);
@@ -114,25 +122,26 @@ void MonteCarlo::price(const PnlMat *past, double t, double &prix, double &ic){
 	//tirages: vecteur de taille samples_ contenant la valeur des payoff de l'option
 	PnlVect *tirages = pnl_vect_create(samples_);
 	//G: matrice de dimension (N-taille)*d pour générer une suite iid selon la loi normale centrée réduite
-	PnlMat *G = pnl_mat_create(timeStep-taille, size);
+	PnlMat *G = pnl_mat_create(N-taille, size);
 	//grid: vecteur de taille N-taille+1 pour générer la grille de temps de t à t_N
-	PnlVect *grid = pnl_vect_create(timeStep-taille+1);
+	PnlVect *grid = pnl_vect_create(N-taille+1);
 	LET(grid, 0) = t;
-	for (int i=1; i<timeStep-taille+1; i++){
+	for (int i=1; i<N-taille+1; i++){
 		LET(grid, i) = dt*(i+taille);
 	}
-
 	for (int j=0; j<samples_; j++){
 		//Génération de l'évolution du sous-jacent par le modèle de Bs
-		mod_->asset(path, t, timeStep , T, rng, extractPast, taille, G, grid);
+		mod_->asset(N, taille, T, t, extractPast, grid, path, G, rng);
 		//Ajout dans tirages
-		LET(tirages, j) = opt_->payoff(path, t);
+		LET(tirages, j) = opt_->payoff(t, path);
 	}
 
 	//Calcul du prix
 	prix = (1./(double)samples_)*pnl_vect_sum(tirages);
 	//Calcul de la variance
-	ic = (3.92/sqrt((double)samples_)) * sqrt(((1./(double)samples_)*SQR(pnl_vect_norm_two(tirages))-SQR((1./(double)samples_)*pnl_vect_sum(tirages))));
+	ic = (3.92/sqrt((double)samples_)) * sqrt(
+		(1./(double)samples_)*SQR(pnl_vect_norm_two(tirages))
+		-SQR((1./(double)samples_)*pnl_vect_sum(tirages)));
 
 	pnl_mat_free(&path);
 	pnl_mat_free(&G);
@@ -141,45 +150,31 @@ void MonteCarlo::price(const PnlMat *past, double t, double &prix, double &ic){
 	pnl_vect_free(&grid);
 }
 
-void MonteCarlo::delta (const PnlMat *past, double t, PnlVect *delta, PnlVect *ic){
+void MonteCarlo::delta (
+	double t, 
+	PnlVect* delta, 
+	PnlVect* ic, 
+	const PnlMat* past)
+{
+	int size = opt_->get_size();
+	int indice;
+	int N = opt_->get_timeStep();
 	double temps1 = 0;
 	double temps2 = 0;
 	double sum, sum2;
-	double facteur;
+	double facteur, facteur_com;
 	double result, resultic;
-
 	double T = opt_->get_T();
-	int size = opt_->get_size();
-
-	//Delta à maturité
-	//Si le payoff est positif alors la somme des deltas vaut 1
-	//et chaque actif à un delta correspondant à son coefficnent
-	if (fabs(T-t) < 0.00001){
-		//Cas où le payoff est positif
-		if (fabs(opt_->payoff(past, t)) > 0.001){
-			PnlVect *coeff = opt_->get_Coeff();
-			for (int d = 0; d < size; d++){
-				LET(delta, d) =  GET(coeff, d);
-			}
-		} else {
-			for (int d = 0; d < size; d++){
-				LET(delta, d) =  0;
-			}
-		}
-		return;
-	}
-
-	int timeStep = opt_->get_timeStep();
 	double r = mod_->get_r();
 
 	//Initialisation de path comme une matrice de dimension d x (N+1)
-	PnlMat *path = pnl_mat_create(size, timeStep+1);
+	PnlMat *path = pnl_mat_create(size, N+1);
 	//temps: incrémentation pour chaque date de constatation
-	double dt = T/timeStep;
+	double dt = T/N;
 	//extractPast: vecteur de taille size servant à extraire de la matrice past les colonnes pour les insérer dans path
 	PnlVect *extractPast = pnl_vect_create(size);
-	PnlMat *_shift_path_plus = pnl_mat_create(size, timeStep+1);
-	PnlMat *_shift_path_moins = pnl_mat_create(size, timeStep+1);
+	PnlMat *shift_path_plus = pnl_mat_create(size, N+1);
+	PnlMat *shift_path_moins = pnl_mat_create(size, N+1);
 	PnlMat *tirages = pnl_mat_create(samples_, size);
 	PnlMat *tirages2 =  pnl_mat_create(samples_, size);
 	PnlVect *tiragesRow = pnl_vect_create(samples_);
@@ -206,56 +201,54 @@ void MonteCarlo::delta (const PnlMat *past, double t, PnlVect *delta, PnlVect *i
 		pnl_mat_get_col(extractPast, past, H);
 	}
 	//G: matrice de dimension (N-taille)*d pour générer une suite iid selon la loi normale centrée réduite
-	PnlMat *G = pnl_mat_create(timeStep-taille, size);
+	PnlMat *G = pnl_mat_create(N-taille, size);
 
 	//Grid: vecteur de taille N-taille+1 pour générer la grille de temps (t, t_{i+1}, ..., t_{N})
-	PnlVect *grid = pnl_vect_create(timeStep-taille+1);
+	PnlVect *grid = pnl_vect_create(N-taille+1);
 	LET(grid, 0) = t;
-	for (int i=1; i<timeStep-taille+1; i++){
+	for (int i=1; i<N-taille+1; i++){
 		LET(grid, i) = dt*(i+taille);
 	}
 
 	for (int j=0; j<samples_; j++){
-		mod_->asset(path, t, timeStep, T, rng, extractPast, taille, G, grid);
+		mod_->asset(N, taille, T, t, extractPast, grid, path, G, rng);
 		for (int d=0; d<size; d++){
 			// On récupère la trajectoire shiftée
-			mod_->shift_asset(_shift_path_plus, path, d, h_, taille+1);
-			mod_->shift_asset (_shift_path_moins, path, d, -h_, taille+1);
+			//Si on est à maturité, on fait varier le spot à maturité et on observe le payoff
+			//Sinon on fait varier le spot à t + dt et on observe le payoff
+			mod_->shift_asset(d, taille+1, h_, shift_path_plus, path);
+			mod_->shift_asset (d, taille+1, -h_, shift_path_moins, path);
+
 			//On calcul la valeur du payoff et on retiens la dtérence
-			temps1 = opt_->payoff(_shift_path_plus, t);
-			temps2 = opt_->payoff(_shift_path_moins, t);
+			temps1 = opt_->payoff(t, shift_path_plus);
+			temps2 = opt_->payoff(t, shift_path_moins);
 			MLET(tirages, j, d) = temps1-temps2;
 			// recuperation des (phi(plus)-pi(moins))²
 			MLET(tirages2, j, d) = (temps1-temps2)*(temps1-temps2);
 		}
 	}
 
+	facteur_com = 1./(2.*h_*(double)samples_);
 	for (int d = 0; d < size; d++){
+		//calcul delta
 		pnl_mat_get_col(tiragesRow, tirages, d);
-		// somme des phi
-		sum = pnl_vect_sum(tiragesRow);
-
-		pnl_mat_get_col(tiragesRow, tirages2, d);
-		// somme des phi²
-		sum2 = pnl_vect_sum(tiragesRow);
-
-		// calcul de delta
-		facteur =  1./(2.*h_*(double)samples_*MGET(past, d, past->n-1));
-		result = facteur * sum;
+		facteur = facteur_com/MGET(past, d, past->n-1);
+		result = facteur * pnl_vect_sum(tiragesRow);
 		LET(delta, d) = result;
 
-		// calcul de l'intervalle de confiance
-		sum = (sum*facteur)*(sum*facteur);
-		resultic = exp(r*(T-t))/2 * (facteur*sum2 - sum);
-		resultic = 3.92*sqrt(resultic * 1./(double)samples_);
+		//calcul ic
+		pnl_mat_get_col(tiragesRow, tirages2, d);
+		resultic = (3.92/sqrt((double)samples_)) * sqrt(
+			(1./(double)samples_)*pnl_vect_sum(tiragesRow)
+			- (result * result));
 		LET(ic, d) = resultic;
 	}
 
 
 	pnl_mat_free(&G);
 	pnl_mat_free(&path);
-	pnl_mat_free(&_shift_path_plus);
-	pnl_mat_free(&_shift_path_moins);
+	pnl_mat_free(&shift_path_plus);
+	pnl_mat_free(&shift_path_moins);
 	pnl_mat_free(&tirages);
 	pnl_mat_free(&tirages2);
 	pnl_vect_free(&tiragesRow);
@@ -263,7 +256,12 @@ void MonteCarlo::delta (const PnlMat *past, double t, PnlVect *delta, PnlVect *i
 	pnl_vect_free(&grid);
 }
 
-void MonteCarlo::couv(PnlMat *past, double &pl, int H, double T, PnlMat *summary_simul)
+void MonteCarlo::couv(
+	int H,
+	double T,
+	double& pl,
+	PnlMat *past, 
+	PnlMat *summary)
 {
 	int size = opt_->get_size();
 	int timeStep = opt_->get_timeStep();
@@ -288,8 +286,8 @@ void MonteCarlo::couv(PnlMat *past, double &pl, int H, double T, PnlMat *summary
 	//
 	//SIMULATION OF AN ASSET TO HEDGE
 	//
-	mod_->simul_market(past, H, T, rng);
-	printf("%f\n", MGET(past, 0, H));
+	mod_->simul_market(H, T, past, rng);
+
 	//
 	//COMPUTE IN 0
 	//
@@ -299,7 +297,7 @@ void MonteCarlo::couv(PnlMat *past, double &pl, int H, double T, PnlMat *summary
 	//Delta
 	pnl_mat_get_col(S, past, 0);
 	pnl_mat_set_col(past_sub, S, 0);
-	delta(past_sub, 0, delta_i, ic_vect);
+	delta(0, delta_i, ic_vect, past_sub);
 	
 	//Compute portfolios (risk and risk-free)
 	//simulate
@@ -309,16 +307,16 @@ void MonteCarlo::couv(PnlMat *past, double &pl, int H, double T, PnlMat *summary
 	
 	//Add informations in summary matrix
 	//simulate
-	MLET(summary_simul, 0, 0) = 0;
+	MLET(summary, 0, 0) = 0;
 	for (int d = 0; d < size; d++){
 		pnl_mat_get_row(past_extract, past, d);
-		pnl_mat_set_col(summary_simul, past_extract, 1+d);
-		MLET(summary_simul, 0, 1+size+d) = GET(delta_i, d);
+		pnl_mat_set_col(summary, past_extract, 1+d);
+		MLET(summary, 0, 1+size+d) = GET(delta_i, d);
 	}
-	MLET(summary_simul, 0, 2*size+1) = priceVal;
-	MLET(summary_simul, 0, 2*size+2) = pF_risk;
-	MLET(summary_simul, 0, 2*size+3) = pF_risk_free;
-	MLET(summary_simul, 0, 2*size+4) = pF;
+	MLET(summary, 0, 2*size+1) = priceVal;
+	MLET(summary, 0, 2*size+2) = pF_risk;
+	MLET(summary, 0, 2*size+3) = pF_risk_free;
+	MLET(summary, 0, 2*size+4) = pF;
 
 	//
 	//COMPUTE IN t>0
@@ -337,10 +335,10 @@ void MonteCarlo::couv(PnlMat *past, double &pl, int H, double T, PnlMat *summary
 			pnl_mat_get_col(S, past, j);
 			pnl_mat_set_col(past_sub, S, j);
 		}
-		delta(past_sub, timeH*i, delta_i, ic_vect);
+		delta(timeH*i, delta_i, ic_vect, past_sub);
 
 		//Compute price at tau_i
-		price(past_sub, timeH*i, priceVal, ic);
+		price(timeH*i, priceVal, ic, past_sub);
 
 		//Compute portfolios
 		//simulate
@@ -351,22 +349,70 @@ void MonteCarlo::couv(PnlMat *past, double &pl, int H, double T, PnlMat *summary
 
 		//Add informations in summary matrix
 		//simulate
-		MLET(summary_simul, i, 0) = timeH*i;
+		MLET(summary, i, 0) = timeH*i;
 		for (int d = 0; d < size; d++)
-			MLET(summary_simul, i, 1+size+d) = GET(delta_i, d);
-		MLET(summary_simul, i, 2*size+1) = priceVal;
-		MLET(summary_simul, i, 2*size+2) = pF_risk;
-		MLET(summary_simul, i, 2*size+3) = pF_risk_free;
-		MLET(summary_simul, i, 2*size+4) = pF;
+			MLET(summary, i, 1+size+d) = GET(delta_i, d);
+		MLET(summary, i, 2*size+1) = priceVal;
+		MLET(summary, i, 2*size+2) = pF_risk;
+		MLET(summary, i, 2*size+3) = pF_risk_free;
+		MLET(summary, i, 2*size+4) = pF;
 	}
-	price(past, T, priceVal, ic);
+	price(T, priceVal, ic, past);
 
-	//Calcul de l'erreur de couverture
-	pl = pF_risk_free + pnl_vect_scalar_prod(delta_i, S) - priceVal;
+	//P&L compute
+	pl = pF - priceVal;
 
 	pnl_vect_free(&S);
 	pnl_vect_free(&delta_i_1);
 	pnl_vect_free(&delta_i);
 	pnl_vect_free(&ic_vect);
 	pnl_vect_free(&past_extract);
+}
+
+void MonteCarlo::compute_portfolio(
+	int H, 
+	double T, 
+	double t, 
+	double& risk_free,
+	double& risk,
+	double& pl,
+	PnlVect* delta_ant,
+	const PnlMat *past) 
+{
+	int size = opt_->get_size();
+	double r = mod_->get_r();
+	double timeH = T/H; //timestep of the hedging
+	double priceVal, ci;
+
+	PnlVect *delta_t = pnl_vect_create(size); //delta at t
+	PnlVect* ci_t = pnl_vect_create(size); //confidence interval for delta at t
+	PnlVect* spot = pnl_vect_create(size); //spot at t
+
+	//Get spot price
+	pnl_mat_get_col(spot, past, past->n-1);
+
+	//Compute delta at t
+	delta(t, delta_t, ci_t, past);
+
+	//Compute portfolios (risk and risk_free)
+	risk = pnl_vect_scalar_prod(delta_t, spot);
+	
+	if (t == 0.00){
+		double priceVal, ic;
+		price(priceVal, ic);
+		risk_free = priceVal - risk;
+	}
+	else{
+		risk_free = risk_free*exp(r*timeH) + pnl_vect_scalar_prod(delta_ant,spot) - risk;
+	}
+
+	//Update delta risk portfolio 
+	for (int i = 0; i < size; i++)
+		LET(delta_ant, i) = GET(delta_t, i);
+
+	price(t, priceVal, ci, past);
+	pl = (risk_free+risk) / priceVal - 1 ;
+	pnl_vect_free(&delta_t);
+	pnl_vect_free(&ci_t);
+	pnl_vect_free(&spot);
 }

@@ -36,24 +36,26 @@ int main(){
 	PnlRng *rng = pnl_rng_create(PNL_RNG_MERSENNE);
 	pnl_rng_sseed(rng, time(NULL));
 
-	/*int const size = 4;
+	/*
+	int const size = 1;
 	double strike = 100;
-	double spot[size] = {100, 100, 100, 100};
+	double spot[size] = {100};
 	double T = 6;
-	double sigma[size] = {0.2, 0.2, 0.2, 0.2};	
+	double sigma[size] = {0.2};	
 	double r = .05;
-	double coeff[size] = {.25, .25, .25, .25};
-	double rho[size*(size-1)/2] = {0., 0., 0., 0., 0., 0.};*/
+	double coeff[size] = {1.};
+	*/
 	
 	int const size = 4;
 	double strike = 100;
 	double spot[size] = {100, 100, 100, 100};
 	double T = 6;
-	double sigma[size] = {0.2, 0.2, 0.2 , 0.2};	
+	double sigma[size] = {0.2, 0.2, 0.2, 0.2};	
 	double r = .05;
 	double coeff[size] = {0.25, 0.25, 0.25, 0.25};
 	double rho[size*(size+1)/2] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
-
+	
+	
 	int N = 6;
 	int samples = 50000;
 
@@ -77,9 +79,10 @@ int main(){
 
 	//test.compute_price_samples(10000, true, true, past);
 	//test.compute_delta_samples(10000, true, true, past);
-	//test.compute_price(0 , 0.);	
-	//test.compute_delta(50, 0.5);
-	test.compute_couv(300 , true);
+	//test.compute_price(3 , 1.5);	
+	//test.compute_delta(0, 0.);
+	//test.compute_couv(6, false);
+	test.compute_hedge(6);
 
 	/*tend = clock();
 	temps = (float)(tend-tbegin)/CLOCKS_PER_SEC;

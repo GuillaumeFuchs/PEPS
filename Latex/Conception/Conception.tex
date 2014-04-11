@@ -179,22 +179,22 @@ où
  $\tau_{0}$ = $0$ et $\tau_{N}$ = $T$.\\
  
 Le long de cette trajectoire, la construction du portefeuille de couverture se fait par le calcul d'un portefeuille constitué d'actifs sans risques et d'un portefeuille d'actifs risqués.\\
-Soit le prix $p_{i}$ et $\delta_{i}$ à chaque date $\tau_{i}$. \\
-Le portefeuille d'actifs risqué est calculé à partir de l'achat du sous-jacent de l'option. L'évolution du portefeuille d'actifs risqués s'écrit:\\
+Soit le prix $p_{i}$, $\delta_{i}^{0}$ la part d'actif non risqué, $\delta_{i}^{1}$ la part d'actif risqué et $\delta_{i}$ le delta à chaque date $\tau_{i}$. \\
+La part en actifs risqué est calculée à partir de l'achat du sous-jacent de l'option. L'évolution du portefeuille d'actifs risqués s'écrit:\\
 $$
      \vspace{-3ex}
         \begin{aligned}
-          & V^{risk}_{i} = \delta_{i}.S_{\tau_{i}}, \hspace{7 mm}  i=0,...,H 
+          & \delta^{1}_{i} = \delta_{i}.S_{\tau_{i}}, \hspace{7 mm}  i=0,...,H 
         \end{aligned}
  $$
 \\
-Le portefeuille d'actifs sans risques est calculé à partir de la vente à l'instant 0 de l'option et de la composition du portefeuille d'actifs risqués. L'évolution du portefeuille d'actifs sans risques s'écrit:\\
+La part en actifs sans risques est calculée à partir de la vente à l'instant 0 de l'option et de la composition du portefeuille d'actifs risqués. L'évolution du portefeuille d'actifs sans risques s'écrit:\\
 $$
   \left\{%
      \vspace{-3ex}
         \begin{aligned}
-          & V^{risk free}_{0} = p_{0}-\delta_{0}.S_{0} \\
-          & V^{risk free}_{i} = V^{risk free}_{i-1}*\exp^{\frac{r*T}{H}}-(\delta_{i}-\delta_{i-1}).S_{\tau_{i}}, \hspace{7 mm}  i=1,...,H 
+          & \delta_{0}^{0} = p_{0}-\delta_{0}.S_{0} \\
+          & \delta_{i}^{0} = \delta_{i-1}^{0}*\exp^{\frac{r*T}{H}}-(\delta_{i}-\delta_{i-1}).S_{\tau_{i}}, \hspace{7 mm}  i=1,...,H 
         \end{aligned}
  \right.
  $$
@@ -204,7 +204,7 @@ Le portefeuille de couverture est donné par la somme des deux portefeuilles:
 $$
 	\vspace{-3ex}
         \begin{aligned}
-          & V^{hedge}_{i} = V^{risk free}_{i} + V^{risk}_{i}, \hspace{7 mm}  i=0,...,H 
+          & V^{hedge}_{i} = \delta^{0}_{i} + \delta^{1}_{i}, \hspace{7 mm}  i=0,...,H 
         \end{aligned}
 $$
 \\

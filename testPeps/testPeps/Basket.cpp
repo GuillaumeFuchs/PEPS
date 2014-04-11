@@ -26,7 +26,10 @@ void Basket :: set_Strike(double strike) {
   strike_ = strike;
 }
 
-double Basket :: payoff (const PnlMat *path, double t) const{
+double Basket :: payoff (
+	double t, 
+	const PnlMat* path) const
+{
   double sum;
   PnlVect* final = pnl_vect_create(path->m);
 

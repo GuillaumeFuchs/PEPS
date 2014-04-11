@@ -1,8 +1,8 @@
 #include "stdafx.h"
- 
 #include "Wrapper.h"
- 
+
 using namespace Computations;
+
 namespace Wrapper {
 	void WrapperClass::getPrice(double t, int size, array<double> ^spot, double K, array<double> ^sigma, double r, array<double> ^coeff, array<double> ^rho, double T, int N, int H, int M){
 		double ic;
@@ -48,4 +48,38 @@ namespace Wrapper {
 		this->pl = PaL;
 		this->executionTime = execTime;
 	}
+
+	void WrapperClass::getPortfolio(
+		int past_size, 
+		int size, 
+		int N, 
+		int M,
+		int H,
+		double T, 
+		double t, 
+		double r, 
+		array<double> ^sigma, 
+		array<double> ^rho, 
+		array<double> ^coeff, 
+		array<double> ^past, 
+		array<double> ^delta_ant){
+
+			double pl;
+			double risk;
+			double risk_free;
+
+			pin_ptr<double> pSigma = &sigma[0];
+			pin_ptr<double> pRho = &rho[0];
+			pin_ptr<double> pCoeff = &coeff[0];
+			pin_ptr<double> pPast = &past[0];
+			pin_ptr<double> pDeltaAnt = &delta_ant[0];
+
+			compute_portfolio(past_size, size, N, M, H, T, t, r, pSigma, pRho, pCoeff, pPast, pDeltaAnt, pl, risk, risk_free);
+
+			this->pl = pl;
+			this->risk = risk;
+			this->risk_free = risk_free;
+	}
+
+
 }

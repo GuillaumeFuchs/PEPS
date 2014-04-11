@@ -52,7 +52,10 @@ void Barrier :: set_Bu(PnlVect *Bu) {
   Bu_ = Bu;
 }
 
-double Barrier :: payoff (const PnlMat *path, double t) const{
+double Barrier :: payoff (
+	double t,
+	const PnlMat* path) const
+{
   double sum ;
   PnlVect* final = pnl_vect_create(size_);
 

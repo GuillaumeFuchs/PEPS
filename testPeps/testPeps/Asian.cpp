@@ -27,7 +27,10 @@ void Asian :: set_Strike(double Strike){
   strike_=Strike;
 }
 
-double Asian :: payoff (const PnlMat *path, double t) const{
+double Asian :: payoff (
+	double t, 
+	const PnlMat* path) const
+{
   double sum;
   //Vecteur pour mette les valeurs des S_{ti}
   //Dimension D=1 donc path ne contient qu'une seule ligne (indice 0)

@@ -17,7 +17,14 @@ ModelAsset::ModelAsset(){
 	Ld_ = pnl_vect_new();
 }
 
-ModelAsset::ModelAsset(int size, double r, double* rho, double* sigma, double* spot, double* trend){
+ModelAsset::ModelAsset(
+	int size, 
+	double r, 
+	double* rho, 
+	double* sigma, 
+	double* spot, 
+	double* trend)
+{
 	(*this).size_ = size;
 	(*this).r_ = r;
 	(*this).rho_ = rho;

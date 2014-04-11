@@ -55,7 +55,7 @@ void Test::compute_price_samples(int samples, bool display, bool output, PnlMat*
 					MLET(past_extract, 0, i) = MGET(past, 0, i); 
 				}
 
-				mc_->price(past_extract, t, price, ic);
+				mc_->price(t, price, ic, past_extract);
 
 				if (t==0)
 					priceTheo = theo_price(MGET(past, 0, 0), strike, r, T-t, GET(sigma, 0));
@@ -85,7 +85,7 @@ void Test::compute_price_samples(int samples, bool display, bool output, PnlMat*
 				MLET(past_extract, 0, i) = MGET(past, 0, i); 
 			}
 
-			mc_->price(past_extract, t, price, ic);
+			mc_->price(t, price, ic, past_extract);
 
 			if (t==0)
 				priceTheo = theo_price(MGET(past, 0, 0), strike, r, T-t, GET(sigma, 0));
@@ -141,7 +141,7 @@ void Test::compute_delta_samples(int samples, bool display, bool output, PnlMat*
 					MLET(past_extract, 0, i) = MGET(past, 0, i); 
 				}
 
-				mc_->delta(past_extract, t, delta, ic_delta);
+				mc_->delta(t, delta, ic_delta, past_extract);
 
 				if (t==0)
 					delta_th = theo_delta(MGET(past, 0, 0), strike, r, T-t, GET(sigma, 0));
@@ -169,7 +169,7 @@ void Test::compute_delta_samples(int samples, bool display, bool output, PnlMat*
 				MLET(past_extract, 0, i) = MGET(past, 0, i); 
 			}
 
-			mc_->delta(past_extract, t, delta, ic_delta);
+			mc_->delta(t, delta, ic_delta, past_extract);
 
 			if (t==0)
 				delta_th = theo_delta(MGET(past, 0, 0), strike, r, T-t, GET(sigma, 0));
@@ -211,20 +211,17 @@ void Test::compute_price(int H, double t){
 		system("pause");
 		return;
 	}
+
 	PnlMat* past = pnl_mat_create(size, H+1);
-	mod->simul_market(past, H, T, rng);
+	PnlMat* past_sub = pnl_mat_create(size, 1);
+	PnlVect* V = pnl_vect_create(size);
 
-	mc_->price(past, t, price, ic);
+	mod->simul_market(H, t, past, rng);
+	pnl_mat_print(past); 
 
-	/*
-	if (t==0)
-	priceTheo = theo_price(MGET(past, 0, 0), strike, r, T-t, GET(sigma, 0));
-	else
-	priceTheo = theo_price(MGET(past, 0, H), strike, r, T-t, GET(sigma, 0));
+	mc_->price(t, price, ic, past);
+	printf("%f\n", price);
 
-	printf("%f %f, %f\n", price_/500, ic_/500, priceTheo);
-	*/
-	printf("%f %f\n", price, ic);
 	pnl_mat_free(&past);
 }
 
@@ -241,26 +238,15 @@ void Test::compute_delta(int H, double t){
 	PnlVect* ic_delta = pnl_vect_create(mod->get_size());
 	int size = mod->get_size();
 
-	if (fmod(T/(double)N, t/(double)H) > 0.0001){
-		printf("Erreur: H non adapte \n");
-		system("pause");
-		return;
-	}
 	PnlMat* past = pnl_mat_create(size, H+1);
-	mod->simul_market(past, H, T, rng);
+	PnlMat* past_sub = pnl_mat_create(size, 1);
+	PnlVect* V = pnl_vect_create(size);
 
-	mc_->delta(past, t, delta, ic_delta);
-
-	if (t==0)
-		delta_th = theo_delta(MGET(past, 0, 0), strike, r, T-t, GET(sigma, 0));
-	else
-		delta_th = theo_delta(MGET(past, 0, H), strike, r, T-t, GET(sigma, 0));
-
-	printf("Simul %f Theo %f\n", GET(delta, 0), delta_th);
-
+	mod->simul_market(H, T, past, rng);
+	pnl_mat_print(past);
+	mc_->delta(0, delta, ic_delta, past);
 	pnl_vect_print(delta);
-	printf("\n");
-	pnl_vect_print(ic_delta);
+
 	pnl_mat_free(&past);
 }
 
@@ -278,7 +264,7 @@ void Test::compute_couv(int H, bool output){
 
 
 	PnlMat* past = pnl_mat_create(size, H+1);
-	PnlMat* summarySimul = pnl_mat_create(H+1, 5+4+4);
+	PnlMat* summarySimul = pnl_mat_create(H+1, size*2+5);
 
 	if (output) {
 		ofstream file1("../Data/s1.txt", ios::out | ios::trunc);  // ouverture en écriture avec effacement du file ouvert
@@ -296,7 +282,7 @@ void Test::compute_couv(int H, bool output){
 
 		if(file1 && file2 && file3 && file4)
 		{
-			mc_->couv(past, pl, H, T, summarySimul);
+			mc_->couv(H, T, pl, past, summarySimul);
 			mc_->price(price, ic);
 			
 			cout << "P&L simule: " << pl/price << endl;
@@ -323,14 +309,57 @@ void Test::compute_couv(int H, bool output){
 		}else
 			cerr << "Impossible d'ouvrir le file !" << endl;
 	}else{
-		mc_->couv(past, pl, H, T, summarySimul);
-		mc_->price(price, ic);
-
+		mc_->couv(H, T, pl, past, summarySimul);
 		pnl_mat_print(summarySimul);
 
-		cout << "P&L simule: " << pl/price << endl;
+		cout << "P&L simule: " << pl/MGET(summarySimul, H, 9) << endl;
 	}
 }
+
+void Test::compute_hedge(
+	int H)
+{
+	double N = mc_->get_opt()->get_timeStep();
+	double T = mc_->get_opt()->get_T();
+	double pl, price, ic;
+	int size = mc_->get_opt()->get_size();
+
+	if (fmod((double)H, (double)N) > 0.0001){
+		printf("Erreur: H non adapte \n");
+		system("pause");
+		return;
+	}
+
+	PnlMat* past = pnl_mat_create(size, H+1);
+	PnlMat* past_sub = pnl_mat_create(size, 1);
+	PnlVect* extract = pnl_vect_create(size);
+	PnlVect* delta_ant = pnl_vect_create_from_double(size, 0.);
+	PnlRng* rng = mc_->get_rng();
+	double risk_free_portion = 0.0;
+	double risk_portion = 0.0;
+
+	mc_->get_mod()->simul_market(H, T, past, rng);
+	pnl_mat_print(past);
+
+	for (int i = 0; i < H+1; i++){
+		printf("\n%d\n", i);
+
+		pnl_mat_resize(past_sub, size, i+1);
+		for (int j = 0; j<i+1; j++){
+			pnl_mat_get_col(extract, past, j);
+			pnl_mat_set_col(past_sub, extract, j);
+		}
+		mc_->compute_portfolio(H, T, (double)(i*T)/(double)H, risk_free_portion, risk_portion, delta_ant, past_sub);
+
+		printf("%f %f %f\n", risk_free_portion, risk_portion, risk_free_portion+risk_portion);
+	}
+	double prix;
+	mc_->price(6., prix, ic, past);
+	printf("%f %f\n", prix, (risk_free_portion+risk_portion-prix)/prix);
+}
+
+
+
 double Test::theo_price(double S, double K, double r, double T, double sigma){
 	double q, bound;
 	int status;

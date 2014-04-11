@@ -3,91 +3,86 @@
 #include "Montecarlos.h"
 
 /*!
- *  \file	montecarlo.h
- *  \brief	Header de la classe MonteCarlo
- *  \author Equipe 11
- */
+*  \file	montecarlo.h
+*  \brief	Header de la classe MonteCarlo
+*  \author Equipe 11
+*/
 
 /*!
- * \class MonteCarlo
- * \brief Classe representant le pricer Monte Carlo
- */
+* \class MonteCarlo
+* \brief Classe representant le pricer Monte Carlo
+*/
 
 class MonteCarlo : public MonteCarlos {
-  public:
+public:
 
 	/*!
-	 * \brief Constructeur par defaut
-	 *
-	 * Constructeur par defaut de la classe montecarlo
-	 * \param rng: generateur aleatoire
-	 */
+	* \brief Constructeur par defaut
+	*
+	* Constructeur par defaut de la classe montecarlo
+	* \param rng: generateur aleatoire
+	*/
 	MonteCarlo(PnlRng *rng);
 
 	/*!
-	 * \brief Constructeur avec argument
-	 *
-	 Constructeur avec argument de la classe montecarlo
-	 *
-	 * \param mod_: pointeur vers le modele 
-	 * \param opt_: pointeur sur l'option 
-	 * \param rng: pointeur sur le generateur
-	 * \param h_: pas de difference finie
-	 * \param samples_: nombre de tirages Monte Carlo
-	 */
+	* \brief Constructeur avec argument
+	*
+	Constructeur avec argument de la classe montecarlo
+	*
+	* \param mod_: pointeur vers le modele 
+	* \param opt_: pointeur sur l'option 
+	* \param rng: pointeur sur le generateur
+	* \param h_: pas de difference finie
+	* \param samples_: nombre de tirages Monte Carlo
+	*/
 	MonteCarlo(ModelAsset *mod, Option *opt, PnlRng *rng, double h, int samples);
 
 	/*!
-	 * \brief Destructeur
-	 *
-	 * Destructeur de la classe Bs
-	 */
+	* \brief Destructeur
+	*
+	* Destructeur de la classe Bs
+	*/
 	virtual ~MonteCarlo();
 
 	/*!
-	 * \brief Calcule du prix de l’option a la date 0
-	 *
-	 * \param prix (ouptut) contient le prix
-	 * \param ic (ouptut) contient la largeur de l’intervalle de confiance sur le calcul du prix
-	 */
+	* \brief Calcule du prix de l’option a la date 0
+	*
+	* \param prix (ouptut) contient le prix
+	* \param ic (ouptut) contient la largeur de l’intervalle de confiance sur le calcul du prix
+	*/
 	void price (double &prix, double &ic);	
 
 	/*!
-	 * \brief Calcule le prix de l’option a la date t
-	 *
-	 * \param past (input) contient la trajectoire du sous-jacent jusqu’a l’instant t
-	 * \param t (input) date a laquelle le calcul est fait
-	 * \param prix (ouptut) contient le prix
-	 * \param ic (ouptut) contient la largeur de l’intervalle de confiance sur le calcul du prix
-	 */
-	void price (const PnlMat *past, double t, double &prix, double &ic);
+	* \brief Calcule le prix de l’option a la date t
+	*
+	* \param t (input) date a laquelle le calcul est fait
+	* \param prix (ouptut) contient le prix
+	* \param ic (ouptut) contient la largeur de l’intervalle de confiance sur le calcul du 		* \param past (input) contient la trajectoire du sous-jacent jusqu’a l’instant t
+	prix
+	*/
+	void price (double t, double &prix, double &ic, const PnlMat* past);
 
 	/*!
-	 * \brief Calcul du delta de l’option a la date t
-	 *
-	 * \param past (input) contient la trajectoire du sous-jacent jusqu’a l’instant t
-	 * \param t (input) date a laquelle le calcul est fait
-	 * \param delta (ouptut) contient le vecteur de delta
-	 * \param ic (ouptut) contient la largeur de l’intervalle de confiance sur le calcul du delta
-	 */
-	void delta (const PnlMat *past, double t, PnlVect *delta, PnlVect *ic); 
+	* \brief Calcul du delta de l’option a la date t
+	*
+	* \param t (input) date a laquelle le calcul est fait
+	* \param delta (ouptut) contient le vecteur de delta
+	* \param ic (ouptut) contient la largeur de l’intervalle de confiance sur le calcul du delta
+	* \param past (input) contient la trajectoire du sous-jacent jusqu’a l’instant t
+	*/
+	void delta (double t, PnlVect* delta, PnlVect* ic, const PnlMat* past); 
 
 	/*!
-	 * \brief Calcul de l'erreur de couverture
-	 *
-	 * \param past contient une trajectoire du modele 
-	 * \param pl erreur de courverture du portefeuille
-	 * \param H nombre de date dans la simulation
-	 * \param T maturite du portefeuille
-	 * \param summary contient les informations liés à l'achat & à la vente d'actions pour le portefeuille de couverture
-	 *	1er colonne: date de recalibrage
-	 *	2e  colonne: cours de l'action
-	 *	3e  colonne: delta simulé
-	 *	4e	colonne: nombre d'actions à acheter (si négatif alors vente)
-	 *	5e	colonne: delta théorique selon B&S
-	 *	6e	colonne: nb d'actions à acheter théorique
-	 */
-	void couv (PnlMat *past, double &pl, int H, double T, PnlMat* summary);
+	* \brief Calcul de l'erreur de couverture
+	*
+	* \param H nombre de date dans la simulation
+	* \param T maturite du portefeuille
+	* \param pl erreur de courverture du portefeuille
+	* \param past contient une trajectoire du modele 
+	* \param summary contient les informations liés à l'achat & à la vente d'actions pour le portefeuille de couverture
+	*/
+	void couv(int H, double T, double &pl, PnlMat* past, PnlMat* summary);
 
+	void compute_portfolio(int H, double T, double t, double &risk_free, double &risk, double &pl, PnlVect* delta_ant, const PnlMat* past);
 };
 #endif
