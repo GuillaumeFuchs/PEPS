@@ -17,7 +17,10 @@ Playlist::Playlist(double T, int timeStep, int size, double r, double *coeff) : 
 Playlist :: ~Playlist(){
 }
 
-double Playlist :: payoff (const PnlMat *path, double t) const{
+double Playlist :: payoff (
+	double t, 
+	const PnlMat* path) const
+{
     PnlVect* S0 = pnl_vect_create(size_);
     pnl_mat_get_col(S0, path, 0);
 

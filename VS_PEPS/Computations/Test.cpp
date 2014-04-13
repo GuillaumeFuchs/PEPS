@@ -43,8 +43,8 @@ void Test::compute_prix_samples(int samples, bool affiche){
 		H = (int)(t*100);
 		pnl_mat_resize(past, 1, H+1);
 
-		mod->simul_market(past, H, t, rng);
-		mc_->price(past, t, prix, ic);
+		mod->simul_market(H, t, past, rng);
+		mc_->price(t, prix, ic, past);
 
 		if (t==0)
 			prix_th = theo_price(MGET(past, 0, 0), strike, r, T-t, GET(sigma, 0));
@@ -89,8 +89,8 @@ void Test::compute_delta_samples(int samples, bool affiche){
 		H = (int)(t*100);
 		pnl_mat_resize(past, 1, H+1);
 
-		mod->simul_market(past, H, t, rng);
-		mc_->delta(past, t, delta, ic_delta);
+		mod->simul_market(H, t, past, rng);
+		mc_->delta(t, delta, ic_delta, past);
 
 		if (t==0)
 			delta_th = theo_delta(MGET(past, 0, 0), strike, r, T-t, GET(sigma, 0));
@@ -133,8 +133,8 @@ void Test::compute_prix(int H, double t){
 		return;
 	}
 	PnlMat* past = pnl_mat_create(1, H+1);
-	mod->simul_market(past, H, T, rng);
-	mc_->price(past, t, prix, ic);
+	mod->simul_market(H, T, past, rng);
+	mc_->price(t, prix, ic, past);
 
 	if (t==0)
 		prix_th = theo_price(MGET(past, 0, 0), strike, r, T-t, GET(sigma, 0));
@@ -164,8 +164,8 @@ void Test::compute_delta(int H, double t){
 		return;
 	}
 	PnlMat* past = pnl_mat_create(1, H+1);
-	mod->simul_market(past, H, T, rng);
-	mc_->delta(past, t, delta, ic_delta);
+	mod->simul_market(H, T, past, rng);
+	mc_->delta(t, delta, ic_delta, past);
 
 	if (t==0)
 		delta_th = theo_delta(MGET(past, 0, 0), strike, r, T-t, GET(sigma, 0));
@@ -209,7 +209,7 @@ void Test::compute_couv(int H, bool output){
 
 		if(file1 && file2 && file3 && file4)
 		{
-			mc_->couv(past, pl, H, T, summarySimul);
+			mc_->couv(H, T, pl, past, summarySimul);
 			mc_->price(price, ic);
 			
 			cout << "P&L simule: " << pl/price << endl;
@@ -236,7 +236,7 @@ void Test::compute_couv(int H, bool output){
 		}else
 			cerr << "Impossible d'ouvrir le file !" << endl;
 	}else{
-		mc_->couv(past, pl, H, T, summarySimul);
+		mc_->couv(H, T, pl, past, summarySimul);
 		mc_->price(price, ic);
 
 		pnl_mat_print(summarySimul);

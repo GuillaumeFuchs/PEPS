@@ -16,7 +16,9 @@ Performance :: Performance(double T, int timeStep, int size, double r, double* c
 Performance :: ~Performance(){
 }
 
-double Performance :: payoff (const PnlMat *path, double t) const{
+double Performance :: payoff (double t, 
+	const PnlMat* path) const
+{
   double sum = 0.0;
   double temp_num;
   double temp_deno;

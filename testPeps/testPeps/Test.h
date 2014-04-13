@@ -77,6 +77,8 @@ class Test {
 	*/
 	void compute_couv(int H, bool output);
 
+	void compute_hedge(int H);
+
 	/*!
 	* \brief Calcul la valeur theorique d'un call selon la formule d'évalution de B&S
 	*/

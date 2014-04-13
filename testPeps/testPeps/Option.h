@@ -135,6 +135,6 @@ public:
 	 *
 	 * \return payoff du sous-jacent asiatique
 	 */
-	virtual double payoff (const PnlMat *path, double t) const = 0;
+	virtual double payoff (double t, const PnlMat* path) const = 0;
 };
 #endif 

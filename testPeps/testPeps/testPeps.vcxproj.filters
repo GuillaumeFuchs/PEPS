@@ -39,9 +39,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Computations.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
     <ClInclude Include="Asian.h">
       <Filter>Fichiers d%27en-tête\Options</Filter>
     </ClInclude>
@@ -60,12 +57,6 @@
     <ClInclude Include="Option.h">
       <Filter>Fichiers d%27en-tête\Options</Filter>
     </ClInclude>
-    <ClInclude Include="Montecarlos.h">
-      <Filter>Fichiers d%27en-tête\Montecarlos</Filter>
-    </ClInclude>
-    <ClInclude Include="Montecarlo.h">
-      <Filter>Fichiers d%27en-tête\Montecarlos</Filter>
-    </ClInclude>
     <ClInclude Include="Performance.h">
       <Filter>Fichiers d%27en-tête\Options</Filter>
     </ClInclude>
@@ -78,14 +69,20 @@
     <ClInclude Include="Modelasset.h">
       <Filter>Fichiers d%27en-tête\Modelasset</Filter>
     </ClInclude>
+    <ClInclude Include="Computations.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="Montecarlo.h">
+      <Filter>Fichiers d%27en-tête\Montecarlos</Filter>
+    </ClInclude>
+    <ClInclude Include="Montecarlos.h">
+      <Filter>Fichiers d%27en-tête\Montecarlos</Filter>
+    </ClInclude>
     <ClInclude Include="Test.h">
       <Filter>Fichiers d%27en-tête\Tests</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Computations.cpp">
-      <Filter>Fichiers sources</Filter>
-    </ClCompile>
     <ClCompile Include="Asian.cpp">
       <Filter>Fichiers sources\Options</Filter>
     </ClCompile>
@@ -116,14 +113,17 @@
     <ClCompile Include="Modelasset.cpp">
       <Filter>Fichiers sources\Modelasset</Filter>
     </ClCompile>
+    <ClCompile Include="Computations.cpp">
+      <Filter>Fichiers sources</Filter>
+    </ClCompile>
+    <ClCompile Include="Test.cpp">
+      <Filter>Fichiers sources\Tests</Filter>
+    </ClCompile>
     <ClCompile Include="Montecarlo.cpp">
       <Filter>Fichiers sources\Montecarlos</Filter>
     </ClCompile>
     <ClCompile Include="Montecarlos.cpp">
       <Filter>Fichiers sources\Montecarlos</Filter>
-    </ClCompile>
-    <ClCompile Include="Test.cpp">
-      <Filter>Fichiers sources\Tests</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

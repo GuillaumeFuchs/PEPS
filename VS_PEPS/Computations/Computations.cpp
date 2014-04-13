@@ -34,8 +34,8 @@ void Computations::compute_price(double &px, double &ic, double t, int size, dou
 
 	pnl_rng_sseed(rng, time(NULL));
 	
-	mod.simul_market(past, H, T, rng);
-	mc.price(past, t, px, ic);
+	mod.simul_market(H, T, past, rng);
+	mc.price(t, px, ic, past);
 
 	pnl_mat_free(&past);
 	pnl_rng_free(&rng);
@@ -55,8 +55,8 @@ void Computations::compute_delta(double &delt, double &icd, double t, int size, 
 
 	pnl_rng_sseed(rng, time(NULL));
 
-	mod.simul_market(past, H, T, rng);
-	mc.delta(past, t, delta, ic_delta);
+	mod.simul_market(H, T, past, rng);
+	mc.delta(t, delta, ic_delta, past);
 
 	pnl_vect_free(&delta);
 	pnl_vect_free(&ic_delta);
@@ -81,7 +81,7 @@ void Computations::compute_couv(double &pl, double *summary, int size, double *s
 	pnl_rng_sseed(rng, time(NULL));
 
 	tbegin = clock();
-	mc.couv(past, pl, H, T, summaryV);
+	mc.couv(H, T, pl, past, summaryV);
 	tend = clock();
 	execTime = (float)(tend-tbegin)/CLOCKS_PER_SEC;
 
@@ -96,4 +96,45 @@ void Computations::compute_couv(double &pl, double *summary, int size, double *s
 	pnl_rng_free(&rng);
 	pnl_mat_free(&past);
 	pnl_mat_free(&summaryV);
+}
+
+void Computations::compute_portfolio(
+	int past_size,
+	int size,
+	int N,
+	int M,
+	int H,
+	double T,
+	double t,
+	double r,
+	double *sigma,
+	double *rho,
+	double *coeff,
+	double *past_double,
+	double *delta_ant_double,
+	double &pl,
+	double &risk_portion,
+	double &risk_free_portion
+	)
+{
+	PnlMat* past = pnl_mat_create_from_ptr(size, past_size, past_double);
+
+	double* spot = new double(size*sizeof(double));
+	for (int d = 0; d < size; d++)
+		spot[d] = past_double[(d+1)*past_size-1];
+
+	PnlVect* delta_ant = pnl_vect_create_from_ptr(size, delta_ant_double);
+
+	PnlRng *rng = pnl_rng_create(PNL_RNG_MERSENNE);
+	pnl_rng_sseed(rng, time(NULL));
+
+	Bs mod(size, r, rho, sigma, spot, NULL);
+	Playlist opt(T, N, size, r, coeff);
+	MonteCarlo mc(&mod, &opt, rng, 0.01, M);
+
+	mc.compute_portfolio(H, T, t, risk_free_portion, risk_portion, pl, delta_ant, past);
+
+	pnl_rng_free(&rng);
+	pnl_mat_free(&past);
+	free(spot);
 }

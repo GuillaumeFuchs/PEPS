@@ -40,7 +40,10 @@ void Barrier_u :: set_Bu(PnlVect *Bu) {
   Bu_ = Bu;
 }
 
-double Barrier_u :: payoff (const PnlMat *path, double t) const{
+double Barrier_u :: payoff (
+	double t, 
+	const PnlMat* path) const
+{
   double sum ;
   //Vecteur utilisé pour effectuer la somme de chaque actif à maturité
   PnlVect* final = pnl_vect_create(size_);

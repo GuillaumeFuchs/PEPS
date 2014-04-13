@@ -103,6 +103,6 @@ class Barrier : public Option {
 	 *
 	 * \return payoff du sous-jacent asiatique
 	 */
-	double payoff (const PnlMat *path, double t) const;
+	double payoff (double t, const PnlMat* path) const;
 };
 #endif

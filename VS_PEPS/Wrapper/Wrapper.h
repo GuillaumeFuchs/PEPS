@@ -20,6 +20,7 @@ namespace Wrapper {
 		double vrD;
 
 		double pl;
+
 		double executionTime;
 		array<double> ^summary;
 
@@ -37,6 +38,8 @@ namespace Wrapper {
 		void getDelta(double t, int size, array<double> ^spot, double K, array<double> ^sigma, double r, array<double> ^coeff, array<double> ^rho, double T, int N, int H, int M);
 
 		void getHedge(int size, array<double> ^spot, double K, array<double> ^sigma, double r, array<double> ^coeff, array<double> ^rho, double T, int N, int H, int M);
+
+		void getPortfolio(int past_size, int size, int N, int M, int H, double T, double t, double r, double risk, double risk_free, array<double> ^sigma, array<double> ^rho, array<double> ^coeff, array<double> ^past, array<double> ^delta_ant);
 
 		double getPrice() {return prix;};
 		double getICP() {return intConfiancePrix;};

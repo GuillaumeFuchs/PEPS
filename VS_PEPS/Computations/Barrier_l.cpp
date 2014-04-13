@@ -40,7 +40,9 @@ void Barrier_l :: set_Bl(PnlVect *Bl) {
   Bl_ = Bl;
 }
 
-double Barrier_l :: payoff (const PnlMat *path, double t) const{
+double Barrier_l :: payoff (double t, 
+	const PnlMat* path) const
+{
   double sum ;
   PnlVect* final = pnl_vect_create(size_);
 

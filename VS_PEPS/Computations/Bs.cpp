@@ -4,6 +4,7 @@
 #include <iostream>
 
 using namespace std;
+
 Bs::Bs() : ModelAsset() {
 }
 
@@ -13,7 +14,14 @@ Bs::Bs(int size, double r, double* rho, double* sigma, double* spot, double* tre
 Bs::~Bs(){
 }
 
-void Bs::asset(PnlMat *path, double T, int N, PnlRng *rng, PnlMat* G, PnlVect* grid){
+void Bs::asset(
+	int N, 
+	double T, 
+	PnlVect* grid, 
+	PnlMat *path, 
+	PnlMat *G, 
+	PnlRng *rng)
+{
 	//s: double pour la valeur du sous-jacent à la date t_{i+1}
 	double s;
 	//diff: double t_{i+1}-t_{i}
@@ -40,7 +48,17 @@ void Bs::asset(PnlMat *path, double T, int N, PnlRng *rng, PnlMat* G, PnlVect* g
 	}
 }
 
-void Bs::asset(PnlMat *path, double t, int N, double T, PnlRng *rng, const PnlVect *pastT, int taille, PnlMat* G, PnlVect* grid){
+void Bs::asset(
+	int N, 
+	int taille, 
+	double T, 
+	double t, 
+	const PnlVect* pastT, 
+	const PnlVect* grid, 
+	PnlMat* path,
+	PnlMat* G, 
+	PnlRng *rng)
+{
 	//s: double pour la valeur du sous-jacent à la date t_{i+1}
 	double s;
 	//diff: double t_{i+1}-t_{i}
@@ -71,15 +89,24 @@ void Bs::asset(PnlMat *path, double t, int N, double T, PnlRng *rng, const PnlVe
 	}
 }
 
-void Bs:: shift_asset (PnlMat *_shift_path, const PnlMat *path,
-	int d, double h, int indice){
-		pnl_mat_clone(_shift_path, path);
-		for (int i = indice; i < path->n; i++){
-			MLET(_shift_path, d,i) =  (1+h)*MGET(path, d,i);
-		}
+void Bs::shift_asset(
+	int d,
+	int indice,
+	double h,
+	PnlMat* shift_path, 
+	const PnlMat *path)
+{
+		pnl_mat_clone(shift_path, path);
+		for (int i = indice; i < path->n; i++)
+			MLET(shift_path, d,i) =  (1+h)*MGET(path, d,i);
 }
 
-void Bs:: simul_market (PnlMat* past, int H, double T, PnlRng *rng){
+void Bs:: simul_market (
+	int H, 
+	double T, 
+	PnlMat* past, 
+	PnlRng* rng)
+{
 	if (T == 0){
 		pnl_mat_resize(past, past->m, 1);
 		pnl_mat_set_col(past, spot_, 0);
