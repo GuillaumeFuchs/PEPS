@@ -22,7 +22,6 @@ namespace DataExporter
         {
             var table = (from x in d.Table.Data
                          select x).ToList();
-            int id = 100;
 
             // Create a new Order object.
             //Order ord = new Order
