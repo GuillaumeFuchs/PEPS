@@ -2,14 +2,14 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using AccesBD;
+using AccesDB;
 
 namespace Parameters
 {
     public class ComputeParam
     {
 
-        private AccesBD.AccesBD data;
+        private AccesDB.AccesBD data;
 
         private string[] assets;
 
@@ -46,7 +46,7 @@ namespace Parameters
 
         public ComputeParam()
         {
-            data = new AccesBD.AccesBD();
+            data = new AccesDB.AccesBD();
             Assets = new String[4] { "^STOXX50E", "^FTSE", "^N225", "^GSPC" };
             mean = new double[4];
             volatility = new double[4];

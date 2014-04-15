@@ -5,11 +5,11 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>8.0.30703</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{11BF916A-158C-4E42-AEE7-779E3F5DD0DC}</ProjectGuid>
+    <ProjectGuid>{70DBD548-8288-45DD-A4B4-D4F7F76B3A91}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>AccesDB</RootNamespace>
-    <AssemblyName>AccesBD</AssemblyName>
+    <RootNamespace>DataExporter</RootNamespace>
+    <AssemblyName>DataExporter</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -31,6 +31,10 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="APIFiMag, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>bin\Debug\APIFiMag.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Data.Linq" />
@@ -41,11 +45,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AccesBD.cs" />
-    <Compile Include="PepsDB.designer.cs">
+    <Compile Include="DBExporter.cs" />
+    <Compile Include="DBAccess.designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
-      <DependentUpon>PepsDB.dbml</DependentUpon>
+      <DependentUpon>DBAccess.dbml</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\Settings.Designer.cs">
@@ -56,9 +60,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
-    <None Include="PepsDB.dbml">
+    <None Include="DBAccess.dbml">
       <Generator>MSLinqToSQLGenerator</Generator>
-      <LastGenOutput>PepsDB.designer.cs</LastGenOutput>
+      <LastGenOutput>DBAccess.designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
     </None>
     <None Include="Properties\Settings.settings">
@@ -70,8 +74,8 @@
     <Service Include="{3259AA49-8AA1-44D3-9025-A0B520596A8C}" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="PepsDB.dbml.layout">
-      <DependentUpon>PepsDB.dbml</DependentUpon>
+    <None Include="DBAccess.dbml.layout">
+      <DependentUpon>DBAccess.dbml</DependentUpon>
     </None>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

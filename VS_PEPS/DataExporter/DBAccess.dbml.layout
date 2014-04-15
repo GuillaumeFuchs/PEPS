@@ -1,0 +1,24 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ordesignerObjectsDiagram dslVersion="1.0.0.0" absoluteBounds="0, 0, 11, 8.5" name="Export">
+  <DataContextMoniker Name="/ExportDataContext" />
+  <nestedChildShapes>
+    <classShape Id="5ee2e634-6de9-4385-902f-2fda192db91c" absoluteBounds="1.75, 1, 2, 3.3093082682291666">
+      <DataClassMoniker Name="/ExportDataContext/Backtest" />
+      <nestedChildShapes>
+        <elementListCompartment Id="98cd461f-ce52-4913-8da2-d61c68166c41" absoluteBounds="1.7650000000000001, 1.46, 1.9700000000000002, 2.7493082682291665" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
+      </nestedChildShapes>
+    </classShape>
+    <classShape Id="cc46c79f-5cfb-4da2-8d07-c75690de1da2" absoluteBounds="4.5, 1, 2, 3.3093082682291666">
+      <DataClassMoniker Name="/ExportDataContext/Component" />
+      <nestedChildShapes>
+        <elementListCompartment Id="0a3ac3c7-7e90-4d34-93d7-be40fd598a54" absoluteBounds="4.515, 1.46, 1.9700000000000002, 2.7493082682291665" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
+      </nestedChildShapes>
+    </classShape>
+    <classShape Id="3cf688bc-70c7-4821-91e8-396d143672de" absoluteBounds="7.25, 1, 2, 1.9631982421875">
+      <DataClassMoniker Name="/ExportDataContext/PepsDB" />
+      <nestedChildShapes>
+        <elementListCompartment Id="031d0458-6e86-464b-8f86-9192605a7f85" absoluteBounds="7.2650000000000006, 1.46, 1.9700000000000002, 1.4031982421875" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
+      </nestedChildShapes>
+    </classShape>
+  </nestedChildShapes>
+</ordesignerObjectsDiagram>

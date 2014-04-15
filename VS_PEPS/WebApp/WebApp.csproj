@@ -39,6 +39,9 @@
     <Reference Include="AjaxMin">
       <HintPath>..\..\DLL\AjaxMin.dll</HintPath>
     </Reference>
+    <Reference Include="APIFiMag">
+      <HintPath>..\DataExporter\bin\Debug\APIFiMag.dll</HintPath>
+    </Reference>
     <Reference Include="HtmlAgilityPack">
       <HintPath>..\..\DLL\HtmlAgilityPack.dll</HintPath>
     </Reference>
@@ -230,6 +233,14 @@
     <Content Include="Site.Master" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\AccesBD\AccesBD.csproj">
+      <Project>{11BF916A-158C-4E42-AEE7-779E3F5DD0DC}</Project>
+      <Name>AccesBD</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\DataExporter\DataExporter.csproj">
+      <Project>{70DBD548-8288-45DD-A4B4-D4F7F76B3A91}</Project>
+      <Name>DataExporter</Name>
+    </ProjectReference>
     <ProjectReference Include="..\DBAccess\AffichageBD.csproj">
       <Project>{B9CADB4F-7103-4A57-A2D8-B35D931A8411}</Project>
       <Name>AffichageBD</Name>

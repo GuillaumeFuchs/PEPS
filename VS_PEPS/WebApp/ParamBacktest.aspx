@@ -23,23 +23,39 @@
                 </div>
                 <div style="clear:both"></div>
                 <div style="height: 30px">
-                    <div style="float:left;width:20%;font-weight:bold">Estimate Time:</div>
+                    <div style="float:left;width:20%;font-weight:bold">Nombre de rebalancement:</div>
                     <div id="slider1" style="float:left;width:70%;position:relative;top:5px"></div>
                     <asp:HiddenField ID="hidden_estimate" runat="server" />
-                    <asp:TextBox ID="estimate_time" style="float:left;width: 35px;border:0; color: #f6931f; font-weight: bold; margin-left:5px;" runat="server">90</asp:TextBox>
-                </div>
-                <div style="height: 30px">
-                    <div style="float:left;width:20%;font-weight:bold">Backtest Step:</div>
-                    <asp:HiddenField ID="hidden_step" runat="server" />
-                    <div id="slider2" style="float:left;width:70%;position:relative;top:5px"></div>
-                    <asp:TextBox ID="backtest_step" style="float:left;width: 35px;border:0; color: #f6931f; font-weight: bold; margin-left:5px;" runat="server"></asp:TextBox>
+                    <asp:TextBox ID="estimate_time" style="float:left;width: 35px;border:0; color: #f6931f; font-weight: bold; margin-left:5px;" runat="server">40</asp:TextBox>
                 </div>
             </div>
             <div id="simulation" style="float:right;margin-right:300px;" runat="server">
-                <asp:Button ID="Button1" CssClass="run" runat="server" Text="Affiche"    />
+                <asp:Button ID="Button1" CssClass="run" runat="server" Text="Affiche" OnClick="Hedge"   />
             </div>
        </div>
         </div>
+        <div id="Affichage"  runat="server" Height="1000px" Width="1200px" style="display:none;">
+	    <asp:Chart ID="Chart1" runat="server" Height="800px" Width="1000px" style="margin-left:20%;">
+			<Series>
+				<asp:Series ChartType="Line" Name="1">
+				</asp:Series>
+                <asp:Series ChartType="Line" Name="2">
+				</asp:Series>
+                <asp:Series ChartType="Line" Name="3">
+				</asp:Series>
+                <asp:Series ChartType="Line" Name="4">
+				</asp:Series>
+			</Series>
+			<ChartAreas>
+				<asp:ChartArea Name="ChartArea1">
+					<AxisX Title="Temps">
+					</AxisX>
+					<AxisY Title="Composition du portefeuille">
+					</AxisY>
+				</asp:ChartArea>
+			</ChartAreas>
+		</asp:Chart>
+	    </div>
 
         <script type="text/javascript">
             function isPostBack() {
@@ -51,7 +67,6 @@
                     $("#<%=div_parameters.ClientID%>").slideToggle("slow");
                 });
                 
-                alert("on initialise le premier datapicker");
                 $("#<%= datepicker.ClientID %>").datepicker({
                            
                            dateFormat: "mm/dd/yy",
@@ -65,11 +80,9 @@
                            buttonImageOnly: true,
                            showAnim: "slideDown",
                            onSelect: function (selectedDate) {
-                               alert("on entre dans la sélection du datapicker");
                                $("#<%= datepicker2.ClientID %>").datepicker("option", "minDate", selectedDate);
                            }
                        });
-                       alert("on sort du premier datapicker");
 
                       $("#<%= datepicker2.ClientID %>").datepicker({
                            dateFormat: "mm/dd/yy",
