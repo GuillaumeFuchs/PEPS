@@ -87,7 +87,7 @@ namespace WebApp
 
             //Traitement du cas où la date de départ est celle de début du produit
             //Changer le Past en tableaux bidimmensionnels !!
-            wrap.getPortfolio(past.Length/4, 4, 30, 100, (int)rebalancement, 6, 0, 0.05, risk, riskfree, sigma, rho, coeff, null, Delta); 
+            //wrap.computePortfolio(past.Length/4, 4, 30, 100, (int)rebalancement, 6, 0, 0.05, risk, riskfree, sigma, rho, coeff, null, Delta); 
 
             //Affichage du portefeuille
             Chart1.Titles.Add("Composition du portefeuille de couverture");

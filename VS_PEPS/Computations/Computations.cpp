@@ -22,24 +22,114 @@
 
 using namespace std;
 
-void Computations::compute_price(double &px, double &ic, double t, int size, double *spot, double K, double *sigma, double r, double *coeff, double *rho, double T, int N, int H, int M){
-	if (fmod(T/(double)N, t/(double)H) > 0.0001)
-		return;
+void Computations::compute_price(
+	int past_size,
+	int size,
+	int N,
+	int M,
+	double T,
+	double t,
+	double r, 
+	double &px, 
+	double &ic, 
+	double *sigma, 
+	double *coeff, 
+	double *rho,
+	double *past_double)
+{
+	PnlMat* past = pnl_mat_create_from_ptr(size, past_size, past_double);
 
 	PnlRng *rng = pnl_rng_create(PNL_RNG_MERSENNE);
+	pnl_rng_sseed(rng, time(NULL));
+
+	double* spot = (double *)malloc(size*sizeof(double));
+	for (int d = 0; d < size; d++){
+		spot[d] = past_double[(d+1)*past_size-1];
+	}
+
 	Bs mod(size, r, rho, sigma, spot, NULL);
 	Playlist opt(T, N, size, r, coeff);
 	MonteCarlo mc(&mod, &opt, rng, 0.01, M);
-	PnlMat* past = pnl_mat_create(size, H+1);
-
-	pnl_rng_sseed(rng, time(NULL));
 	
-	mod.simul_market(H, T, past, rng);
 	mc.price(t, px, ic, past);
-
+	
 	pnl_mat_free(&past);
 	pnl_rng_free(&rng);
+	free(spot);
 }
+
+void Computations::compute_portfolio(
+	int past_size,
+	int size,
+	int N,
+	int M,
+	int H,
+	double T,
+	double t,
+	double r,
+	double *sigma,
+	double *rho,
+	double *coeff,
+	double *past_double,
+	double *delta_ant_double,
+	double &price,
+	double &ci,
+	double &err,
+	double &risk_portion,
+	double &risk_free_portion)
+{
+	PnlMat* past = pnl_mat_create_from_ptr(size, past_size, past_double);
+
+	double* spot = (double *)malloc(size*sizeof(double));
+	for (int d = 0; d < size; d++){
+		spot[d] = past_double[(d+1)*past_size-1];
+	}
+
+	PnlVect* delta_ant = pnl_vect_create_from_ptr(size, delta_ant_double);
+
+	PnlRng *rng = pnl_rng_create(PNL_RNG_MERSENNE);
+	pnl_rng_sseed(rng, time(NULL));
+
+	Bs mod(size, r, rho, sigma, spot, NULL);
+	Playlist opt(T, N, size, r, coeff);
+	MonteCarlo mc(&mod, &opt, rng, 0.01, M);
+
+	mc.compute_portfolio(H, T, t, risk_free_portion, risk_portion, price, ci, err, delta_ant, past);
+
+	for (int d = 0; d < size; d++)
+		delta_ant_double[d]= GET(delta_ant, d);
+
+	pnl_rng_free(&rng);
+	pnl_mat_free(&past);
+	free(spot);
+}
+
+void Computations::compute_simul_market(
+	int size,
+	int H, 
+	double T,
+	double r,
+	double *spot,
+	double *sigma,
+	double *rho,
+	double *past_double)
+{
+	PnlMat* past = pnl_mat_create(size, H+1);
+	
+	PnlRng *rng = pnl_rng_create(PNL_RNG_MERSENNE);
+	pnl_rng_sseed(rng, time(NULL));
+
+	Bs mod(size, r, rho, sigma, spot, NULL);
+
+	mod.simul_market(H, T, past, rng);
+
+	for (int i = 0; i < H+1; i++){
+		for (int d = 0; d < size; d++){
+			past_double[d*(H+1)+i] = MGET(past, d, i);
+		}
+	}
+}
+
 
 void Computations::compute_delta(double &delt, double &icd, double t, int size, double *spot, double K, double *sigma, double r, double *coeff, double *rho, double T, int N, int H, int M){
 	if (fmod(T/(double)N, t/(double)H) > 0.0001)
@@ -96,45 +186,4 @@ void Computations::compute_couv(double &pl, double *summary, int size, double *s
 	pnl_rng_free(&rng);
 	pnl_mat_free(&past);
 	pnl_mat_free(&summaryV);
-}
-
-void Computations::compute_portfolio(
-	int past_size,
-	int size,
-	int N,
-	int M,
-	int H,
-	double T,
-	double t,
-	double r,
-	double *sigma,
-	double *rho,
-	double *coeff,
-	double *past_double,
-	double *delta_ant_double,
-	double &pl,
-	double &risk_portion,
-	double &risk_free_portion
-	)
-{
-	PnlMat* past = pnl_mat_create_from_ptr(size, past_size, past_double);
-
-	double* spot = new double(size*sizeof(double));
-	for (int d = 0; d < size; d++)
-		spot[d] = past_double[(d+1)*past_size-1];
-
-	PnlVect* delta_ant = pnl_vect_create_from_ptr(size, delta_ant_double);
-
-	PnlRng *rng = pnl_rng_create(PNL_RNG_MERSENNE);
-	pnl_rng_sseed(rng, time(NULL));
-
-	Bs mod(size, r, rho, sigma, spot, NULL);
-	Playlist opt(T, N, size, r, coeff);
-	MonteCarlo mc(&mod, &opt, rng, 0.01, M);
-
-	mc.compute_portfolio(H, T, t, risk_free_portion, risk_portion, pl, delta_ant, past);
-
-	pnl_rng_free(&rng);
-	pnl_mat_free(&past);
-	free(spot);
 }
