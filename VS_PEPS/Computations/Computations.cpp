@@ -58,6 +58,46 @@ void Computations::compute_price(
 	free(spot);
 }
 
+void Computations::compute_delta(
+	int past_size,
+	int size,
+	int N,
+	int M,
+	double T,
+	double t,
+	double r, 
+	double *sigma, 
+	double *coeff, 
+	double *rho,
+	double *past_double,
+	double *delta,
+	double *ic_delta)
+{
+	PnlMat* past = pnl_mat_create_from_ptr(size, past_size, past_double);
+
+	PnlRng *rng = pnl_rng_create(PNL_RNG_MERSENNE);
+	pnl_rng_sseed(rng, time(NULL));
+	
+	double* spot = (double *)malloc(size*sizeof(double));
+	for (int d = 0; d < size; d++){
+		spot[d] = past_double[(d+1)*past_size-1];
+	}
+
+	Bs mod(size, r, rho, sigma, spot, NULL);
+	Playlist opt(T, N, size, r, coeff);
+	MonteCarlo mc(&mod, &opt, rng, 0.01, M);
+
+	PnlVect* deltaPnl = pnl_vect_create(size);
+	PnlVect* ic_deltaPnl = pnl_vect_create(size);
+
+	mc.delta(t, deltaPnl, ic_deltaPnl, past);
+
+	pnl_vect_free(&deltaPnl);
+	pnl_vect_free(&ic_deltaPnl);
+	pnl_rng_free(&rng);
+	free(spot);
+}
+
 void Computations::compute_portfolio(
 	int past_size,
 	int size,
@@ -131,28 +171,6 @@ void Computations::compute_simul_market(
 }
 
 
-void Computations::compute_delta(double &delt, double &icd, double t, int size, double *spot, double K, double *sigma, double r, double *coeff, double *rho, double T, int N, int H, int M){
-	if (fmod(T/(double)N, t/(double)H) > 0.0001)
-		return;
-
-	PnlRng *rng = pnl_rng_create(PNL_RNG_MERSENNE);
-	Bs mod(size, r, rho, sigma, spot, NULL);
-	Playlist opt(T, N, size, r, coeff);
-	MonteCarlo mc(&mod, &opt, rng, 0.01, M);
-	PnlVect* delta = pnl_vect_create(size);
-	PnlVect* ic_delta = pnl_vect_create(size);
-	PnlMat* past = pnl_mat_create(size, H+1);
-
-	pnl_rng_sseed(rng, time(NULL));
-
-	mod.simul_market(H, T, past, rng);
-	mc.delta(t, delta, ic_delta, past);
-
-	pnl_vect_free(&delta);
-	pnl_vect_free(&ic_delta);
-	pnl_mat_free(&past);
-	pnl_rng_free(&rng);
-}
 
 void Computations::compute_couv(double &pl, double *summary, int size, double *spot, double K, double *sigma, double r, double *coeff, double *rho, double T, int N, int H, int M, double &execTime){
 	if (fmod((double)H, (double)N) > 0.0001){

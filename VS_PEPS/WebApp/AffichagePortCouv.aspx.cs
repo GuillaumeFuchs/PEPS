@@ -126,10 +126,10 @@ namespace WebApp
 			Product_value.Text = wrap.getPrice().ToString();
 			Err_value.Text = wrap.getErr().ToString();
 
-			Label1.Text = wrap.getDeltaAnt()[0].ToString();
-			Label2.Text = wrap.getDeltaAnt()[1].ToString();
-			Label3.Text = wrap.getDeltaAnt()[2].ToString();
-			Label4.Text = wrap.getDeltaAnt()[3].ToString();
+			Label1.Text = wrap.getDelta()[0].ToString();
+			Label2.Text = wrap.getDelta()[1].ToString();
+			Label3.Text = wrap.getDelta()[2].ToString();
+			Label4.Text = wrap.getDelta()[3].ToString();
 
 			Chart2.Series[0].Points.AddXY(day, wrap.getRisk() + wrap.getRiskFree());
 			Chart2.Series[1].Points.AddXY(day, wrap.getPrice());
