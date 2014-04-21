@@ -40,10 +40,9 @@ namespace WebApp
 
 			WrapperClass wc = new WrapperClass(size, H);
 			double K = 0.0;
-			wc.getHedge(size, spot, K, sigma, r, coeff, rho, T, N, H, samples);
+			wc.getHedge(size, N, samples, H, T, r, spot, sigma, rho, coeff);
 			
 			Label11.Text = Math.Round(wc.getErr(), 4).ToString();
-			Label12.Text = Math.Round(wc.getExecutionTime(), 4).ToString();
 
 			//Array
 			TableRow row_title = new TableRow();

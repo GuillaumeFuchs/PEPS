@@ -324,12 +324,6 @@ void Test::compute_hedge(
 	double pl, price, ic;
 	int size = mc_->get_opt()->get_size();
 
-	if (fmod((double)H, (double)N) > 0.0001){
-		printf("Erreur: H non adapte \n");
-		system("pause");
-		return;
-	}
-
 	PnlMat* past = pnl_mat_create(size, H+1);
 	PnlMat* past_sub = pnl_mat_create(size, 1);
 	PnlVect* extract = pnl_vect_create(size);
@@ -353,7 +347,7 @@ void Test::compute_hedge(
 		double prix, ic;
 		mc_->price((double)(i*T)/(double)H, prix, ic, past_sub);
 
-		printf("%f %f %f %f\n", risk_free_portion, risk_portion, risk_free_portion+risk_portion, prix);
+		//printf("%f %f %f %f\n", risk_free_portion, risk_portion, risk_free_portion+risk_portion, prix);
 	}
 	double prix;
 	mc_->price(6., prix, ic, past);

@@ -172,10 +172,20 @@ void Computations::compute_simul_market(
 
 
 
-void Computations::compute_couv(double &pl, double *summary, int size, double *spot, double K, double *sigma, double r, double *coeff, double *rho, double T, int N, int H, int M, double &execTime){
-	if (fmod((double)H, (double)N) > 0.0001){
-		return;
-	}
+void Computations::compute_couv(
+	int size, 
+	int N, 
+	int M, 
+	int H, 
+	double T, 
+	double r, 
+	double &pl, 
+	double *spot, 
+	double *sigma, 
+	double *rho, 
+	double *coeff, 
+	double *summary)
+{
 	double prix;
 	double ic;
 	PnlRng *rng = pnl_rng_create(PNL_RNG_MERSENNE);
@@ -184,14 +194,10 @@ void Computations::compute_couv(double &pl, double *summary, int size, double *s
 	MonteCarlo mc(&mod, &opt, rng, 0.01, M);
 	PnlMat* past = pnl_mat_create(size, H+1);
 	PnlMat* summaryV = pnl_mat_create(H+1, size*3+1);
-    clock_t tbegin, tend;
 
 	pnl_rng_sseed(rng, time(NULL));
 
-	tbegin = clock();
 	mc.couv(H, T, pl, past, summaryV);
-	tend = clock();
-	execTime = (float)(tend-tbegin)/CLOCKS_PER_SEC;
 
 	mc.price(prix, ic);
 	pl /= prix;
