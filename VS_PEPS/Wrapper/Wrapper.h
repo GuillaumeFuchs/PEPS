@@ -9,6 +9,9 @@ namespace Wrapper {
 	private:
 		double intConfiancePrix;
 		double prix;
+		double risk;
+		double riskFree;
+		array<double> ^deltaAnt;
 
 		double intConfianceDelta;
 		double delta;
@@ -26,11 +29,12 @@ namespace Wrapper {
 
 	public:
 		WrapperClass() {
-			intConfiancePrix = prix = intConfianceDelta = delta = mxP = vrP = mxD = vrD = pl = 0;
+			intConfiancePrix = prix = risk = riskFree = intConfianceDelta = delta = mxP = vrP = mxD = vrD = pl = 0;
 		};
 		
 		WrapperClass(int size, int H) {
-			intConfiancePrix = prix = intConfianceDelta = delta = mxP = vrP = mxD = vrD = pl = 0;
+			intConfiancePrix = prix = risk = riskFree = intConfianceDelta = delta = mxP = vrP = mxD = vrD = pl = 0;
+			deltaAnt = gcnew array<double>(size);
 			summary = gcnew array<double>((2*size+5)*(H+1));
 		};
 
@@ -39,9 +43,13 @@ namespace Wrapper {
 
 		void getHedge(int size, array<double> ^spot, double K, array<double> ^sigma, double r, array<double> ^coeff, array<double> ^rho, double T, int N, int H, int M);
 
-		void getPortfolio(int past_size, int size, int N, int M, int H, double T, double t, double r, double risk, double risk_free, array<double> ^sigma, array<double> ^rho, array<double> ^coeff, array<double> ^past, array<double> ^delta_ant);
+		void getPortfolio(int past_size, int size, int N, int M, int H, double T, double t, double r, array<double> ^sigma, array<double> ^rho, array<double> ^coeff, array<double> ^past);
 
 		double getPrice() {return prix;};
+		double getRisk() {return risk;};
+		double getRiskFree() {return riskFree;};
+		array<double> ^getDeltaAnt() {return deltaAnt;};
+
 		double getICP() {return intConfiancePrix;};
 
 		double getDelta() {return delta;};

@@ -19,6 +19,7 @@ namespace WebApp
         protected void Hedge(object sender, EventArgs e)
         {
 
+            DateTime deb = new DateTime(2010, 04, 29);
             WrapperClass wrap = new WrapperClass(4,60);
             AffichageBD.AfficheBD hello = new AffichageBD.AfficheBD();
             double[] spot = new double[4];
@@ -29,7 +30,7 @@ namespace WebApp
                 spot[i] = hello.Spot[i][0];
             }
             ComputeParam cp = new ComputeParam();
-            cp.param(40);
+            cp.param(40,deb);
             double[] sigma = new double[4];
             double[] rho = new double[16];
             for (int i = 0; i<4; i++){

@@ -19,7 +19,7 @@ namespace WebApp
         {
             int NbDays = int.Parse(TextBox1.Text);
             ComputeParam cp = new ComputeParam();
-            cp.param(NbDays);
+            //cp.param(NbDays);
 
             Label1.Text = Math.Round(100*(cp.Volatility[0]),2).ToString()+" %";
             Label2.Text = Math.Round(100 * (cp.Volatility[1]), 2).ToString() + " %";

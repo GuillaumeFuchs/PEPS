@@ -58,23 +58,21 @@ namespace Wrapper {
 		double T, 
 		double t, 
 		double r,
-		double risk,
-		double risk_free,
 		array<double> ^sigma, 
 		array<double> ^rho, 
 		array<double> ^coeff, 
-		array<double> ^past, 
-		array<double> ^delta_ant){
-
+		array<double> ^past){
+			double risk = this->getRisk();
+			double riskFree = this->getRiskFree();
 			double pl;
+			pin_ptr<double> pDeltaAnt = &deltaAnt[0];
 
 			pin_ptr<double> pSigma = &sigma[0];
 			pin_ptr<double> pRho = &rho[0];
 			pin_ptr<double> pCoeff = &coeff[0];
 			pin_ptr<double> pPast = &past[0];
-			pin_ptr<double> pDeltaAnt = &delta_ant[0];
 
-			compute_portfolio(past_size, size, N, M, H, T, t, r, pSigma, pRho, pCoeff, pPast, pDeltaAnt, pl, risk, risk_free);
+			compute_portfolio(past_size, size, N, M, H, T, t, r, pSigma, pRho, pCoeff, pPast, pDeltaAnt, pl, risk, riskFree);
 
 			this->pl = pl;
 	}

@@ -2,22 +2,22 @@
 <ordesignerObjectsDiagram dslVersion="1.0.0.0" absoluteBounds="0, 0, 11, 8.5" name="PepsDB">
   <DataContextMoniker Name="/PepsDBDataContext" />
   <nestedChildShapes>
-    <classShape Id="6fc5576b-ce3f-457a-8171-594f8701db0e" absoluteBounds="8.125, 2.75, 2, 1.9631982421875">
-      <DataClassMoniker Name="/PepsDBDataContext/PepsDB" />
-      <nestedChildShapes>
-        <elementListCompartment Id="bca6534b-af19-457d-8f30-43a3ac16edf0" absoluteBounds="8.14, 3.21, 1.9700000000000002, 1.4031982421875" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
-      </nestedChildShapes>
-    </classShape>
     <classShape Id="97176ffe-d53e-4f04-8e20-19c8ac361f7c" absoluteBounds="5.125, 1.375, 2, 3.3093082682291666">
       <DataClassMoniker Name="/PepsDBDataContext/Component" />
       <nestedChildShapes>
         <elementListCompartment Id="601c44c4-5855-4c77-b959-b6b6649b2a9a" absoluteBounds="5.14, 1.835, 1.9700000000000002, 2.7493082682291665" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
       </nestedChildShapes>
     </classShape>
-    <classShape Id="94105cf7-6359-4e11-975c-f5976f5cf42a" absoluteBounds="2, 1.5, 2, 3.3093082682291666">
+    <classShape Id="946b077b-51fb-4024-a61b-824ed4414805" absoluteBounds="1.875, 1.625, 2, 3.3093082682291666">
       <DataClassMoniker Name="/PepsDBDataContext/Backtest" />
       <nestedChildShapes>
-        <elementListCompartment Id="3ec4c56e-9c8b-45fc-9d8c-4eb8636398b3" absoluteBounds="2.015, 1.96, 1.9700000000000002, 2.7493082682291665" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
+        <elementListCompartment Id="70529b9e-4b54-43f4-b27c-391ea6546cbe" absoluteBounds="1.8899999999999997, 2.085, 1.9700000000000002, 2.7493082682291665" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
+      </nestedChildShapes>
+    </classShape>
+    <classShape Id="65529ce1-162b-417d-be58-da516e32e658" absoluteBounds="8.375, 2.75, 2, 2.3478011067708335">
+      <DataClassMoniker Name="/PepsDBDataContext/PepsDB" />
+      <nestedChildShapes>
+        <elementListCompartment Id="3642952c-0392-48c8-9e9e-6192fde58a67" absoluteBounds="8.39, 3.21, 1.9700000000000002, 1.7878011067708335" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
       </nestedChildShapes>
     </classShape>
   </nestedChildShapes>

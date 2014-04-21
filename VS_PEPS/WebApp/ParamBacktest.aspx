@@ -15,11 +15,11 @@
             <div id="parameters" style="padding:10px 10px 10px 10px;margin-bottom:10px">
                 <div style="height: 40px;width:49%;float:left;">
                     <div style="float:left;width:40%;font-weight:bold;position:relative;top:11px;">Start Date:</div>
-                    <asp:TextBox ID="datepicker" Text="01/04/2006" runat="server" ></asp:TextBox>
+                    <asp:TextBox ID="datepicker" Text="29/04/2010" runat="server" ></asp:TextBox>
                 </div>
                 <div style="height: 40px;width:49%;float:right">
                     <div style="float:left;width:25%;font-weight:bold;position:relative;top:11px;">End Date:</div>
-                    <asp:TextBox ID="datepicker2" Text="24/05/2009" ViewStateMode="Enabled" runat="server"></asp:TextBox>
+                    <asp:TextBox ID="datepicker2" Text="15/04/2016" ViewStateMode="Enabled" runat="server"></asp:TextBox>
                 </div>
                 <div style="clear:both"></div>
                 <div style="height: 30px">
@@ -40,10 +40,6 @@
 				<asp:Series ChartType="Line" Name="1">
 				</asp:Series>
                 <asp:Series ChartType="Line" Name="2">
-				</asp:Series>
-                <asp:Series ChartType="Line" Name="3">
-				</asp:Series>
-                <asp:Series ChartType="Line" Name="4">
 				</asp:Series>
 			</Series>
 			<ChartAreas>

@@ -19,55 +19,99 @@ namespace WebApp
         protected void Simulate(object sender, EventArgs e)
         {
 
-                AffichageBD.AfficheBD hello = new AffichageBD.AfficheBD();
-                for (int d = 0; d < 4; d++)
+            AffichageBD.AfficheBD hello = new AffichageBD.AfficheBD();
+            //for (int d = 0; d < 4; d++)
+            //{
+            Button tmp = (Button)sender;
+            int d;
+            double lastSpot =0.0;
+            double firstSpot = 0.0;
+                if (tmp.ID.Equals("first"))
                 {
-                    if (d == 0)
+                    d = 0;
+                    Chart1.Titles.Add("Evolution du cours du Footsie");
+                    for (int j = 0; j < hello.Dates.Length; ++j)
                     {
-                        Chart1.Titles.Add("Evolution du cours de l'Eurostoxx");
-                        for (int j = 0; j < hello.Dates[d].Length; ++j)
+                        if (hello.Spot[d][j] != 0)
                         {
-                            Chart1.Series[0].Points.AddXY(hello.Dates[d][j], hello.Spot[d][j]);
-                           
+                            Chart1.Series[0].Points.AddXY(hello.Dates[j], hello.Spot[d][j]);
+                            lastSpot = hello.Spot[d][j];
+                            if (firstSpot == 0)
+                            {
+                                firstSpot = hello.Spot[d][j];
+                            }
+                        }
 
-                        }
-                        double perf = Math.Round(100.0 * (hello.Spot[d][0] - hello.Spot[d][hello.Spot[d].Length - 1]) / hello.Spot[d][hello.Spot[d].Length - 1], 2);
-                        Perf_Euro.Text = perf.ToString() + "%";
-                        Stoxx.Style.Add(HtmlTextWriterStyle.Display, "inline");
-                    }else if (d==1){
-                        Chart2.Titles.Add("Evolution du cours du Footsie");
-                        for (int j = 0; j < hello.Dates[d].Length; ++j)
-                        {
-                            Chart2.Series[0].Points.AddXY(hello.Dates[d][j], hello.Spot[d][j]);
-                        }
-                        double perf = Math.Round(100.0 * (hello.Spot[d][0] - hello.Spot[d][hello.Spot[d].Length - 1]) / hello.Spot[d][hello.Spot[d].Length - 1],2);
-                        Perf_Footsie.Text = perf.ToString() + "%";
-                        Ftse.Style.Add(HtmlTextWriterStyle.Display, "inline");
-                    }else if (d==2){
-                        Chart3.Titles.Add("Evolution du cours du Nikkei");
-                        for (int j = 0; j < hello.Dates[d].Length; ++j)
-                        {
-                            Chart3.Series[0].Points.AddXY(hello.Dates[d][j], hello.Spot[d][j]);
-                            
-                        }
-                        double perf = Math.Round(100.0 * (hello.Spot[d][0] - hello.Spot[d][hello.Spot[d].Length - 1]) / hello.Spot[d][hello.Spot[d].Length - 1],2);
-                        Perf_Nikkei.Text = perf.ToString() + "%";
-                        N225.Style.Add(HtmlTextWriterStyle.Display, "inline");
+
                     }
-                    else if (d == 3)
-                    {
-                        Chart4.Titles.Add("Evolution du cours du S&P 500");
-                        for (int j = 0; j < hello.Dates[d].Length; ++j)
-                        {
-                            Chart4.Series[0].Points.AddXY(hello.Dates[d][j], hello.Spot[d][j]);
-                            
-                        }
-                        double perf = Math.Round(100.0 * (hello.Spot[d][0] - hello.Spot[d][hello.Spot[d].Length - 1]) / hello.Spot[d][hello.Spot[d].Length - 1],2);
-                        Perf_SP.Text = perf.ToString() + "%";
-                        SP.Style.Add(HtmlTextWriterStyle.Display, "inline");
-                    }
+                    double perf = Math.Round(100.0 * (lastSpot -  firstSpot) / firstSpot, 2);
+                    Perf_Asset.Text = perf.ToString() + "%";
+                    Asset.Style.Add(HtmlTextWriterStyle.Display, "inline");
                 }
-                simulation.Style.Add(HtmlTextWriterStyle.Display, "none");
+                else if (tmp.ID.Equals("second"))
+                {
+                    d = 1;
+                    Chart1.Titles.Add("Evolution du cours du S&P 500");
+                    for (int j = 0; j < hello.Dates.Length; ++j)
+                    {
+                        if (hello.Spot[d][j] != 0)
+                        {
+                            Chart1.Series[0].Points.AddXY(hello.Dates[j], hello.Spot[d][j]);
+                            lastSpot = hello.Spot[d][j];
+                            if (firstSpot == 0)
+                            {
+                                firstSpot = hello.Spot[d][j];
+                            }
+                        }
+                    }
+                    double perf = Math.Round(100.0 * (lastSpot - firstSpot) / firstSpot, 2);
+                    Perf_Asset.Text = perf.ToString() + "%";
+                    Asset.Style.Add(HtmlTextWriterStyle.Display, "inline");
+                }
+                else if (tmp.ID.Equals("third"))
+                {
+                    d = 2;
+                    Chart1.Titles.Add("Evolution du cours du Nikkei");
+                    for (int j = 0; j < hello.Dates.Length; ++j)
+                    {
+                        if (hello.Spot[d][j] != 0)
+                        {
+                            Chart1.Series[0].Points.AddXY(hello.Dates[j], hello.Spot[d][j]);
+                            lastSpot = hello.Spot[d][j];
+                            if (firstSpot == 0)
+                            {
+                                firstSpot = hello.Spot[d][j];
+                            }
+                        }
+
+                    }
+                    double perf = Math.Round(100.0 * (lastSpot - firstSpot) / firstSpot, 2);
+                    Perf_Asset.Text = perf.ToString() + "%";
+                    Asset.Style.Add(HtmlTextWriterStyle.Display, "inline");
+                }
+                else if (tmp.ID.Equals("fourth"))
+                {
+                    d = 3;
+                    Chart1.Titles.Add("Evolution du cours du Eurostoxx");
+                    for (int j = 0; j < hello.Dates.Length; ++j)
+                    {
+                        if (hello.Spot[d][j] != 0)
+                        {
+                            Chart1.Series[0].Points.AddXY(hello.Dates[j], hello.Spot[d][j]);
+                            lastSpot = hello.Spot[d][j];
+                            if (firstSpot == 0)
+                            {
+                                firstSpot = hello.Spot[d][j];
+                            }
+                        }
+
+                    }
+                    double perf = Math.Round(100.0 * (lastSpot - firstSpot) / firstSpot, 2);
+                    Perf_Asset.Text = perf.ToString() + "%";
+                    Asset.Style.Add(HtmlTextWriterStyle.Display, "inline");
+                }
+            //}
+            //simulation.Style.Add(HtmlTextWriterStyle.Display, "none");
             }
         }
     }

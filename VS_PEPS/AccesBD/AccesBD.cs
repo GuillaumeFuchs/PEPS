@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Linq.Expressions;
 
 namespace AccesDB
 {
@@ -38,21 +39,41 @@ namespace AccesDB
         /// <param name="myAssetInfo">Object containing an array in which we save the assets name.</param>
         /// <param name="selectedAsset">Object containing the name of the assets selected by the user</param>
         /// //Useful to calculate the volatility and correlations
-        public double[] getAssetSpot(String Asset, int DaysNumber)
+        public double[] getAssetSpot(String Asset,DateTime EndDate, DateTime DepDate)
         {
-            //Erreur de table
-            String[] tmpAssetSpot = (from nam in myDbdc.PepsDB
-                                     where nam.Actif.Equals(Asset)
-                                     select nam.Open).ToArray<String>();
+            DateTime end  = EndDate;
+            string[] val = null;
+            if (Asset.Equals("FTSE")){
+                val = (from nam in myDbdc.PepsDB
+                                where DepDate <= nam.Date && end >= nam.Date
+                                select nam.FTSE).ToArray();
 
-            double[] AssetSpot = new double[DaysNumber];
-            double oute;
-            for (int i = 0; i < DaysNumber; i++)
-            {
-                double.TryParse(tmpAssetSpot[i], out oute);
-                AssetSpot[i] = oute;
             }
-            return AssetSpot;
+            else if (Asset.Equals("S&P"))
+            {
+                val = (from nam in myDbdc.PepsDB
+                       where DepDate <= nam.Date && end >= nam.Date
+                       select nam.S_P).ToArray();
+            }
+            else if (Asset.Equals("NIKKEI"))
+            {
+                val = (from nam in myDbdc.PepsDB
+                       where DepDate <= nam.Date && end >= nam.Date
+                       select nam.NIKKEI).ToArray();
+            }
+            else if (Asset.Equals("EUROSTOXX"))
+            {
+                val = (from nam in myDbdc.PepsDB
+                       where DepDate <= nam.Date && end >= nam.Date
+                       select nam.EUROSTOXX).ToArray();
+            }
+
+            double[] result = new double[val.Length];
+            for (int j = 0; j < val.Length; j++)
+            {
+                result[j] = double.Parse(val[j]);
+            }
+            return result;
         }
 
         //public double[] getPortfolio()
@@ -70,84 +91,118 @@ namespace AccesDB
         //    return Portfolio;
         //}
 
-        public double getCurrentRisk()
+        public double getCurrentRisk(DateTime Date)
         {
-            String[] tmpRisk = (from nam in myDbdc.Component
-                                     select nam.Valrisk).ToArray<String>();
+            String tmpRisk = (from nam in myDbdc.Component
+                                    where nam.Date.Equals(Date)
+                                     select nam.Valrisk).ToString();
 
-            return double.Parse(tmpRisk[tmpRisk.Length - 1]);
-        }
-
-        public double getCurrentRiskFree()
-        {
-            String[] tmpRiskfree = (from nam in myDbdc.Component
-                                select nam.Valriskfree).ToArray<String>();
-
-            return double.Parse(tmpRiskfree[tmpRiskfree.Length - 1]);
-        }
-
-        public double[][] getDelta()
-        {
-            double[][] Delta = new double[4][];
-            //Delat du FTSE
-            String[] tmpDeltaFTSE = (from nam in myDbdc.Component
-                                     select nam.DeltaFTSE).ToArray<String>();
-
-            Delta[0] = new double[tmpDeltaFTSE.Length];
-            double oute;
-            for (int i = 0; i < tmpDeltaFTSE.Length; i++)
+            try
             {
-                double.TryParse(tmpDeltaFTSE[i], out oute);
-                Delta[0][i] = oute;
+                return double.Parse(tmpRisk);
+            }
+            catch
+            {
+                return 0;
+            }
+        }
+
+        public double getCurrentRiskFree(DateTime Date)
+        {
+            String tmpRiskfree = (from nam in myDbdc.Component
+                                    where nam.Date.Equals(Date)
+                                select nam.Valriskfree).ToString();
+
+            try
+            {
+                return double.Parse(tmpRiskfree);
+            }
+            catch
+            {
+                return 0;
+            }
+        }
+
+        public double[] getDelta(DateTime Date)
+        {
+            double[] Delta = new double[4];
+            //Delat du FTSE
+            String tmpDeltaFTSE = (from nam in myDbdc.Component
+                                     where nam.Date.Equals(Date)
+                                     select nam.DeltaFTSE).ToString();
+            try
+            {
+                Delta[0] = double.Parse(tmpDeltaFTSE);
+            }
+            catch
+            {
+                Delta[0] = 0;
             }
             //Delta du S&P
-            String[] tmpDeltaSP = (from nam in myDbdc.Component
-                                     select nam.DeltaS_P).ToArray<String>();
+            String tmpDeltaSP = (from nam in myDbdc.Component
+                                 where nam.Date.Equals(Date)
+                                     select nam.DeltaS_P).ToString();
 
-            Delta[1] = new double[tmpDeltaSP.Length];
-            for (int i = 0; i < tmpDeltaSP.Length; i++)
+            try
             {
-                double.TryParse(tmpDeltaSP[i], out oute);
-                Delta[1][i] = oute;
+                Delta[1] = double.Parse(tmpDeltaSP);
+            }
+            catch
+            {
+                Delta[1] = 0;
             }
             //Delta du Nikkei
-            String[] tmpDeltaNikkei = (from nam in myDbdc.Component
-                                   select nam.DeltaNikkei).ToArray<String>();
+            String tmpDeltaNikkei = (from nam in myDbdc.Component
+                                       where nam.Date.Equals(Date)
+                                   select nam.DeltaNikkei).ToString();
 
-            Delta[2] = new double[tmpDeltaNikkei.Length];
-            for (int i = 0; i < tmpDeltaNikkei.Length; i++)
+            try
             {
-                double.TryParse(tmpDeltaNikkei[i], out oute);
-                Delta[2][i] = oute;
+                Delta[2] = double.Parse(tmpDeltaNikkei);
+            }
+            catch
+            {
+                Delta[2] = 0;
             }
             //Delta du Eurostoxx
-            String[] tmpDeltaEuro = (from nam in myDbdc.Component
-                                       select nam.DeltaEuro).ToArray<String>();
-
-            Delta[3] = new double[tmpDeltaEuro.Length];
-            for (int i = 0; i < tmpDeltaEuro.Length; i++)
+            String tmpDeltaEuro = (from nam in myDbdc.Component
+                                   where nam.Date.Equals(Date)
+                                       select nam.DeltaEuro).ToString();
+            try
             {
-                double.TryParse(tmpDeltaEuro[i], out oute);
-                Delta[3][i] = oute;
+                Delta[3] = double.Parse(tmpDeltaEuro);
+            }
+            catch
+            {
+                Delta[3] = 0;
             }
             return Delta;
         }
 
-        public double[] getPast(String Asset, DateTime DateDep, DateTime DateFin)
+        public void Insert(DateTime Datee, double ValLiq, double[] delta, double Valriskfree, double Valrisk)
         {
-            //Erreur de table
-            String[] tmpAssetSpot = (from nam in myDbdc.PepsDB
-                                     where nam.Actif.Equals(Asset) && DateTime.Parse(nam.Date) <= DateFin && DateTime.Parse(nam.Date) >= DateDep
-                                     select nam.Open).ToArray<String>();
-
-            double[] AssetSpot = new double[tmpAssetSpot.Length];
-            double oute;
-            for (int i = 0; i < tmpAssetSpot.Length; i++)
+            Backtest ord = new Backtest
             {
-                double.TryParse(tmpAssetSpot[i], out oute);
-                AssetSpot[i] = oute;
+                Date = Datee,
+                DeltaFTSE = delta[0].ToString(),
+                DeltaS_P = delta[1].ToString(),
+                DeltaNikkei = delta[2].ToString(),
+                DeltaEuro = delta[3].ToString(),
+                ValLiquidative = ValLiq.ToString(),
+                Valrisk = Valrisk.ToString(),
+                Valriskfree = Valriskfree.ToString(),
+                ValPortefeuille = (Valrisk + Valriskfree).ToString()
+            };
+            myDbdc.Backtest.InsertOnSubmit(ord);
+            try
+            {
+                myDbdc.SubmitChanges();
             }
-            return AssetSpot;
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
+                
         }
     }
 }

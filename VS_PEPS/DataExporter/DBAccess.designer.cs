@@ -36,6 +36,9 @@ namespace DataExporter
     partial void InsertComponent(Component instance);
     partial void UpdateComponent(Component instance);
     partial void DeleteComponent(Component instance);
+    partial void InsertPepsDB(PepsDB instance);
+    partial void UpdatePepsDB(PepsDB instance);
+    partial void DeletePepsDB(PepsDB instance);
     #endregion
 		
 		public ExportDataContext() : 
@@ -84,11 +87,11 @@ namespace DataExporter
 			}
 		}
 		
-		public System.Data.Linq.Table<DBAccess> PepsDB
+		public System.Data.Linq.Table<PepsDB> PepsDB
 		{
 			get
 			{
-				return this.GetTable<DBAccess>();
+				return this.GetTable<PepsDB>();
 			}
 		}
 	}
@@ -794,43 +797,56 @@ namespace DataExporter
 	}
 	
 	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.PepsDB")]
-	public partial class DBAccess
+	public partial class PepsDB : INotifyPropertyChanging, INotifyPropertyChanged
 	{
 		
-		private string _Actif;
+		private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
 		
-		private System.Nullable<System.DateTime> _Date;
+		private System.DateTime _Date;
 		
-		private string _High;
+		private string _FTSE;
 		
-		private string _Low;
+		private string _S_P;
 		
-		private string _Open;
+		private string _NIKKEI;
 		
-		private string _Close;
+		private string _EUROSTOXX;
 		
-		public DBAccess()
+		private string _Eur_JPY;
+		
+		private string _Eur_USD;
+		
+		private string _Eur_GBP;
+		
+    #region Définitions de méthodes d'extensibilité
+    partial void OnLoaded();
+    partial void OnValidate(System.Data.Linq.ChangeAction action);
+    partial void OnCreated();
+    partial void OnDateChanging(System.DateTime value);
+    partial void OnDateChanged();
+    partial void OnFTSEChanging(string value);
+    partial void OnFTSEChanged();
+    partial void OnS_PChanging(string value);
+    partial void OnS_PChanged();
+    partial void OnNIKKEIChanging(string value);
+    partial void OnNIKKEIChanged();
+    partial void OnEUROSTOXXChanging(string value);
+    partial void OnEUROSTOXXChanged();
+    partial void OnEur_JPYChanging(string value);
+    partial void OnEur_JPYChanged();
+    partial void OnEur_USDChanging(string value);
+    partial void OnEur_USDChanged();
+    partial void OnEur_GBPChanging(string value);
+    partial void OnEur_GBPChanged();
+    #endregion
+		
+		public PepsDB()
 		{
+			OnCreated();
 		}
 		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Actif", DbType="VarChar(255)")]
-		public string Actif
-		{
-			get
-			{
-				return this._Actif;
-			}
-			set
-			{
-				if ((this._Actif != value))
-				{
-					this._Actif = value;
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Date", DbType="DateTime")]
-		public System.Nullable<System.DateTime> Date
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Date", DbType="DateTime NOT NULL", IsPrimaryKey=true)]
+		public System.DateTime Date
 		{
 			get
 			{
@@ -840,72 +856,172 @@ namespace DataExporter
 			{
 				if ((this._Date != value))
 				{
+					this.OnDateChanging(value);
+					this.SendPropertyChanging();
 					this._Date = value;
+					this.SendPropertyChanged("Date");
+					this.OnDateChanged();
 				}
 			}
 		}
 		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_High", DbType="VarChar(255)")]
-		public string High
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_FTSE", DbType="VarChar(255)")]
+		public string FTSE
 		{
 			get
 			{
-				return this._High;
+				return this._FTSE;
 			}
 			set
 			{
-				if ((this._High != value))
+				if ((this._FTSE != value))
 				{
-					this._High = value;
+					this.OnFTSEChanging(value);
+					this.SendPropertyChanging();
+					this._FTSE = value;
+					this.SendPropertyChanged("FTSE");
+					this.OnFTSEChanged();
 				}
 			}
 		}
 		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Low", DbType="VarChar(255)")]
-		public string Low
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Name="[S&P]", Storage="_S_P", DbType="VarChar(255)")]
+		public string S_P
 		{
 			get
 			{
-				return this._Low;
+				return this._S_P;
 			}
 			set
 			{
-				if ((this._Low != value))
+				if ((this._S_P != value))
 				{
-					this._Low = value;
+					this.OnS_PChanging(value);
+					this.SendPropertyChanging();
+					this._S_P = value;
+					this.SendPropertyChanged("S_P");
+					this.OnS_PChanged();
 				}
 			}
 		}
 		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Name="[Open]", Storage="_Open", DbType="VarChar(255)")]
-		public string Open
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_NIKKEI", DbType="VarChar(255)")]
+		public string NIKKEI
 		{
 			get
 			{
-				return this._Open;
+				return this._NIKKEI;
 			}
 			set
 			{
-				if ((this._Open != value))
+				if ((this._NIKKEI != value))
 				{
-					this._Open = value;
+					this.OnNIKKEIChanging(value);
+					this.SendPropertyChanging();
+					this._NIKKEI = value;
+					this.SendPropertyChanged("NIKKEI");
+					this.OnNIKKEIChanged();
 				}
 			}
 		}
 		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Name="[Close]", Storage="_Close", DbType="VarChar(255)")]
-		public string Close
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_EUROSTOXX", DbType="VarChar(255)")]
+		public string EUROSTOXX
 		{
 			get
 			{
-				return this._Close;
+				return this._EUROSTOXX;
 			}
 			set
 			{
-				if ((this._Close != value))
+				if ((this._EUROSTOXX != value))
 				{
-					this._Close = value;
+					this.OnEUROSTOXXChanging(value);
+					this.SendPropertyChanging();
+					this._EUROSTOXX = value;
+					this.SendPropertyChanged("EUROSTOXX");
+					this.OnEUROSTOXXChanged();
 				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Name="[Eur/JPY]", Storage="_Eur_JPY", DbType="VarChar(255)")]
+		public string Eur_JPY
+		{
+			get
+			{
+				return this._Eur_JPY;
+			}
+			set
+			{
+				if ((this._Eur_JPY != value))
+				{
+					this.OnEur_JPYChanging(value);
+					this.SendPropertyChanging();
+					this._Eur_JPY = value;
+					this.SendPropertyChanged("Eur_JPY");
+					this.OnEur_JPYChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Name="[Eur/USD]", Storage="_Eur_USD", DbType="VarChar(255)")]
+		public string Eur_USD
+		{
+			get
+			{
+				return this._Eur_USD;
+			}
+			set
+			{
+				if ((this._Eur_USD != value))
+				{
+					this.OnEur_USDChanging(value);
+					this.SendPropertyChanging();
+					this._Eur_USD = value;
+					this.SendPropertyChanged("Eur_USD");
+					this.OnEur_USDChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Name="[Eur/GBP]", Storage="_Eur_GBP", DbType="VarChar(255)")]
+		public string Eur_GBP
+		{
+			get
+			{
+				return this._Eur_GBP;
+			}
+			set
+			{
+				if ((this._Eur_GBP != value))
+				{
+					this.OnEur_GBPChanging(value);
+					this.SendPropertyChanging();
+					this._Eur_GBP = value;
+					this.SendPropertyChanged("Eur_GBP");
+					this.OnEur_GBPChanged();
+				}
+			}
+		}
+		
+		public event PropertyChangingEventHandler PropertyChanging;
+		
+		public event PropertyChangedEventHandler PropertyChanged;
+		
+		protected virtual void SendPropertyChanging()
+		{
+			if ((this.PropertyChanging != null))
+			{
+				this.PropertyChanging(this, emptyChangingEventArgs);
+			}
+		}
+		
+		protected virtual void SendPropertyChanged(String propertyName)
+		{
+			if ((this.PropertyChanged != null))
+			{
+				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
 			}
 		}
 	}

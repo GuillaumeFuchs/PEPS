@@ -89,6 +89,7 @@
     <Content Include="Account\Login.aspx" />
     <Content Include="Account\Register.aspx" />
     <Content Include="AffichagePortCouv.aspx" />
+    <Content Include="Styles\Button.css" />
     <Content Include="Styles\Model.css" />
     <Content Include="Styles\Site.css" />
     <Content Include="Model.aspx" />

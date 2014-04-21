@@ -119,7 +119,7 @@ void Computations::compute_portfolio(
 {
 	PnlMat* past = pnl_mat_create_from_ptr(size, past_size, past_double);
 
-	double* spot = new double(size*sizeof(double));
+	double* spot = (double *)malloc(size*sizeof(double));
 	for (int d = 0; d < size; d++)
 		spot[d] = past_double[(d+1)*past_size-1];
 
@@ -133,6 +133,9 @@ void Computations::compute_portfolio(
 	MonteCarlo mc(&mod, &opt, rng, 0.01, M);
 
 	mc.compute_portfolio(H, T, t, risk_free_portion, risk_portion, pl, delta_ant, past);
+
+	for (int d = 0; d < size; d++)
+		delta_ant_double[d] = GET(delta_ant, d);
 
 	pnl_rng_free(&rng);
 	pnl_mat_free(&past);
