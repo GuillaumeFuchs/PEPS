@@ -75,7 +75,7 @@ namespace WebApp
 
 		protected void Start_Click(object sender, EventArgs e)
 		{
-			int H = 6;
+			int H = 60;
 			int size = 4;
 			double[] spot = new double[] { 100, 100, 100, 100 };
 			double[] sigma = new double[] { 0.2, 0.2, 0.2, 0.2 };
@@ -115,14 +115,14 @@ namespace WebApp
 		protected void Next_day_Click(object sender, EventArgs e)
 		{
 			int N = 6;
-			int H = 6;
+			int H = 60;
 			int M = 50000;
 			int size = 4;
-			double[] past_extract = new double[size*(day+1)];
-			for (int i = 0; i < day+1; i++)
+			double[] past_extract = new double[size * (day + 1)];
+			for (int i = 0; i < day + 1; i++)
 			{
 				for (int d = 0; d < size; d++)
-					past_extract[d * (day + 1) + i] = past[d * (H+1) + i];
+					past_extract[d * (day + 1) + i] = past[d * (H + 1) + i];
 			}
 			double[] sigma = new double[] { 0.2, 0.2, 0.2, 0.2 };
 			double r = 0.05;
@@ -130,7 +130,7 @@ namespace WebApp
 			double[] coeff = new double[] { .25, .25, .25, .25 };
 			double[] rho = new double[] { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 };
 
-			wrap.computePortfolio(day + 1, size, N, M, H, T, (double)day, r, sigma, rho, coeff, past_extract);
+			wrap.computePortfolio(day + 1, size, N, M, H, T, (double)day * (double)N / (double)H, r, sigma, rho, coeff, past_extract);
 
 			Portfolio_value.Text = (wrap.getRisk() + wrap.getRiskFree()).ToString();
 			Product_value.Text = wrap.getPrice().ToString();
@@ -148,6 +148,7 @@ namespace WebApp
 
 			day++;
 			Next_day.Text = "Calcul au jour " + day.ToString();
+
 		}
-    }
+	}
 }

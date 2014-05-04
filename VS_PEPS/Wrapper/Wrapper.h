@@ -9,16 +9,11 @@ namespace Wrapper {
 	private:
 		double ciPrice;
 		double price;
-		
 		array<double> ^delta;
 		array<double> ^ciDelta;
-
 		double risk;
 		double riskFree;
-
 		double err;
-		double executionTime;
-
 		array<double> ^summary;
 
 	public:
@@ -39,24 +34,19 @@ namespace Wrapper {
 		void computeDelta(int past_size, int size, int N, int M, double T, double t, double r, array<double> ^sigma, array<double> ^rho, array<double> ^coeff, array<double> ^past);
 
 		void computePortfolio(int past_size, int size, int N, int M, int H, double T, double t, double r, array<double> ^sigma, array<double> ^rho, array<double> ^coeff, array<double> ^past);
-
+		
+		void getHedge(int size, int N, int M, int H, double T, double r, array<double> ^spot, array<double> ^sigma, array<double> ^rho, array<double> ^coeff);
+		
 		void getSimulMarket(int size, int H, double T, double r, array<double> ^spot, array<double> ^sigma, array<double> ^rho, array<double> ^coeff, array<double> ^past_double);
-
-		void getHedge(int size, array<double> ^spot, double K, array<double> ^sigma, double r, array<double> ^coeff, array<double> ^rho, double T, int N, int H, int M);
 
 		
 		double getPrice() {return price;};
 		double getCiPrce() {return ciPrice;};
-		
 		array<double> ^getDelta() {return delta;};
 		array<double> ^getCiDelta() {return ciDelta;};
-
 		double getRisk() {return risk;};
 		double getRiskFree() {return riskFree;};
-
 		double getErr() {return err;};
-		double getExecutionTime() {return executionTime;};
-
 		array<double> ^getSummary() {return summary;};
 	};
 }

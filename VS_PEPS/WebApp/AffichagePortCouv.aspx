@@ -100,7 +100,7 @@
 			<asp:Label ID="Product_value" runat="server" Text=""></asp:Label>
 		</div>
 		<div>
-			PL:
+			Erreur de couverture:
 			<asp:Label ID="Err_value" runat="server" Text=""></asp:Label>
 		</div>
 		<asp:Label ID="Label1" runat="server" Text=""></asp:Label>

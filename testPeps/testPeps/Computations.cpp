@@ -82,7 +82,7 @@ int main(){
 	//test.compute_price(3 , 1.5);	
 	//test.compute_delta(0, 0.);
 	//test.compute_couv(6, false);
-	test.compute_hedge(6);
+	test.compute_hedge(12);
 
 	/*tend = clock();
 	temps = (float)(tend-tbegin)/CLOCKS_PER_SEC;
