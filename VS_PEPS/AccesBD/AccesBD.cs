@@ -67,6 +67,24 @@ namespace AccesDB
                        where DepDate <= nam.Date && end >= nam.Date
                        select nam.EUROSTOXX).ToArray();
             }
+            else if (Asset.Equals("Eur/JPY"))
+            {
+                val = (from nam in myDbdc.PepsDB
+                       where DepDate <= nam.Date && end >= nam.Date
+                       select nam.Eur_JPY).ToArray();
+            }
+            else if (Asset.Equals("Eur/USD"))
+            {
+                val = (from nam in myDbdc.PepsDB
+                       where DepDate <= nam.Date && end >= nam.Date
+                       select nam.Eur_USD).ToArray();
+            }
+            else if (Asset.Equals("Eur/GBP"))
+            {
+                val = (from nam in myDbdc.PepsDB
+                       where DepDate <= nam.Date && end >= nam.Date
+                       select nam.Eur_GBP).ToArray();
+            }
 
             double[] result = new double[val.Length];
             for (int j = 0; j < val.Length; j++)
@@ -93,13 +111,13 @@ namespace AccesDB
 
         public double getCurrentRisk(DateTime Date)
         {
-            String tmpRisk = (from nam in myDbdc.Component
+            string[] tmpRisk = (from nam in myDbdc.Component
                                     where nam.Date.Equals(Date)
-                                     select nam.Valrisk).ToString();
+                                     select nam.Valrisk).ToArray();
 
             try
             {
-                return double.Parse(tmpRisk);
+                return double.Parse(tmpRisk[0]);
             }
             catch
             {
@@ -107,15 +125,15 @@ namespace AccesDB
             }
         }
 
-        public double getCurrentRiskFree(DateTime Date)
+        public double getCurrentRiskFree(DateTime Datee)
         {
-            String tmpRiskfree = (from nam in myDbdc.Component
-                                    where nam.Date.Equals(Date)
-                                select nam.Valriskfree).ToString();
+            string[] tmpRiskfree = (from nam in myDbdc.Component
+                                    where nam.Date == Datee
+                                select nam.Valriskfree).ToArray();
 
             try
             {
-                return double.Parse(tmpRiskfree);
+                return double.Parse(tmpRiskfree[0]);
             }
             catch
             {
@@ -127,50 +145,50 @@ namespace AccesDB
         {
             double[] Delta = new double[4];
             //Delat du FTSE
-            String tmpDeltaFTSE = (from nam in myDbdc.Component
+            String[] tmpDeltaFTSE = (from nam in myDbdc.Component
                                      where nam.Date.Equals(Date)
-                                     select nam.DeltaFTSE).ToString();
+                                     select nam.DeltaFTSE).ToArray();
             try
             {
-                Delta[0] = double.Parse(tmpDeltaFTSE);
+                Delta[0] = double.Parse(tmpDeltaFTSE[0]);
             }
             catch
             {
                 Delta[0] = 0;
             }
             //Delta du S&P
-            String tmpDeltaSP = (from nam in myDbdc.Component
+            String[] tmpDeltaSP = (from nam in myDbdc.Component
                                  where nam.Date.Equals(Date)
-                                     select nam.DeltaS_P).ToString();
+                                     select nam.DeltaS_P).ToArray();
 
             try
             {
-                Delta[1] = double.Parse(tmpDeltaSP);
+                Delta[1] = double.Parse(tmpDeltaSP[0]);
             }
             catch
             {
                 Delta[1] = 0;
             }
             //Delta du Nikkei
-            String tmpDeltaNikkei = (from nam in myDbdc.Component
+            String[] tmpDeltaNikkei = (from nam in myDbdc.Component
                                        where nam.Date.Equals(Date)
-                                   select nam.DeltaNikkei).ToString();
+                                   select nam.DeltaNikkei).ToArray();
 
             try
             {
-                Delta[2] = double.Parse(tmpDeltaNikkei);
+                Delta[2] = double.Parse(tmpDeltaNikkei[0]);
             }
             catch
             {
                 Delta[2] = 0;
             }
             //Delta du Eurostoxx
-            String tmpDeltaEuro = (from nam in myDbdc.Component
+            String[] tmpDeltaEuro = (from nam in myDbdc.Component
                                    where nam.Date.Equals(Date)
-                                       select nam.DeltaEuro).ToString();
+                                       select nam.DeltaEuro).ToArray();
             try
             {
-                Delta[3] = double.Parse(tmpDeltaEuro);
+                Delta[3] = double.Parse(tmpDeltaEuro[0]);
             }
             catch
             {
@@ -179,21 +197,17 @@ namespace AccesDB
             return Delta;
         }
 
-        public void Insert(DateTime Datee, double ValLiq, double[] delta, double Valriskfree, double Valrisk)
+        public void Insert(DateTime Datee, double[] spot)
         {
-            Backtest ord = new Backtest
+            PepsDB ord = new PepsDB
             {
                 Date = Datee,
-                DeltaFTSE = delta[0].ToString(),
-                DeltaS_P = delta[1].ToString(),
-                DeltaNikkei = delta[2].ToString(),
-                DeltaEuro = delta[3].ToString(),
-                ValLiquidative = ValLiq.ToString(),
-                Valrisk = Valrisk.ToString(),
-                Valriskfree = Valriskfree.ToString(),
-                ValPortefeuille = (Valrisk + Valriskfree).ToString()
+                FTSE = spot[0].ToString(),
+                S_P = spot[1].ToString(),
+                NIKKEI = spot[2].ToString(),
+                EUROSTOXX = spot[3].ToString(),
             };
-            myDbdc.Backtest.InsertOnSubmit(ord);
+            myDbdc.PepsDB.InsertOnSubmit(ord);
             try
             {
                 myDbdc.SubmitChanges();
@@ -202,7 +216,141 @@ namespace AccesDB
             {
                 Console.WriteLine(e);
             }
+        }
+
+
+        public void Insert(DateTime Datee, double ValLiq, double[] delta, double Valriskfree, double Valrisk)
+        {
+            DateTime tmp = Datee;
+            var val = (from nam in myDbdc.InfoProd select nam).ToArray();
+            if (val.Length == 0)
+            {
+                //Afficher une popup
+            }
+            else
+            {
+                Component ord = new Component
+                {
+                    Date = tmp,
+                    DeltaFTSE = delta[0].ToString(),
+                    DeltaS_P = delta[1].ToString(),
+                    DeltaNikkei = delta[2].ToString(),
+                    DeltaEuro = delta[3].ToString(),
+                    PartFTSE = (delta[0]*int.Parse(val[0].NbPartAchetes)).ToString(),
+                    PartS_P = (delta[1]*int.Parse(val[0].NbPartAchetes)).ToString(),
+                    PartNikkei = (delta[2]*int.Parse(val[0].NbPartAchetes)).ToString(),
+                    PartEuro = (delta[3]*int.Parse(val[0].NbPartAchetes)).ToString(),
+                    ValLiquidative = ValLiq.ToString(),
+                    Valrisk = Valrisk.ToString(),
+                    Valriskfree = Valriskfree.ToString(),
+                    ValPortefeuille = (Valrisk + Valriskfree).ToString()
+                };
+                myDbdc.Component.InsertOnSubmit(ord);
+                try
+                {
+                    myDbdc.SubmitChanges();
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e);
+                }
+            }
                 
+        }
+
+        public double[] getLastSpot(ref DateTime DateFinBD)
+        {
+            double[] spot = new double[4];
+            var val = (from nam in myDbdc.PepsDB
+                       where nam.Date > DateTime.Now.AddDays(-10)
+                       select new { nam.FTSE, nam.S_P, nam.NIKKEI, nam.EUROSTOXX, nam.Date }).ToArray();
+            spot[0] = double.Parse(val[val.Length - 1].FTSE);
+            spot[1] = double.Parse(val[val.Length - 1].S_P);
+            spot[2] = double.Parse(val[val.Length - 1].NIKKEI);
+            spot[3] = double.Parse(val[val.Length - 1].EUROSTOXX);
+            DateFinBD = val[val.Length - 1].Date;
+            return spot;
+
+        }
+
+        public void InsertInfoProd(String NomProduit, int NBPart, int ValNom)
+        {
+            var val = (from nam in myDbdc.InfoProd select nam).ToArray();
+            if (val.Length == 0)
+            {
+                InfoProd inf = new InfoProd
+                {
+                    NomProd = NomProduit,
+                    NbPartAchetes = NBPart.ToString(),
+                    ValNominale = ValNom.ToString()
+                };
+                myDbdc.InfoProd.InsertOnSubmit(inf);
+            }
+            else
+            {
+                foreach (InfoProd inf in val)
+                {
+                    inf.NomProd = NomProduit;
+                    inf.NbPartAchetes = NBPart.ToString();
+                    inf.ValNominale = ValNom.ToString();
+                }
+            }
+            try
+            {
+                myDbdc.SubmitChanges();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                // Provide for exceptions.
+            }
+        }
+
+        public int GetInfoProd(ref String NomProduit, ref int NBPart, ref int ValNom)
+        {
+            var val = (from nam in myDbdc.InfoProd select nam).ToArray();
+            if (val.Length == 0)
+            {
+                return 0;
+            }
+            else
+            {
+                foreach (InfoProd inf in val)
+                {
+                    NomProduit = inf.NomProd;
+                    NBPart = int.Parse(inf.NbPartAchetes);
+                    ValNom = int.Parse(inf.ValNominale);
+                }
+                return 1;
+            }
+        }
+
+        public int DeleteCompo(DateTime Dep, DateTime Fin)
+        {
+            var val = (from nam in myDbdc.Component
+                       where Dep <= nam.Date && Fin >= nam.Date
+                       select nam).ToArray();
+            if (val.Length != 0)
+            {
+                foreach (Component comp in val)
+                {
+                    myDbdc.Component.DeleteOnSubmit(comp);
+                }
+                try
+                {
+                    myDbdc.SubmitChanges();
+                    return 0;
+                }
+                catch
+                {
+                    return 1;
+                }
+            }
+            else
+            {
+                return 2;
+            }
+
         }
     }
 }

@@ -350,8 +350,10 @@ void Test::compute_hedge(
 			pnl_mat_set_col(past_sub, extract, j);
 		}
 		mc_->compute_portfolio(H, T, (double)(i*T)/(double)H, risk_free_portion, risk_portion, delta_ant, past_sub);
+		double prix, ic;
+		mc_->price((double)(i*T)/(double)H, prix, ic, past_sub);
 
-		printf("%f %f %f\n", risk_free_portion, risk_portion, risk_free_portion+risk_portion);
+		printf("%f %f %f %f\n", risk_free_portion, risk_portion, risk_free_portion+risk_portion, prix);
 	}
 	double prix;
 	mc_->price(6., prix, ic, past);

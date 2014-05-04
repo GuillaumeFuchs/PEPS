@@ -68,7 +68,7 @@ namespace WebApp
         //    wc.getPriceCallEuro(t, 100, 100, .2, .05, 1, 10, H, 50000);
 
         //    Label1.Text = Math.Round(wc.getPrice(), 4).ToString();
-        //    Label2.Text = Math.Round(wc.getICP(), 4).ToString();
+        //    Label2.Text = Math.Round(wc.getCIP(), 4).ToString();
         //    Label3.Text = Math.Round(wc.getPriceBS(), 4).ToString();
         //}
 

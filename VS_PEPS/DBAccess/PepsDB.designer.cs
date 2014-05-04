@@ -33,12 +33,15 @@ namespace AffichageBD
     partial void InsertBacktest(Backtest instance);
     partial void UpdateBacktest(Backtest instance);
     partial void DeleteBacktest(Backtest instance);
-    partial void InsertComponent(Component instance);
-    partial void UpdateComponent(Component instance);
-    partial void DeleteComponent(Component instance);
     partial void InsertPepsDB(PepsDB instance);
     partial void UpdatePepsDB(PepsDB instance);
     partial void DeletePepsDB(PepsDB instance);
+    partial void InsertComponent(Component instance);
+    partial void UpdateComponent(Component instance);
+    partial void DeleteComponent(Component instance);
+    partial void InsertInfoProd(InfoProd instance);
+    partial void UpdateInfoProd(InfoProd instance);
+    partial void DeleteInfoProd(InfoProd instance);
     #endregion
 		
 		public PepsDBDataContext() : 
@@ -79,6 +82,14 @@ namespace AffichageBD
 			}
 		}
 		
+		public System.Data.Linq.Table<PepsDB> PepsDB
+		{
+			get
+			{
+				return this.GetTable<PepsDB>();
+			}
+		}
+		
 		public System.Data.Linq.Table<Component> Component
 		{
 			get
@@ -87,11 +98,11 @@ namespace AffichageBD
 			}
 		}
 		
-		public System.Data.Linq.Table<PepsDB> PepsDB
+		public System.Data.Linq.Table<InfoProd> InfoProd
 		{
 			get
 			{
-				return this.GetTable<PepsDB>();
+				return this.GetTable<InfoProd>();
 			}
 		}
 	}
@@ -161,356 +172,6 @@ namespace AffichageBD
     #endregion
 		
 		public Backtest()
-		{
-			OnCreated();
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Date", DbType="VarChar(255) NOT NULL", CanBeNull=false, IsPrimaryKey=true)]
-		public string Date
-		{
-			get
-			{
-				return this._Date;
-			}
-			set
-			{
-				if ((this._Date != value))
-				{
-					this.OnDateChanging(value);
-					this.SendPropertyChanging();
-					this._Date = value;
-					this.SendPropertyChanged("Date");
-					this.OnDateChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_ValLiquidative", DbType="VarChar(255)")]
-		public string ValLiquidative
-		{
-			get
-			{
-				return this._ValLiquidative;
-			}
-			set
-			{
-				if ((this._ValLiquidative != value))
-				{
-					this.OnValLiquidativeChanging(value);
-					this.SendPropertyChanging();
-					this._ValLiquidative = value;
-					this.SendPropertyChanged("ValLiquidative");
-					this.OnValLiquidativeChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_PartFTSE", DbType="VarChar(255)")]
-		public string PartFTSE
-		{
-			get
-			{
-				return this._PartFTSE;
-			}
-			set
-			{
-				if ((this._PartFTSE != value))
-				{
-					this.OnPartFTSEChanging(value);
-					this.SendPropertyChanging();
-					this._PartFTSE = value;
-					this.SendPropertyChanged("PartFTSE");
-					this.OnPartFTSEChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Name="[PartS&P]", Storage="_PartS_P", DbType="VarChar(255)")]
-		public string PartS_P
-		{
-			get
-			{
-				return this._PartS_P;
-			}
-			set
-			{
-				if ((this._PartS_P != value))
-				{
-					this.OnPartS_PChanging(value);
-					this.SendPropertyChanging();
-					this._PartS_P = value;
-					this.SendPropertyChanged("PartS_P");
-					this.OnPartS_PChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_PartNikkei", DbType="VarChar(255)")]
-		public string PartNikkei
-		{
-			get
-			{
-				return this._PartNikkei;
-			}
-			set
-			{
-				if ((this._PartNikkei != value))
-				{
-					this.OnPartNikkeiChanging(value);
-					this.SendPropertyChanging();
-					this._PartNikkei = value;
-					this.SendPropertyChanged("PartNikkei");
-					this.OnPartNikkeiChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_PartEuro", DbType="VarChar(255)")]
-		public string PartEuro
-		{
-			get
-			{
-				return this._PartEuro;
-			}
-			set
-			{
-				if ((this._PartEuro != value))
-				{
-					this.OnPartEuroChanging(value);
-					this.SendPropertyChanging();
-					this._PartEuro = value;
-					this.SendPropertyChanged("PartEuro");
-					this.OnPartEuroChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_DeltaFTSE", DbType="VarChar(255)")]
-		public string DeltaFTSE
-		{
-			get
-			{
-				return this._DeltaFTSE;
-			}
-			set
-			{
-				if ((this._DeltaFTSE != value))
-				{
-					this.OnDeltaFTSEChanging(value);
-					this.SendPropertyChanging();
-					this._DeltaFTSE = value;
-					this.SendPropertyChanged("DeltaFTSE");
-					this.OnDeltaFTSEChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Name="[DeltaS&P]", Storage="_DeltaS_P", DbType="VarChar(255)")]
-		public string DeltaS_P
-		{
-			get
-			{
-				return this._DeltaS_P;
-			}
-			set
-			{
-				if ((this._DeltaS_P != value))
-				{
-					this.OnDeltaS_PChanging(value);
-					this.SendPropertyChanging();
-					this._DeltaS_P = value;
-					this.SendPropertyChanged("DeltaS_P");
-					this.OnDeltaS_PChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_DeltaNikkei", DbType="VarChar(255)")]
-		public string DeltaNikkei
-		{
-			get
-			{
-				return this._DeltaNikkei;
-			}
-			set
-			{
-				if ((this._DeltaNikkei != value))
-				{
-					this.OnDeltaNikkeiChanging(value);
-					this.SendPropertyChanging();
-					this._DeltaNikkei = value;
-					this.SendPropertyChanged("DeltaNikkei");
-					this.OnDeltaNikkeiChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_DeltaEuro", DbType="VarChar(255)")]
-		public string DeltaEuro
-		{
-			get
-			{
-				return this._DeltaEuro;
-			}
-			set
-			{
-				if ((this._DeltaEuro != value))
-				{
-					this.OnDeltaEuroChanging(value);
-					this.SendPropertyChanging();
-					this._DeltaEuro = value;
-					this.SendPropertyChanged("DeltaEuro");
-					this.OnDeltaEuroChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Valriskfree", DbType="VarChar(255)")]
-		public string Valriskfree
-		{
-			get
-			{
-				return this._Valriskfree;
-			}
-			set
-			{
-				if ((this._Valriskfree != value))
-				{
-					this.OnValriskfreeChanging(value);
-					this.SendPropertyChanging();
-					this._Valriskfree = value;
-					this.SendPropertyChanged("Valriskfree");
-					this.OnValriskfreeChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Valrisk", DbType="VarChar(255)")]
-		public string Valrisk
-		{
-			get
-			{
-				return this._Valrisk;
-			}
-			set
-			{
-				if ((this._Valrisk != value))
-				{
-					this.OnValriskChanging(value);
-					this.SendPropertyChanging();
-					this._Valrisk = value;
-					this.SendPropertyChanged("Valrisk");
-					this.OnValriskChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_ValPortefeuille", DbType="VarChar(255)")]
-		public string ValPortefeuille
-		{
-			get
-			{
-				return this._ValPortefeuille;
-			}
-			set
-			{
-				if ((this._ValPortefeuille != value))
-				{
-					this.OnValPortefeuilleChanging(value);
-					this.SendPropertyChanging();
-					this._ValPortefeuille = value;
-					this.SendPropertyChanged("ValPortefeuille");
-					this.OnValPortefeuilleChanged();
-				}
-			}
-		}
-		
-		public event PropertyChangingEventHandler PropertyChanging;
-		
-		public event PropertyChangedEventHandler PropertyChanged;
-		
-		protected virtual void SendPropertyChanging()
-		{
-			if ((this.PropertyChanging != null))
-			{
-				this.PropertyChanging(this, emptyChangingEventArgs);
-			}
-		}
-		
-		protected virtual void SendPropertyChanged(String propertyName)
-		{
-			if ((this.PropertyChanged != null))
-			{
-				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
-			}
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.Component")]
-	public partial class Component : INotifyPropertyChanging, INotifyPropertyChanged
-	{
-		
-		private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
-		
-		private string _Date;
-		
-		private string _ValLiquidative;
-		
-		private string _PartFTSE;
-		
-		private string _PartS_P;
-		
-		private string _PartNikkei;
-		
-		private string _PartEuro;
-		
-		private string _DeltaFTSE;
-		
-		private string _DeltaS_P;
-		
-		private string _DeltaNikkei;
-		
-		private string _DeltaEuro;
-		
-		private string _Valriskfree;
-		
-		private string _Valrisk;
-		
-		private string _ValPortefeuille;
-		
-    #region Définitions de méthodes d'extensibilité
-    partial void OnLoaded();
-    partial void OnValidate(System.Data.Linq.ChangeAction action);
-    partial void OnCreated();
-    partial void OnDateChanging(string value);
-    partial void OnDateChanged();
-    partial void OnValLiquidativeChanging(string value);
-    partial void OnValLiquidativeChanged();
-    partial void OnPartFTSEChanging(string value);
-    partial void OnPartFTSEChanged();
-    partial void OnPartS_PChanging(string value);
-    partial void OnPartS_PChanged();
-    partial void OnPartNikkeiChanging(string value);
-    partial void OnPartNikkeiChanged();
-    partial void OnPartEuroChanging(string value);
-    partial void OnPartEuroChanged();
-    partial void OnDeltaFTSEChanging(string value);
-    partial void OnDeltaFTSEChanged();
-    partial void OnDeltaS_PChanging(string value);
-    partial void OnDeltaS_PChanged();
-    partial void OnDeltaNikkeiChanging(string value);
-    partial void OnDeltaNikkeiChanged();
-    partial void OnDeltaEuroChanging(string value);
-    partial void OnDeltaEuroChanged();
-    partial void OnValriskfreeChanging(string value);
-    partial void OnValriskfreeChanged();
-    partial void OnValriskChanging(string value);
-    partial void OnValriskChanged();
-    partial void OnValPortefeuilleChanging(string value);
-    partial void OnValPortefeuilleChanged();
-    #endregion
-		
-		public Component()
 		{
 			OnCreated();
 		}
@@ -1001,6 +662,466 @@ namespace AffichageBD
 					this._Eur_GBP = value;
 					this.SendPropertyChanged("Eur_GBP");
 					this.OnEur_GBPChanged();
+				}
+			}
+		}
+		
+		public event PropertyChangingEventHandler PropertyChanging;
+		
+		public event PropertyChangedEventHandler PropertyChanged;
+		
+		protected virtual void SendPropertyChanging()
+		{
+			if ((this.PropertyChanging != null))
+			{
+				this.PropertyChanging(this, emptyChangingEventArgs);
+			}
+		}
+		
+		protected virtual void SendPropertyChanged(String propertyName)
+		{
+			if ((this.PropertyChanged != null))
+			{
+				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.Component")]
+	public partial class Component : INotifyPropertyChanging, INotifyPropertyChanged
+	{
+		
+		private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
+		
+		private System.DateTime _Date;
+		
+		private string _ValLiquidative;
+		
+		private string _PartFTSE;
+		
+		private string _PartS_P;
+		
+		private string _PartNikkei;
+		
+		private string _PartEuro;
+		
+		private string _DeltaFTSE;
+		
+		private string _DeltaS_P;
+		
+		private string _DeltaNikkei;
+		
+		private string _DeltaEuro;
+		
+		private string _Valriskfree;
+		
+		private string _Valrisk;
+		
+		private string _ValPortefeuille;
+		
+    #region Définitions de méthodes d'extensibilité
+    partial void OnLoaded();
+    partial void OnValidate(System.Data.Linq.ChangeAction action);
+    partial void OnCreated();
+    partial void OnDateChanging(System.DateTime value);
+    partial void OnDateChanged();
+    partial void OnValLiquidativeChanging(string value);
+    partial void OnValLiquidativeChanged();
+    partial void OnPartFTSEChanging(string value);
+    partial void OnPartFTSEChanged();
+    partial void OnPartS_PChanging(string value);
+    partial void OnPartS_PChanged();
+    partial void OnPartNikkeiChanging(string value);
+    partial void OnPartNikkeiChanged();
+    partial void OnPartEuroChanging(string value);
+    partial void OnPartEuroChanged();
+    partial void OnDeltaFTSEChanging(string value);
+    partial void OnDeltaFTSEChanged();
+    partial void OnDeltaS_PChanging(string value);
+    partial void OnDeltaS_PChanged();
+    partial void OnDeltaNikkeiChanging(string value);
+    partial void OnDeltaNikkeiChanged();
+    partial void OnDeltaEuroChanging(string value);
+    partial void OnDeltaEuroChanged();
+    partial void OnValriskfreeChanging(string value);
+    partial void OnValriskfreeChanged();
+    partial void OnValriskChanging(string value);
+    partial void OnValriskChanged();
+    partial void OnValPortefeuilleChanging(string value);
+    partial void OnValPortefeuilleChanged();
+    #endregion
+		
+		public Component()
+		{
+			OnCreated();
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Date", DbType="DateTime NOT NULL", IsPrimaryKey=true)]
+		public System.DateTime Date
+		{
+			get
+			{
+				return this._Date;
+			}
+			set
+			{
+				if ((this._Date != value))
+				{
+					this.OnDateChanging(value);
+					this.SendPropertyChanging();
+					this._Date = value;
+					this.SendPropertyChanged("Date");
+					this.OnDateChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_ValLiquidative", DbType="VarChar(255)")]
+		public string ValLiquidative
+		{
+			get
+			{
+				return this._ValLiquidative;
+			}
+			set
+			{
+				if ((this._ValLiquidative != value))
+				{
+					this.OnValLiquidativeChanging(value);
+					this.SendPropertyChanging();
+					this._ValLiquidative = value;
+					this.SendPropertyChanged("ValLiquidative");
+					this.OnValLiquidativeChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_PartFTSE", DbType="VarChar(255)")]
+		public string PartFTSE
+		{
+			get
+			{
+				return this._PartFTSE;
+			}
+			set
+			{
+				if ((this._PartFTSE != value))
+				{
+					this.OnPartFTSEChanging(value);
+					this.SendPropertyChanging();
+					this._PartFTSE = value;
+					this.SendPropertyChanged("PartFTSE");
+					this.OnPartFTSEChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Name="[PartS&P]", Storage="_PartS_P", DbType="VarChar(255)")]
+		public string PartS_P
+		{
+			get
+			{
+				return this._PartS_P;
+			}
+			set
+			{
+				if ((this._PartS_P != value))
+				{
+					this.OnPartS_PChanging(value);
+					this.SendPropertyChanging();
+					this._PartS_P = value;
+					this.SendPropertyChanged("PartS_P");
+					this.OnPartS_PChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_PartNikkei", DbType="VarChar(255)")]
+		public string PartNikkei
+		{
+			get
+			{
+				return this._PartNikkei;
+			}
+			set
+			{
+				if ((this._PartNikkei != value))
+				{
+					this.OnPartNikkeiChanging(value);
+					this.SendPropertyChanging();
+					this._PartNikkei = value;
+					this.SendPropertyChanged("PartNikkei");
+					this.OnPartNikkeiChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_PartEuro", DbType="VarChar(255)")]
+		public string PartEuro
+		{
+			get
+			{
+				return this._PartEuro;
+			}
+			set
+			{
+				if ((this._PartEuro != value))
+				{
+					this.OnPartEuroChanging(value);
+					this.SendPropertyChanging();
+					this._PartEuro = value;
+					this.SendPropertyChanged("PartEuro");
+					this.OnPartEuroChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_DeltaFTSE", DbType="VarChar(255)")]
+		public string DeltaFTSE
+		{
+			get
+			{
+				return this._DeltaFTSE;
+			}
+			set
+			{
+				if ((this._DeltaFTSE != value))
+				{
+					this.OnDeltaFTSEChanging(value);
+					this.SendPropertyChanging();
+					this._DeltaFTSE = value;
+					this.SendPropertyChanged("DeltaFTSE");
+					this.OnDeltaFTSEChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Name="[DeltaS&P]", Storage="_DeltaS_P", DbType="VarChar(255)")]
+		public string DeltaS_P
+		{
+			get
+			{
+				return this._DeltaS_P;
+			}
+			set
+			{
+				if ((this._DeltaS_P != value))
+				{
+					this.OnDeltaS_PChanging(value);
+					this.SendPropertyChanging();
+					this._DeltaS_P = value;
+					this.SendPropertyChanged("DeltaS_P");
+					this.OnDeltaS_PChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_DeltaNikkei", DbType="VarChar(255)")]
+		public string DeltaNikkei
+		{
+			get
+			{
+				return this._DeltaNikkei;
+			}
+			set
+			{
+				if ((this._DeltaNikkei != value))
+				{
+					this.OnDeltaNikkeiChanging(value);
+					this.SendPropertyChanging();
+					this._DeltaNikkei = value;
+					this.SendPropertyChanged("DeltaNikkei");
+					this.OnDeltaNikkeiChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_DeltaEuro", DbType="VarChar(255)")]
+		public string DeltaEuro
+		{
+			get
+			{
+				return this._DeltaEuro;
+			}
+			set
+			{
+				if ((this._DeltaEuro != value))
+				{
+					this.OnDeltaEuroChanging(value);
+					this.SendPropertyChanging();
+					this._DeltaEuro = value;
+					this.SendPropertyChanged("DeltaEuro");
+					this.OnDeltaEuroChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Valriskfree", DbType="VarChar(255)")]
+		public string Valriskfree
+		{
+			get
+			{
+				return this._Valriskfree;
+			}
+			set
+			{
+				if ((this._Valriskfree != value))
+				{
+					this.OnValriskfreeChanging(value);
+					this.SendPropertyChanging();
+					this._Valriskfree = value;
+					this.SendPropertyChanged("Valriskfree");
+					this.OnValriskfreeChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Valrisk", DbType="VarChar(255)")]
+		public string Valrisk
+		{
+			get
+			{
+				return this._Valrisk;
+			}
+			set
+			{
+				if ((this._Valrisk != value))
+				{
+					this.OnValriskChanging(value);
+					this.SendPropertyChanging();
+					this._Valrisk = value;
+					this.SendPropertyChanged("Valrisk");
+					this.OnValriskChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_ValPortefeuille", DbType="VarChar(255)")]
+		public string ValPortefeuille
+		{
+			get
+			{
+				return this._ValPortefeuille;
+			}
+			set
+			{
+				if ((this._ValPortefeuille != value))
+				{
+					this.OnValPortefeuilleChanging(value);
+					this.SendPropertyChanging();
+					this._ValPortefeuille = value;
+					this.SendPropertyChanged("ValPortefeuille");
+					this.OnValPortefeuilleChanged();
+				}
+			}
+		}
+		
+		public event PropertyChangingEventHandler PropertyChanging;
+		
+		public event PropertyChangedEventHandler PropertyChanged;
+		
+		protected virtual void SendPropertyChanging()
+		{
+			if ((this.PropertyChanging != null))
+			{
+				this.PropertyChanging(this, emptyChangingEventArgs);
+			}
+		}
+		
+		protected virtual void SendPropertyChanged(String propertyName)
+		{
+			if ((this.PropertyChanged != null))
+			{
+				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.InfoProd")]
+	public partial class InfoProd : INotifyPropertyChanging, INotifyPropertyChanged
+	{
+		
+		private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
+		
+		private string _NomProd;
+		
+		private string _NbPartAchetes;
+		
+		private string _ValNominale;
+		
+    #region Définitions de méthodes d'extensibilité
+    partial void OnLoaded();
+    partial void OnValidate(System.Data.Linq.ChangeAction action);
+    partial void OnCreated();
+    partial void OnNomProdChanging(string value);
+    partial void OnNomProdChanged();
+    partial void OnNbPartAchetesChanging(string value);
+    partial void OnNbPartAchetesChanged();
+    partial void OnValNominaleChanging(string value);
+    partial void OnValNominaleChanged();
+    #endregion
+		
+		public InfoProd()
+		{
+			OnCreated();
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_NomProd", DbType="VarChar(255) NOT NULL", CanBeNull=false, IsPrimaryKey=true)]
+		public string NomProd
+		{
+			get
+			{
+				return this._NomProd;
+			}
+			set
+			{
+				if ((this._NomProd != value))
+				{
+					this.OnNomProdChanging(value);
+					this.SendPropertyChanging();
+					this._NomProd = value;
+					this.SendPropertyChanged("NomProd");
+					this.OnNomProdChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_NbPartAchetes", DbType="VarChar(255)")]
+		public string NbPartAchetes
+		{
+			get
+			{
+				return this._NbPartAchetes;
+			}
+			set
+			{
+				if ((this._NbPartAchetes != value))
+				{
+					this.OnNbPartAchetesChanging(value);
+					this.SendPropertyChanging();
+					this._NbPartAchetes = value;
+					this.SendPropertyChanged("NbPartAchetes");
+					this.OnNbPartAchetesChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_ValNominale", DbType="VarChar(255)")]
+		public string ValNominale
+		{
+			get
+			{
+				return this._ValNominale;
+			}
+			set
+			{
+				if ((this._ValNominale != value))
+				{
+					this.OnValNominaleChanging(value);
+					this.SendPropertyChanging();
+					this._ValNominale = value;
+					this.SendPropertyChanged("ValNominale");
+					this.OnValNominaleChanged();
 				}
 			}
 		}

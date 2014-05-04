@@ -43,6 +43,15 @@ namespace DataExporter
             DateTime end = FinParam;//DateTime.Now;
             double CloseFTSE, CloseSP, CloseEURO, CloseNIK;
             double ChangeJPY, ChangeUSD, ChangeGBP;
+            double lastFTSE, lastSP, lastEURO, lastNIK;
+            double lastJPY, lastUSD, lastGBP;
+            lastEURO = 3185.97;
+            lastFTSE = 0;
+            lastNIK = 10924.79;
+            lastSP = 0;
+            lastGBP = 0;
+            lastJPY = 0;
+            lastUSD = 0;
             while(end.CompareTo(start)>=0){
                 CloseEURO = 0;
                 CloseFTSE = 0;
@@ -60,7 +69,7 @@ namespace DataExporter
                 }
                 catch
                 {
-                    CloseFTSE = 0;
+                    CloseFTSE = lastFTSE;
                 }
                 try
                 {
@@ -69,7 +78,7 @@ namespace DataExporter
                               select x.Value).ToList();
                     CloseSP = double.Parse(ta[0].ToString());
                 }catch{
-                     CloseSP = 0;
+                     CloseSP = lastSP;
                 }
                 try
                 {
@@ -78,16 +87,24 @@ namespace DataExporter
                               select x.Value).ToList();
                     CloseNIK = double.Parse(ta[0].ToString());
                 }catch{
-                    CloseNIK = 0;
+                    CloseNIK = lastNIK;
                 }
                 try
                 {
                     var ta = (from x in d.Table.Data
                               where x.Symbol.Equals("^STOXX50E") && x.Date.Equals(start)
                               select x.Value).ToList();
-                    CloseEURO = double.Parse(ta[0].ToString());
+                    //A modifier
+                    if (double.Parse(ta[0].ToString()) == 0)
+                    {
+                        CloseEURO = lastEURO;
+                    }
+                    else
+                    {
+                        CloseEURO = double.Parse(ta[0].ToString());
+                    }
                 }catch{
-                     CloseEURO = 0;
+                     CloseEURO = lastEURO;
                 }
                 try
                 {
@@ -98,7 +115,7 @@ namespace DataExporter
                 }
                 catch
                 {
-                    ChangeJPY = 0;
+                    ChangeJPY = lastJPY;
                 }
                 try
                 {
@@ -109,7 +126,7 @@ namespace DataExporter
                 }
                 catch
                 {
-                    ChangeUSD = 0;
+                    ChangeUSD = lastUSD;
                 }
                 try
                 {
@@ -120,7 +137,7 @@ namespace DataExporter
                 }
                 catch
                 {
-                    ChangeGBP = 0;
+                    ChangeGBP = lastGBP;
                 }
                 PepsDB ord = new PepsDB
                 {
@@ -133,10 +150,17 @@ namespace DataExporter
                     Eur_JPY = ChangeJPY.ToString(),
                     Eur_USD = ChangeUSD.ToString()
                 };
-                if (CloseSP != 0 || CloseNIK != 0 || CloseFTSE != 0 || CloseEURO != 0)
+                if (CloseSP != lastSP || CloseNIK != lastNIK || CloseFTSE != lastFTSE || CloseEURO != lastEURO)
                 {
                     db.PepsDB.InsertOnSubmit(ord);
                 }
+                lastEURO = CloseEURO;
+                lastFTSE = CloseFTSE;
+                lastGBP = ChangeGBP;
+                lastJPY = ChangeJPY;
+                lastNIK = CloseNIK;
+                lastSP = CloseSP;
+                lastUSD = ChangeUSD;
                 start = start.AddDays(1);
 
             }

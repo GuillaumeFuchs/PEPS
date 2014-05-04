@@ -1,22 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?><Database Name="master" Class="PepsDBDataContext" xmlns="http://schemas.microsoft.com/linqtosql/dbml/2007">
   <Connection Mode="AppSettings" ConnectionString="Data Source=PC-GP\Base;Initial Catalog=master;Integrated Security=True" SettingsObjectName="AccesDB.Properties.Settings" SettingsPropertyName="masterConnectionString" Provider="System.Data.SqlClient" />
-  <Table Name="dbo.Component" Member="Component">
-    <Type Name="Component">
-      <Column Name="Date" Type="System.String" DbType="VarChar(255) NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
-      <Column Name="ValLiquidative" Type="System.String" DbType="VarChar(255)" CanBeNull="true" />
-      <Column Name="PartFTSE" Type="System.String" DbType="VarChar(255)" CanBeNull="true" />
-      <Column Name="[PartS&amp;P]" Member="PartS_P" Type="System.String" DbType="VarChar(255)" CanBeNull="true" />
-      <Column Name="PartNikkei" Type="System.String" DbType="VarChar(255)" CanBeNull="true" />
-      <Column Name="PartEuro" Type="System.String" DbType="VarChar(255)" CanBeNull="true" />
-      <Column Name="DeltaFTSE" Type="System.String" DbType="VarChar(255)" CanBeNull="true" />
-      <Column Name="[DeltaS&amp;P]" Member="DeltaS_P" Type="System.String" DbType="VarChar(255)" CanBeNull="true" />
-      <Column Name="DeltaNikkei" Type="System.String" DbType="VarChar(255)" CanBeNull="true" />
-      <Column Name="DeltaEuro" Type="System.String" DbType="VarChar(255)" CanBeNull="true" />
-      <Column Name="Valriskfree" Type="System.String" DbType="VarChar(255)" CanBeNull="true" />
-      <Column Name="Valrisk" Type="System.String" DbType="VarChar(255)" CanBeNull="true" />
-      <Column Name="ValPortefeuille" Type="System.String" DbType="VarChar(255)" CanBeNull="true" />
-    </Type>
-  </Table>
   <Table Name="dbo.Backtest" Member="Backtest">
     <Type Name="Backtest">
       <Column Name="Date" Type="System.DateTime" DbType="DateTime NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
@@ -44,6 +27,30 @@
       <Column Name="[Eur/JPY]" Member="Eur_JPY" Type="System.String" DbType="VarChar(255)" CanBeNull="true" />
       <Column Name="[Eur/USD]" Member="Eur_USD" Type="System.String" DbType="VarChar(255)" CanBeNull="true" />
       <Column Name="[Eur/GBP]" Member="Eur_GBP" Type="System.String" DbType="VarChar(255)" CanBeNull="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.InfoProd" Member="InfoProd">
+    <Type Name="InfoProd">
+      <Column Name="NomProd" Type="System.String" DbType="VarChar(255) NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="NbPartAchetes" Type="System.String" DbType="VarChar(255)" CanBeNull="true" />
+      <Column Name="ValNominale" Type="System.String" DbType="VarChar(255)" CanBeNull="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.Component" Member="Component">
+    <Type Name="Component">
+      <Column Name="Date" Type="System.DateTime" DbType="DateTime NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="ValLiquidative" Type="System.String" DbType="VarChar(255)" CanBeNull="true" />
+      <Column Name="PartFTSE" Type="System.String" DbType="VarChar(255)" CanBeNull="true" />
+      <Column Name="[PartS&amp;P]" Member="PartS_P" Type="System.String" DbType="VarChar(255)" CanBeNull="true" />
+      <Column Name="PartNikkei" Type="System.String" DbType="VarChar(255)" CanBeNull="true" />
+      <Column Name="PartEuro" Type="System.String" DbType="VarChar(255)" CanBeNull="true" />
+      <Column Name="DeltaFTSE" Type="System.String" DbType="VarChar(255)" CanBeNull="true" />
+      <Column Name="[DeltaS&amp;P]" Member="DeltaS_P" Type="System.String" DbType="VarChar(255)" CanBeNull="true" />
+      <Column Name="DeltaNikkei" Type="System.String" DbType="VarChar(255)" CanBeNull="true" />
+      <Column Name="DeltaEuro" Type="System.String" DbType="VarChar(255)" CanBeNull="true" />
+      <Column Name="Valriskfree" Type="System.String" DbType="VarChar(255)" CanBeNull="true" />
+      <Column Name="Valrisk" Type="System.String" DbType="VarChar(255)" CanBeNull="true" />
+      <Column Name="ValPortefeuille" Type="System.String" DbType="VarChar(255)" CanBeNull="true" />
     </Type>
   </Table>
 </Database>

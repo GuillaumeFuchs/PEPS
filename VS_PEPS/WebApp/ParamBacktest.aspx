@@ -15,11 +15,11 @@
             <div id="parameters" style="padding:10px 10px 10px 10px;margin-bottom:10px">
                 <div style="height: 40px;width:49%;float:left;">
                     <div style="float:left;width:40%;font-weight:bold;position:relative;top:11px;">Start Date:</div>
-                    <asp:TextBox ID="datepicker" Text="29/04/2010" runat="server" ></asp:TextBox>
+                    <asp:TextBox ID="datepicker" Text="02/01/2004" runat="server" ></asp:TextBox>
                 </div>
                 <div style="height: 40px;width:49%;float:right">
                     <div style="float:left;width:25%;font-weight:bold;position:relative;top:11px;">End Date:</div>
-                    <asp:TextBox ID="datepicker2" Text="15/04/2016" ViewStateMode="Enabled" runat="server"></asp:TextBox>
+                    <asp:TextBox ID="datepicker2" Text="02/01/2010" ViewStateMode="Enabled" runat="server"></asp:TextBox>
                 </div>
                 <div style="clear:both"></div>
                 <div style="height: 30px">
@@ -58,42 +58,103 @@
                 return "<%= Page.IsPostBack.ToString().ToLower() %>" == "true";
             }
             $(function () {
+                var dateMin = new Date();
+                var weekDays = AddWeekDays(3);
 
-                $("#parameters_button").click(function () {
-                    $("#<%=div_parameters.ClientID%>").slideToggle("slow");
-                });
+                dateMin.setDate(dateMin.getDate() + weekDays);
+
+                var natDays = [
+          [1, 1, 'uk'],
+          [12, 25, 'uk'],
+          [12, 26, 'uk']
+        ];
+
+                function noWeekendsOrHolidays(date) {
+                    var noWeekend = $.datepicker.noWeekends(date);
+                    if (noWeekend[0]) {
+                        return nationalDays(date);
+                    } else {
+                        return noWeekend;
+                    }
+                }
+                function nationalDays(date) {
+                    for (i = 0; i < natDays.length; i++) {
+                        if (date.getMonth() == natDays[i][0] - 1 && date.getDate() == natDays[i][1]) {
+                            return [false, natDays[i][2] + '_day'];
+                        }
+                    }
+                    return [true, ''];
+                }
+                function AddWeekDays(weekDaysToAdd) {
+                    var daysToAdd = 0
+                    var mydate = new Date()
+                    var day = mydate.getDay()
+                    weekDaysToAdd = weekDaysToAdd - (5 - day)
+                    if ((5 - day) < weekDaysToAdd || weekDaysToAdd == 1) {
+                        daysToAdd = (5 - day) + 2 + daysToAdd
+                    } else { // (5-day) >= weekDaysToAdd
+                        daysToAdd = (5 - day) + daysToAdd
+                    }
+                    while (weekDaysToAdd != 0) {
+                        var week = weekDaysToAdd - 5
+                        if (week > 0) {
+                            daysToAdd = 7 + daysToAdd
+                            weekDaysToAdd = weekDaysToAdd - 5
+                        } else { // week < 0
+                            daysToAdd = (5 + week) + daysToAdd
+                            weekDaysToAdd = weekDaysToAdd - (5 + week)
+                        }
+                    }
+
+                    return daysToAdd;
+                }
+
+//                $("#parameters_button").click(function () {
+//                    $("#<%=div_parameters.ClientID%>").slideToggle("slow");
+//                });
                 
                 $("#<%= datepicker.ClientID %>").datepicker({
                            
-                           dateFormat: "mm/dd/yy",
-                           maxDate: "03/10/2014",
-                           minDate: new Date(04,04,2005),
+                           dateFormat: "dd/mm/yy",
+                           maxDate: new Date(2004,03,29),
+                           minDate: new Date(2000,00,01),
                            changeMonth: true,
                            changeYear: true,
-                           beforeShowDay: $.datepicker.noWeekends,
+                           beforeShowDay: noWeekendsOrHolidays,
                            buttonImage: "Images/calendar.png",
                            showOn: "both",
                            buttonImageOnly: true,
-                           showAnim: "slideDown",
+                           //showAnim: "slideDown",
                            onSelect: function (selectedDate) {
-                               $("#<%= datepicker2.ClientID %>").datepicker("option", "minDate", selectedDate);
+                               var an = parseInt(selectedDate[6]+selectedDate[7]+selectedDate[8]+selectedDate[9]);
+                               var mois = parseInt(selectedDate[3]+selectedDate[4]);
+                               var jour =  parseInt(selectedDate[0]+selectedDate[1]);
+                               var date = new Date(an+6,mois-1,jour);
+                              // alert(an+6);
+                               $("#<%= datepicker2.ClientID %>").datepicker("option", "minDate", date);
+                               $("#<%= datepicker2.ClientID %>").datepicker("option", "maxDate", date);
                            }
                        });
 
                       $("#<%= datepicker2.ClientID %>").datepicker({
-                           dateFormat: "mm/dd/yy",
-                           maxDate: "09/03/2013",
-                           minDate: new Date(01, 04, 2006),
+                           dateFormat: "dd/mm/yy",
+                           maxDate: new Date(2010,03,29),
+                           minDate: new Date(2006,00,01),
                            changeMonth: true,
                            changeYear: true,
-                           beforeShowDay: $.datepicker.noWeekends,
+                           beforeShowDay: noWeekendsOrHolidays,
                            buttonImage: "Images/calendar.png",
                            showOn: "both",
                            buttonImageOnly: true,
-                           showAnim: "slideDown",
-//                           onSelect: function (selectedDate) {
-//                               $("#<%= datepicker.ClientID %>").datepicker("option", "maxDate", selectedDate);
-//                           }
+                           //showAnim: "slideDown",
+                           onSelect: function (selectedDate) {
+                               var an = parseInt(selectedDate[6] + selectedDate[7] + selectedDate[8] + selectedDate[9]);
+                               var mois = parseInt(selectedDate[3] + selectedDate[4]);
+                               var jour = parseInt(selectedDate[0] + selectedDate[1]);
+                               var date = new Date(an - 6, mois - 1, jour);
+                               $("#<%= datepicker.ClientID %>").datepicker("option", "minDate", date);
+                               $("#<%= datepicker.ClientID %>").datepicker("option", "maxDate", date);
+                           }
                        });
                        $("#<%= datepicker.ClientID %>, #<%= datepicker2.ClientID %>").keypress(function (e) {
                            e.preventDefault();

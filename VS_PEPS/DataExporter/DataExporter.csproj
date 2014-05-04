@@ -31,9 +31,8 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="APIFiMag, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>bin\Debug\APIFiMag.dll</HintPath>
+    <Reference Include="APIFiMag">
+      <HintPath>..\..\DLL\APIFiMag.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />

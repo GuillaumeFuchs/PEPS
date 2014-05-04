@@ -112,7 +112,7 @@ namespace AffichageBD
                 compon.PartFTSE = compo[1].ToString();
                 compon.PartEuro = compo[2].ToString();
                 compon.PartNikkei = compo[3].ToString();
-                compon.Date = now;
+                compon.Date = DateTime.Parse(now);
             };
 
             // Add the new object to the Orders collection.
@@ -120,6 +120,12 @@ namespace AffichageBD
 
             // Submit the change to the database. 
                 myDbdc.SubmitChanges();
+        }
+
+        public int searchDate(DateTime dat)
+        {
+            DateTime[] ind = (from nam in this.Dates where nam.Date <= dat  select nam.Date).ToArray();
+            return ind.Length;
         }
     }
 }

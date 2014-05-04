@@ -375,14 +375,15 @@ void MonteCarlo::compute_portfolio(
 	double t, 
 	double& risk_free,
 	double& risk,
-	double& pl,
+	double& priceVal,
+	double& ciVal,
+	double& err,
 	PnlVect* delta_ant,
 	const PnlMat *past) 
 {
 	int size = opt_->get_size();
 	double r = mod_->get_r();
 	double timeH = T/H; //timestep of the hedging
-	double priceVal, ci;
 
 	PnlVect *delta_t = pnl_vect_create(size); //delta at t
 	PnlVect* ci_t = pnl_vect_create(size); //confidence interval for delta at t
@@ -398,11 +399,11 @@ void MonteCarlo::compute_portfolio(
 	risk = pnl_vect_scalar_prod(delta_t, spot);
 	
 	if (t == 0.00){
-		double priceVal, ic;
-		price(priceVal, ic);
+		price(priceVal, ciVal);
 		risk_free = priceVal - risk;
 	}
 	else{
+		price(t, priceVal, ciVal, past);
 		risk_free = risk_free*exp(r*timeH) + pnl_vect_scalar_prod(delta_ant,spot) - risk;
 	}
 
@@ -410,8 +411,7 @@ void MonteCarlo::compute_portfolio(
 	for (int i = 0; i < size; i++)
 		LET(delta_ant, i) = GET(delta_t, i);
 
-	price(t, priceVal, ci, past);
-	pl = (risk_free+risk) / priceVal - 1 ;
+	err = (risk_free+risk) / priceVal - 1 ;
 	pnl_vect_free(&delta_t);
 	pnl_vect_free(&ci_t);
 	pnl_vect_free(&spot);

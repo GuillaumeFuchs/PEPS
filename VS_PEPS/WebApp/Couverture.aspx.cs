@@ -42,7 +42,7 @@ namespace WebApp
 			double K = 0.0;
 			wc.getHedge(size, spot, K, sigma, r, coeff, rho, T, N, H, samples);
 			
-			Label11.Text = Math.Round(wc.getPL(), 4).ToString();
+			Label11.Text = Math.Round(wc.getErr(), 4).ToString();
 			Label12.Text = Math.Round(wc.getExecutionTime(), 4).ToString();
 
 			//Array

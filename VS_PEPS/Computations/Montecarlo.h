@@ -83,6 +83,6 @@ public:
 	*/
 	void couv(int H, double T, double &pl, PnlMat* past, PnlMat* summary);
 
-	void compute_portfolio(int H, double T, double t, double &risk_free, double &risk, double &pl, PnlVect* delta_ant, const PnlMat* past);
+	void compute_portfolio(int H, double T, double t, double &risk_free, double &risk, double &priceVal, double &ciVal, double &err, PnlVect* delta_ant, const PnlMat* past);
 };
 #endif

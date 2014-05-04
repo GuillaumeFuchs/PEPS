@@ -26,11 +26,12 @@ namespace WebApp
             int d;
             double lastSpot =0.0;
             double firstSpot = 0.0;
+            int ind = hello.searchDate(DateTime.Now);
                 if (tmp.ID.Equals("first"))
                 {
                     d = 0;
                     Chart1.Titles.Add("Evolution du cours du Footsie");
-                    for (int j = 0; j < hello.Dates.Length; ++j)
+                    for (int j = 0; j < ind; ++j)
                     {
                         if (hello.Spot[d][j] != 0)
                         {
@@ -52,7 +53,7 @@ namespace WebApp
                 {
                     d = 1;
                     Chart1.Titles.Add("Evolution du cours du S&P 500");
-                    for (int j = 0; j < hello.Dates.Length; ++j)
+                    for (int j = 0; j < ind; ++j)
                     {
                         if (hello.Spot[d][j] != 0)
                         {
@@ -72,7 +73,7 @@ namespace WebApp
                 {
                     d = 2;
                     Chart1.Titles.Add("Evolution du cours du Nikkei");
-                    for (int j = 0; j < hello.Dates.Length; ++j)
+                    for (int j = 0; j < ind; ++j)
                     {
                         if (hello.Spot[d][j] != 0)
                         {
@@ -93,7 +94,7 @@ namespace WebApp
                 {
                     d = 3;
                     Chart1.Titles.Add("Evolution du cours du Eurostoxx");
-                    for (int j = 0; j < hello.Dates.Length; ++j)
+                    for (int j = 0; j < ind; ++j)
                     {
                         if (hello.Spot[d][j] != 0)
                         {
