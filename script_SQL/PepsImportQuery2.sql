@@ -2,7 +2,7 @@ USE [master]
 GO
 
 
-DROP TABLE dbo.Backtest
+DROP TABLE dbo.Component
 GO
 
 /****** Object:  Table [dbo].[Indices]    Script Date: 01/11/2014 15:22:27 ******/
@@ -15,8 +15,8 @@ GO
 SET ANSI_PADDING ON
 GO
 
-CREATE TABLE [dbo].[Backtest](
-	[Date][datetime] CONSTRAINT PK_Backtest PRIMARY KEY NONCLUSTERED NOT NULL,
+CREATE TABLE [dbo].[Component](
+	[Date] [datetime] CONSTRAINT PK_Component PRIMARY KEY NONCLUSTERED NOT NULL,
 	[ValLiquidative] [varchar](255) NULL,
 	[PartFTSE] [varchar](255) NULL,
 	[PartS&P] [varchar](255) NULL,
@@ -35,6 +35,4 @@ GO
 
 SET ANSI_PADDING OFF
 GO
-select * from Backtest
-
-
+select * from Component

@@ -15,12 +15,14 @@ SET ANSI_PADDING ON
 GO
 
 CREATE TABLE [dbo].[PepsDB](
-	[Actif] [varchar](255) NULL,
-	[Date] [varchar](255) NULL,
-	[High] [varchar](255) NULL,
-	[Low] [varchar](255) NULL,
-	[Open] [varchar](255) NULL,
-	[Close] [varchar](255) NULL
+	[Date] [datetime] CONSTRAINT PK_PepsDB PRIMARY KEY NONCLUSTERED NOT NULL,
+	[FTSE] [varchar](255) NULL,
+	[S&P] [varchar](255) NULL,
+	[NIKKEI] [varchar](255) NULL,
+	[EUROSTOXX] [varchar](255) NULL,
+	[Eur/JPY] [varchar](255) NULL,
+	[Eur/USD] [varchar](255) NULL,
+	[Eur/GBP] [varchar](255) NULL
 ) ON [PRIMARY]
 
 GO
@@ -28,13 +30,8 @@ GO
 SET ANSI_PADDING OFF
 GO
 
-BULK 
-INSERT dbo.PepsDB
-FROM 'C:\Users\Fuchsg\Documents\GitHub\PEPS\script_SQL\donnes_peps.csv'
-WITH (
-FIELDTERMINATOR = ';',
-ROWTERMINATOR = '0x0A'
-)
+
+
 --Check the content of the table.
 SELECT PepsDB.*
 FROM PepsDB
