@@ -352,5 +352,20 @@ namespace AccesDB
             }
 
         }
+
+        public double[,] extractData(DateTime Deb, DateTime Fin)
+        {
+            var val = (from nam in myDbdc.Component select nam).ToArray();
+            double[,] values = new double[2,val.Length];
+            int cpt = 0;
+            foreach (Component comp in val)
+            {
+                values[0, cpt] = double.Parse(comp.ValLiquidative);
+                values[0, cpt] = double.Parse(comp.ValPortefeuille);
+                cpt++;
+            }
+            return values;
+
+        }
     }
 }

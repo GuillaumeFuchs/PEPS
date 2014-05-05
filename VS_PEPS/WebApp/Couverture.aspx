@@ -3,76 +3,105 @@
 
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
 </asp:Content>
-<asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
-	<div style="border-style: solid; padding: 10px">
-		<p>
-			Calcul du portefeuille de couverture d'un call européen selon le modèle de B&S
-		</p>
+<asp:Content ID="BodyContent" runat="server" ContentPlaceHolderID="MainContent">
+	<h2 style="text-align: center">
+		Affichage du portefeuille de couverture
+	</h2>
+    <div style="height: 30px">
+                    <div style="float:left;width:20%;font-weight:bold">Nombre de rebalancement:</div>
+                    <div id="slider1" style="float:left;width:70%;position:relative;top:5px"></div>
+                    <asp:HiddenField ID="hidden_estimate" runat="server" />
+                    <asp:TextBox ID="estimate_time" style="float:left;width: 35px;border:0; color: #f6931f; font-weight: bold; margin-left:5px;" runat="server">300</asp:TextBox>
+    </div>
+	<div id="Affichage" runat="server" height="1000px" width="1200px" ><%--style="display: none;">--%>
+		<table>
+			<tr>
+				<td>
+					<asp:Chart ID="Chart1" runat="server" Height="400px" Width="500px" Style="margin-left: 20%;"
+						EnableViewState="true">
+						<Series>
+							<asp:Series ChartType="Line" Name="1">
+							</asp:Series>
+							<asp:Series ChartType="Line" Name="2">
+							</asp:Series>
+						</Series>
+						<ChartAreas>
+				            <asp:ChartArea Name="ChartArea1">
+					        <AxisX Title="Temps">
+					        </AxisX>
+					        <AxisY Title="Composition du portefeuille">
+					        </AxisY>
+				        </asp:ChartArea>
+			</ChartAreas>
+					</asp:Chart>
+				</td>
+				<td>
+					<asp:Chart ID="Chart2" runat="server" Height="400px" Width="500px" Style="margin-left: 20%;"
+						EnableViewState="true">
+						<Titles>
+							<asp:Title Text="Couverture">
+							</asp:Title>
+						</Titles>
+						<Series>
+							<asp:Series ChartType="Line" Name="1">
+							</asp:Series>
+							<asp:Series ChartType="Line" Name="2">
+							</asp:Series>
+						</Series>
+						<ChartAreas>
+							<asp:ChartArea Name="ChartArea1">
+								<AxisX Title="Temps">
+								</AxisX>
+								<AxisY Title="Value">
+								</AxisY>
+							</asp:ChartArea>
+						</ChartAreas>
+					</asp:Chart>
+				</td>
+			</tr>
+			<tr>
+				<td colspan="2">
+					<asp:Chart ID="Chart3" runat="server" Height="400px" Width="500px" Style="margin-left: 20%;"
+						EnableViewState="true">
+						<Titles>
+							<asp:Title Text="Couverture">
+							</asp:Title>
+						</Titles>
+						<Series>
+							<asp:Series ChartType="Line" Name="1">
+							</asp:Series>
+						</Series>
+						<ChartAreas>
+							<asp:ChartArea Name="ChartArea1">
+								<AxisX Title="Temps">
+								</AxisX>
+								<AxisY Title="Value">
+								</AxisY>
+							</asp:ChartArea>
+						</ChartAreas>
+					</asp:Chart>
+				</td>
+			</tr>
+		</table>
+	</div>
+	<div id="Portfolio_computation" runat="server">
+		<asp:Button ID="Start" runat="server" Text="Start" OnClick="Start_Click" />
+		<asp:Button ID="Next_day" runat="server" Text="" OnClick="Next_day_Click" Visible="false" />
 		<div>
-			Paramètres:
-			<ul>
-				<li>SO (prix spot) = 100,0 </li>
-				<li>K (strike) = 100,0 </li>
-				<li>T (maturité) = 1</li>
-				<li>sigma (volatilité) = 20%</li>
-				<li>r (taux sans risque) = 0,05%</li>
-				<li>M (nombre de simulations de Monte-Carlo) = 50 000</li>
-				<li>H (nombre de date de rebalancement) à déterminer (multiple de 10)</li>
-			</ul>
+			Portefeuille:
+			<asp:Label ID="Portfolio_value" runat="server" Text=""></asp:Label>
 		</div>
-		<p>
-			<asp:TextBox ID="TextBox7" runat="server" Width="40px">H</asp:TextBox>
-			<asp:Button ID="Button5" runat="server" OnClick="Button5_Click" Text="Go" />
-			<asp:Label ID="Label11" runat="server" Text="P&L" BorderStyle="Solid" BorderWidth="1px"></asp:Label>
-			<asp:Label ID="Label12" runat="server" Text="Time"></asp:Label>
-	</div>
-	<div style="overflow-y: scroll; height: 600px">
-		<asp:Table ID="Table1" runat="server" Height="50px" Width="62px" CellPadding="5"
-			GridLines="Both">
-		</asp:Table>
-	</div>
-	<div>
-		<asp:Chart ID="Chart1" runat="server" Height="600px" Width="800px">
-			<Series>
-				<asp:Series ChartType="Line">
-				</asp:Series>
-				<asp:Series ChartType="Line">
-				</asp:Series>
-				<asp:Series ChartType="Line">
-				</asp:Series>
-				<asp:Series ChartType="Line">
-				</asp:Series>
-			</Series>
-			<ChartAreas>
-				<asp:ChartArea Name="ChartArea1">
-					<AxisX Title="Temps">
-					</AxisX>
-					<AxisY Title="Nb d'actions à posséder">
-					</AxisY>
-				</asp:ChartArea>
-			</ChartAreas>
-		</asp:Chart>
-	</div>
-	<div>
-	<asp:Chart ID="Chart2" runat="server" Height="600px" Width="800px">
-			<Series>
-				<asp:Series ChartType="Line">
-				</asp:Series>
-				<asp:Series ChartType="Line">
-				</asp:Series>
-				<asp:Series ChartType="Line">
-				</asp:Series>
-				<asp:Series ChartType="Line">
-				</asp:Series>
-			</Series>
-			<ChartAreas>
-				<asp:ChartArea Name="ChartArea1">
-					<AxisX Title="Temps">
-					</AxisX>
-					<AxisY Title="Cours">
-					</AxisY>
-				</asp:ChartArea>
-			</ChartAreas>
-		</asp:Chart>
+		<div>
+			Produit:
+			<asp:Label ID="Product_value" runat="server" Text=""></asp:Label>
+		</div>
+		<div>
+			Erreur de couverture:
+			<asp:Label ID="Err_value" runat="server" Text=""></asp:Label>
+		</div>
+		<asp:Label ID="Label1" runat="server" Text=""></asp:Label>
+		<asp:Label ID="Label2" runat="server" Text=""></asp:Label>
+		<asp:Label ID="Label3" runat="server" Text=""></asp:Label>
+		<asp:Label ID="Label4" runat="server" Text=""></asp:Label>
 	</div>
 </asp:Content>

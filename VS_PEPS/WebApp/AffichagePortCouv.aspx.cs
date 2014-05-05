@@ -9,6 +9,8 @@ using System.Web.UI.DataVisualization.Charting;
 using System.Globalization;
 using Wrapper;
 using Parameters;
+using AffichageBD;
+using AccesDB;
 
 namespace WebApp
 {
@@ -18,6 +20,82 @@ namespace WebApp
 		static int day = 0;
 		static int past_size = 0;
 		static double[] past = new double[61*4];
+
+        protected void Page_Load(object sender, EventArgs e)
+        {
+            //DateTime DateDeb = new DateTime(2010,4,29);
+            //DateTime DateFin = DateTime.Now;
+            //TimeSpan difference = DateFin.Date - DateDeb.Date;
+
+            //double rebalancement = double.Parse(estimate_time.Text.ToString());
+            //WrapperClass wrap = new WrapperClass(4, 60);
+            //AccesBD acces = new AccesDB.AccesBD();
+            //acces.DeleteCompo(new DateTime(2000, 1, 1), new DateTime(2010, 4, 29));
+            ////acces.getAssetSpot("FTSE", DateDeb, DateDeb);
+            //AfficheBD affiche = new AffichageBD.AfficheBD();
+            //double[] spot = new double[4];
+
+            ////On fait l'approximation que tout les spots commençent à la même date et on ne tient pas compte des paramètres pour le moment
+            //ComputeParam cp = new ComputeParam();
+            //cp.param(40, DateDeb);
+            //double[] sigma = new double[4];
+            //double[] rho = new double[16];
+            //for (int i = 0; i < 4; i++)
+            //{
+            //    sigma[i] = cp.Volatility[i];
+            //    for (int j = 0; j < 4; j++)
+            //    {
+            //        rho[i * 4 + j] = cp.Corel[i, j];
+            //    }
+            //}
+            //double[] coeff = new double[4];
+            //double[][] past = new double[4][];
+            //for (int i = 0; i < 4; i++)
+            //{
+            //    coeff[i] = 0.25;
+            //}
+
+            ////Préparation du calcul des valeurs
+            //DateTime Datee = DateDeb;
+            //int cpt = 0;
+            //DateTime previousDate = DateDeb;
+
+            //int pas = (difference.Days) / (int)rebalancement + 1;
+
+            ////Traitement du cas où la date de départ est celle de début du produit
+            ////FAUX
+            //DateTime DateFinBD = new DateTime(1, 1, 1);
+            //spot = acces.getLastSpot(ref DateFinBD);
+            //int taille = ((((DateFin.Date - DateDeb.Date).Days) / pas) + 1);
+            //while (DateFin.CompareTo(DateDeb) > 0)
+            //{
+            //    past[0] = acces.getAssetSpot("FTSE", DateDeb, Datee);
+            //    past[1] = acces.getAssetSpot("S&P", DateDeb, Datee);
+            //    past[2] = acces.getAssetSpot("NIKKEI", DateDeb, Datee);
+            //    past[3] = acces.getAssetSpot("EUROSTOXX", DateDeb, Datee);
+            //    double[] realPast = new double[past[0].Length * 4];
+            //    for (int i = 0; i < 4; i++)
+            //    {
+            //        for (int j = 0; j < past[0].Length; j++)
+            //        {
+            //            realPast[i * past[0].Length + j] = past[i][j];
+            //        }
+            //    }
+            //    //Temporaire
+
+            //    double risk = acces.getCurrentRisk(previousDate);
+            //    double riskfree = acces.getCurrentRiskFree(previousDate);
+            //    double[] tmpDelta = acces.getDelta(previousDate);
+
+            //    //Traitement du cas où la date de départ est celle de début du produit
+            //    //Changer le Past en tableaux bidimmensionnels !!
+            //    wrap.computePortfolio(past[0].Length, 4, 30, 100, (int)rebalancement, 6.0, ((double)cpt*6) / rebalancement, 0.05, sigma, rho, coeff, realPast);
+            //    acces.Insert(DateDeb, wrap.getPrice(), wrap.getDelta(), wrap.getRiskFree(), wrap.getRisk());
+            //    previousDate = DateDeb;
+            //    DateDeb = DateDeb.AddDays(pas);
+            //    cpt++;
+            //}
+        }
 
         //FIRST IMPLEM
 
