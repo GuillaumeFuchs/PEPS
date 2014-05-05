@@ -26,13 +26,15 @@ namespace WebApp
         {
             DateTime DateDeb = new DateTime(2010, 4, 29);
             DateTime DateFin = new DateTime(2016, 5, 29);
+            DateTime Maturity = new DateTime(2016, 5, 29);
             TimeSpan difference = DateFin.Date - DateDeb.Date;
             DateFin = DateTime.Now;
 
             double rebalancement = double.Parse(estimate_time.Text.ToString());
             WrapperClass wrap = new WrapperClass(4, 60);
             AccesBD acces = new AccesDB.AccesBD();
-            acces.DeleteCompo(new DateTime(2010, 4, 29), new DateTime(2016, 5, 29));
+            acces.DeleteCompo(new DateTime(2010, 4, 29), new DateTime(2016, 6, 29));
+            acces.DeletePeps(DateTime.Now.AddDays(1), new DateTime(2016, 6, 29));
             //acces.getAssetSpot("FTSE", DateDeb, DateDeb);
             AfficheBD affiche = new AffichageBD.AfficheBD();
             double[] spot = new double[4];
@@ -66,6 +68,7 @@ namespace WebApp
             //Traitement du cas où la date de départ est celle de début du produit
 
             int taille = ((((DateFin.Date - DateDeb.Date).Days) / pas) + 1);
+
             while (DateFin.CompareTo(DateDeb) > 0)
             {
                 past[0] = acces.getAssetSpot("FTSE", DateDeb, Datee);
@@ -88,11 +91,11 @@ namespace WebApp
 
                 //Traitement du cas où la date de départ est celle de début du produit
                 //Changer le Past en tableaux bidimmensionnels !!
-                wrap.computePortfolio(past[0].Length, 4, 30, 1000, (int)taille, ((DateFin.Date - Datee.Date).Days) / 365.0, ((double)cpt * 6) / rebalancement, 0.05, sigma, rho, coeff, realPast);
+                wrap.computePortfolio(past[0].Length, 4, 30, 1000, (int)rebalancement, ((Maturity.Date - Datee.Date).Days) / 365.0, (DateDeb - Datee).Days / 365.0, 0.05, sigma, rho, coeff, realPast);
                 acces.Insert(DateDeb, wrap.getPrice(), wrap.getDelta(), wrap.getRiskFree(), wrap.getRisk());
                 previousDate = DateDeb;
                 DateDeb = DateDeb.AddDays(pas);
-                cpt++;
+                //cpt++;
             }
         }
 
@@ -143,16 +146,18 @@ namespace WebApp
             int pas = (difference.Days) / (int)rebalancement + 1;
             int taille = ((((DateFin.Date - DateDeb.Date).Days) / pas) + 1);
             //Calcul des valeurs de marché durant la couverture
+            int taille_bis = (DateFin.Date - DateDeb.Date).Days;
             double[] futurSpot = new double[4];
-            double[] PathSim = new Double[4 * taille];
-            wrap.getSimulMarket(4, taille - 1, ((DateFin.Date - DateDeb.Date).Days) / 365.0, 0.05, spot, sigma, rho, coeff, PathSim);
-            for (int k = 0; k < taille; ++k)
+            double[] PathSim = new Double[4 * taille_bis];
+            wrap.getSimulMarket(4,taille_bis ,((DateFin.Date - DateDeb.Date).Days) / 365.0, 0.05, spot, sigma, rho, coeff, PathSim);
+            for (int k = 0; k < taille_bis; ++k)
             {
                 futurSpot[0] = PathSim[k];
-                futurSpot[1] = PathSim[k + taille];
-                futurSpot[2] = PathSim[k + 2 * taille];
-                futurSpot[3] = PathSim[k + 3 * taille];
-                acces.Insert(DateDeb.AddDays((k + 1) * pas), futurSpot);
+                futurSpot[1] = PathSim[k + taille_bis];
+                futurSpot[2] = PathSim[k + 2 * taille_bis];
+                futurSpot[3] = PathSim[k + 3 * taille_bis];
+                //acces.Insert(DateDeb.AddDays((k + 1) * pas), futurSpot);
+                acces.Insert(DateDeb.AddDays(k), futurSpot);
             }
 
             //AJOUT
@@ -182,15 +187,15 @@ namespace WebApp
 
             //Traitement du cas où la date de départ est celle de début du produit
             //Changer le Past en tableaux bidimmensionnels !!
-            wrap.computePortfolio(past[0].Length, 4, 30, 1000, 1, pas, 6 / rebalancement, 0.05, sigma, rho, coeff, realPast);
+            wrap.computePortfolio(past[0].Length, 4, 30, 1000,(int)rebalancement , ((DateFin.Date - Datee.Date).Days) / 365.0, (DateTime.Now-DateDeb).Days / 365.0, 0.05, sigma, rho, coeff, realPast);
             acces.Insert(DateDeb, wrap.getPrice(), wrap.getDelta(), wrap.getRiskFree(), wrap.getRisk());
             previousDate = DateDeb;
 
-            double[,] values = acces.extractData(Datee, DateTime.Now.AddDays(pas));
-            for (int i = 0; i < values.Length / 2; ++i)
+            String[,] values = acces.extractData(Datee, DateTime.Now.AddDays(pas));
+            for (int i = 0; i < values.Length / 3; ++i)
             {
-                Chart1.Series[0].Points.AddXY(DateDeb, values[1,i]);
-                Chart1.Series[1].Points.AddXY(DateDeb, values[0,i]);
+                Chart1.Series[0].Points.AddXY(DateTime.Parse(values[2,i]),double.Parse(values[1,i]));
+                Chart1.Series[1].Points.AddXY(DateTime.Parse(values[2,i]),double.Parse(values[0, i]));
             }
 
             Portfolio_value.Text = "0";

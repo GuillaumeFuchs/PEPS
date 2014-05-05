@@ -353,15 +353,44 @@ namespace AccesDB
 
         }
 
-        public double[,] extractData(DateTime Deb, DateTime Fin)
+        public int DeletePeps(DateTime Dep, DateTime Fin)
         {
-            var val = (from nam in myDbdc.Component select nam).ToArray();
-            double[,] values = new double[2,val.Length];
+            var val = (from nam in myDbdc.PepsDB
+                       where Dep <= nam.Date && Fin >= nam.Date
+                       select nam).ToArray();
+            if (val.Length != 0)
+            {
+                foreach (PepsDB comp in val)
+                {
+                    myDbdc.PepsDB.DeleteOnSubmit(comp);
+                }
+                try
+                {
+                    myDbdc.SubmitChanges();
+                    return 0;
+                }
+                catch
+                {
+                    return 1;
+                }
+            }
+            else
+            {
+                return 2;
+            }
+
+        }
+
+        public String[,] extractData(DateTime Deb, DateTime Fin)
+        {
+            var val = (from nam in myDbdc.Component where nam.Date>=Deb && nam.Date<=Fin orderby nam.Date select nam).ToArray();
+            string[,] values = new String[3,val.Length];
             int cpt = 0;
             foreach (Component comp in val)
             {
-                values[0, cpt] = double.Parse(comp.ValLiquidative);
-                values[0, cpt] = double.Parse(comp.ValPortefeuille);
+                values[0, cpt] = comp.ValLiquidative;
+                values[1, cpt] = comp.ValPortefeuille;
+                values[2, cpt] = comp.Date.ToString();
                 cpt++;
             }
             return values;
