@@ -118,7 +118,12 @@ void Computations::compute_portfolio(
 	double &risk_portion,
 	double &risk_free_portion)
 {
-	PnlMat* past = pnl_mat_create_from_ptr(size, past_size, past_double);
+	PnlMat* past = pnl_mat_create(size, past_size);
+	for (int i = 0; i < size; i++){
+		for (int j = 0; j < past_size; j++){
+			MLET(past, i, j) = past_double[i*past_size+j];
+		}
+	}
 
 	double* spot = (double *)malloc(size*sizeof(double));
 

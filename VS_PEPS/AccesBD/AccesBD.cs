@@ -39,7 +39,7 @@ namespace AccesDB
         /// <param name="myAssetInfo">Object containing an array in which we save the assets name.</param>
         /// <param name="selectedAsset">Object containing the name of the assets selected by the user</param>
         /// //Useful to calculate the volatility and correlations
-        public double[] getAssetSpot(String Asset,DateTime EndDate, DateTime DepDate)
+        public double[] getAssetSpot(String Asset,DateTime EndDate, DateTime DepDate, int pas)
         {
             DateTime end  = EndDate;
             string[] val = null;
@@ -85,11 +85,20 @@ namespace AccesDB
                        where DepDate <= nam.Date && end >= nam.Date
                        select nam.Eur_GBP).ToArray();
             }
-
-            double[] result = new double[val.Length];
-            for (int j = 0; j < val.Length; j++)
+            int borne;
+            if (pas == 1)
             {
-                result[j] = double.Parse(val[j]);
+                borne = val.Length;
+            }
+            else
+            {
+                borne = 1 + val.Length / pas;
+            }
+            double[] result = new double[borne];
+            for (int j = 0; j < borne; j++)
+            {
+                //result[j] = double.Parse(val[j]);
+                result[j] = double.Parse(val[j * pas]);
             }
             return result;
         }
@@ -112,12 +121,12 @@ namespace AccesDB
         public double getCurrentRisk(DateTime Date)
         {
             string[] tmpRisk = (from nam in myDbdc.Component
-                                    where nam.Date.Equals(Date)
+                                    where nam.Date >=Date.AddDays(-10)
                                      select nam.Valrisk).ToArray();
 
             try
             {
-                return double.Parse(tmpRisk[0]);
+                return double.Parse(tmpRisk[tmpRisk.Length-1]);
             }
             catch
             {
@@ -128,12 +137,12 @@ namespace AccesDB
         public double getCurrentRiskFree(DateTime Datee)
         {
             string[] tmpRiskfree = (from nam in myDbdc.Component
-                                    where nam.Date == Datee
+                                    where nam.Date >= Datee.AddDays(-10)
                                 select nam.Valriskfree).ToArray();
 
             try
             {
-                return double.Parse(tmpRiskfree[0]);
+                return double.Parse(tmpRiskfree[tmpRiskfree.Length-1]);
             }
             catch
             {
@@ -146,11 +155,11 @@ namespace AccesDB
             double[] Delta = new double[4];
             //Delat du FTSE
             String[] tmpDeltaFTSE = (from nam in myDbdc.Component
-                                     where nam.Date.Equals(Date)
+                                     where nam.Date >= Date.AddDays(-10)
                                      select nam.DeltaFTSE).ToArray();
             try
             {
-                Delta[0] = double.Parse(tmpDeltaFTSE[0]);
+                Delta[0] = double.Parse(tmpDeltaFTSE[tmpDeltaFTSE.Length-1]);
             }
             catch
             {
@@ -158,12 +167,12 @@ namespace AccesDB
             }
             //Delta du S&P
             String[] tmpDeltaSP = (from nam in myDbdc.Component
-                                 where nam.Date.Equals(Date)
+                                   where nam.Date >= Date.AddDays(-10)
                                      select nam.DeltaS_P).ToArray();
 
             try
             {
-                Delta[1] = double.Parse(tmpDeltaSP[0]);
+                Delta[1] = double.Parse(tmpDeltaSP[tmpDeltaSP.Length - 1]);
             }
             catch
             {
@@ -171,12 +180,12 @@ namespace AccesDB
             }
             //Delta du Nikkei
             String[] tmpDeltaNikkei = (from nam in myDbdc.Component
-                                       where nam.Date.Equals(Date)
+                                       where nam.Date >= Date.AddDays(-10)
                                    select nam.DeltaNikkei).ToArray();
 
             try
             {
-                Delta[2] = double.Parse(tmpDeltaNikkei[0]);
+                Delta[2] = double.Parse(tmpDeltaNikkei[tmpDeltaNikkei.Length - 1]);
             }
             catch
             {
@@ -184,11 +193,11 @@ namespace AccesDB
             }
             //Delta du Eurostoxx
             String[] tmpDeltaEuro = (from nam in myDbdc.Component
-                                   where nam.Date.Equals(Date)
+                                     where nam.Date >= Date.AddDays(-10)
                                        select nam.DeltaEuro).ToArray();
             try
             {
-                Delta[3] = double.Parse(tmpDeltaEuro[0]);
+                Delta[3] = double.Parse(tmpDeltaEuro[tmpDeltaEuro.Length - 1]);
             }
             catch
             {
@@ -395,6 +404,76 @@ namespace AccesDB
             }
             return values;
 
+        }
+
+        public Dictionary<string,string> getLastCouv(DateTime Dat)
+        {
+            var val = (from nam in myDbdc.Component orderby nam.Date select nam).ToArray();
+            Dictionary<string,string> dic  = new Dictionary<string,string>(14);
+            if (val.Length != 0)
+            {
+                dic["ValLiq"] = val[val.Length - 1].ValLiquidative;
+                dic["risk"] = val[val.Length - 1].Valrisk;
+                dic["riskfree"] = val[val.Length - 1].Valriskfree;
+                dic["deltaFTSE"] = val[val.Length - 1].DeltaFTSE;
+                dic["deltaS_P"] = val[val.Length - 1].DeltaS_P;
+                dic["deltaNIKKEI"] = val[val.Length - 1].DeltaNikkei;
+                dic["deltaEURO"] = val[val.Length - 1].DeltaEuro;
+            }
+            return dic;
+        }
+
+        public double[] getLastParts(ref DateTime dat)
+        {
+            var val = (from nam in myDbdc.Component orderby nam.Date select nam).ToArray();
+            if (val.Length != 0)
+            {
+                double[] parts = new double[4];
+                parts[0] = double.Parse(val[val.Length - 1].PartFTSE);
+                parts[1] = double.Parse(val[val.Length - 1].PartS_P);
+                parts[2] = double.Parse(val[val.Length - 1].PartNikkei);
+                parts[3] = double.Parse(val[val.Length - 1].PartEuro);
+                dat = val[val.Length - 1].Date;
+                return parts;
+            }
+            return null;
+        }
+
+        public string[,] getAllStackedColumn(int pas)
+        {
+            DateTime dat = new DateTime(2010, 4, 29);
+            var val = (from nam in myDbdc.Component where nam.Date >= dat orderby nam.Date select nam).ToArray();
+            var val2 = (from nam in myDbdc.PepsDB where nam.Date >= dat orderby nam.Date select nam).ToArray();
+            int taille  = val.Length;
+            if (taille != 0)
+            {
+                String[,] dic  = new String[9,taille];
+                int cpt = 0;
+                foreach (Component comp in val)
+                {
+                    dic[0, cpt] = comp.Date.Date.ToString();
+                    dic[1, cpt] = comp.PartFTSE;
+                    dic[2, cpt] = comp.PartS_P;
+                    dic[3, cpt] = comp.PartNikkei;
+                    dic[4, cpt] = comp.PartEuro;
+                    cpt++;
+                }
+                for (int i = 0; i < val2.Length/pas; i++)
+                {
+                    dic[5, i] = val2[i * pas].FTSE;
+                    dic[6, i] = val2[i * pas].S_P;
+                    dic[7, i] = val2[i * pas].NIKKEI;
+                    dic[8, i] = val2[i * pas].EUROSTOXX;
+                }
+                return dic;
+            }
+            return null;
+        }
+
+        public void getLastCompoDate(ref DateTime dat)
+        {
+            var val = (from nam in myDbdc.Component orderby nam.Date select nam.Date).ToArray();
+            dat = val[val.Length - 1].Date;
         }
     }
 }

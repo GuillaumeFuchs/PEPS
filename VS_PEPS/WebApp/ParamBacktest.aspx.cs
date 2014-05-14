@@ -6,6 +6,8 @@ using System.Web.UI;
 using System.Web.UI.WebControls;
 using System.Web.Script.Serialization;
 using System.Web.UI.DataVisualization.Charting;
+using System.Web.UI.Adapters;
+using System.Web.UI.HtmlControls;
 using System.Globalization;
 using Wrapper;
 using Wrapper;
@@ -23,6 +25,8 @@ namespace WebApp
     {
         protected void Page_Load(object sender, EventArgs e)
         {
+            if (!IsPostBack)
+            {
 
             ////Initialisation manuelle de la base de données en ajoutant les cours des actifs
             //List<HistoricalColumn> list = new List<HistoricalColumn>();
@@ -32,7 +36,7 @@ namespace WebApp
             //symbol.Add("^GSPC");
             //symbol.Add("^N225");
             //symbol.Add("^STOXX50E");
-            //DataActif actif = new DataActif(symbol, list, new DateTime(2000, 1, 1), DateTime.Now);
+            //DataActif actif = new DataActif(symbol, list, DateTime.Now.AddDays(-7).Date, DateTime.Now);
             //actif.ImportData(new ImportYahoo());
             //// actif.Export(new DBExporter());
             ////Initialisation des taux de changes
@@ -40,7 +44,7 @@ namespace WebApp
             //curr.Add(Currency.USD);
             //curr.Add(Currency.JPY);
             //curr.Add(Currency.GBP);
-            //DateTime init = new DateTime(2000, 1, 1);
+            //DateTime init = DateTime.Now.AddDays(-7).Date;
             //DBExporter hello = new DBExporter();
             //DataFXTop xchange;
             //while (DateTime.Now.CompareTo(init) > 0)
@@ -60,12 +64,9 @@ namespace WebApp
             //        init = init.AddYears(1).AddDays(1);
             //    }
             //}
-
-
-            //if (!IsPostBack)
-            //{
+            
             //    hidden_estimate.Value = "40";
-            //}
+            }
         }
 
         protected void Hedge(object sender, EventArgs e)
@@ -101,47 +102,28 @@ namespace WebApp
                 coeff[i] = 0.25;
             }
 
-            //Préparation du calcul des valeurs
             String Date = datepicker.Text.ToString();
-            //DateTime Datee = new DateTime(2010, 4, 29);
             DateTime Datee = DateDeb;
             Chart1.Titles.Add("Composition du portefeuille de couverture");
             Chart1.Legends.Add(new Legend("Valeur du portefeuille"));
             Chart1.Legends.Add(new Legend("Valeur du produit"));
             Chart1.Series[0].Name = "Valeur du portefeuille";
             Chart1.Series[1].Name = "Valeur du produit";
-            int cpt = 0;
             DateTime previousDate = DateDeb;
 
             int pas = (difference.Days) / (int)rebalancement+1;
 
-            //Traitement du cas où la date de départ est celle de début du produit
-            //FAUX
             DateTime DateFinBD = new DateTime(1,1,1);
             spot = acces.getLastSpot(ref DateFinBD);
             
             
-            //SIMULATION A UTILISER POUR VIE PRODUIT
-
-            //int taille = ((((DateFin.Date - DateTime.Now.Date).Days) / pas) + 1);
             int taille = ((((DateFin.Date - DateDeb.Date).Days) / pas) + 1);
-            //double[] futurSpot = new double[4];
-            //double[] PathSim = new Double[4 * taille];
-            //wrap.getSimulMarket(4, taille-1, ((DateFin.Date - DateDeb.Date).Days) / 365.0, 0.05, spot, sigma, rho, coeff, PathSim);
-            //for (int k = 0; k < taille; ++k)
-            //{
-            //    futurSpot[0] = PathSim[k];
-            //    futurSpot[1] = PathSim[k+taille];
-            //    futurSpot[2] = PathSim[k+2*taille];
-            //    futurSpot[3] = PathSim[k+3*taille];
-            //    acces.Insert(DateDeb.AddDays((k + 1) * pas), futurSpot);
-            //}
             while (DateFin.CompareTo(DateDeb) > 0)
             {
-                past[0] = acces.getAssetSpot("FTSE", DateDeb, Datee);
-                past[1] = acces.getAssetSpot("S&P", DateDeb, Datee);
-                past[2] = acces.getAssetSpot("NIKKEI", DateDeb, Datee);
-                past[3] = acces.getAssetSpot("EUROSTOXX", DateDeb, Datee);
+                past[0] = acces.getAssetSpot("FTSE", DateDeb, Datee,pas);
+                past[1] = acces.getAssetSpot("S&P", DateDeb, Datee,pas);
+                past[2] = acces.getAssetSpot("NIKKEI", DateDeb, Datee,pas);
+                past[3] = acces.getAssetSpot("EUROSTOXX", DateDeb, Datee,pas);
                 double[] realPast = new double[past[0].Length * 4];
                 for (int i = 0; i < 4; i++)
                 {
@@ -158,7 +140,7 @@ namespace WebApp
 
                 //Traitement du cas où la date de départ est celle de début du produit
                 //Changer le Past en tableaux bidimmensionnels !!
-                wrap.computePortfolio(past[0].Length, 4, 30, 10000, (int)rebalancement, 6.0, ((double)cpt*6) / rebalancement, 0.05, sigma, rho, coeff, realPast);
+                wrap.computePortfolio(past[0].Length, 4, 6, 1000, (int)rebalancement, ((DateFin.Date - Datee.Date).Days) / 365.0, (DateDeb-Datee).Days/365.0, 0.05, sigma, rho, coeff, realPast);
                 acces.Insert(DateDeb, wrap.getPrice(), wrap.getDelta(), wrap.getRiskFree(), wrap.getRisk());
                 //Affichage du portefeuille
                 Chart1.Series[0].Points.AddXY(DateDeb, wrap.getRisk()+wrap.getRiskFree());
@@ -166,9 +148,16 @@ namespace WebApp
                 //Chart1.Series[1].Points.AddXY(DateDeb, risk + riskfree);
                 previousDate = DateDeb;
                 DateDeb = DateDeb.AddDays(pas);
-                cpt++;
             }
+            string[,] toolti = acces.extractData(DateTime.Parse(datepicker.Text.ToString()), DateTime.Parse(datepicker2.Text.ToString()));
+            for (int i = 0; i < Chart1.Series[0].Points.Count; i++)
+            {
+                Chart1.Series[0].Points[i].ToolTip = string.Format("Date = {0}, Valeur Portefeuille = {1}", toolti[2,i], Math.Round(double.Parse(toolti[1,i]),2));
+                Chart1.Series[1].Points[i].ToolTip = string.Format("Date = {0}, Valeur Liquidative = {1}", toolti[2, i], Math.Round(double.Parse(toolti[0, i]), 2));
+            }
+             
             Affichage.Style.Add(HtmlTextWriterStyle.Display, "inline");
         }
+
     }
 }

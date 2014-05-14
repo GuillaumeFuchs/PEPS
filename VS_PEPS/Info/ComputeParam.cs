@@ -94,7 +94,7 @@ namespace Parameters
         {
             double mean = 0;
             double mean2 = 0;
-            double[] Spots = data.getAssetSpot(Assets[index], DepDate.AddDays(DaysNumber), DepDate);
+            double[] Spots = data.getAssetSpot(Assets[index], DepDate.AddDays(DaysNumber), DepDate,1);
             double newe, old;
             int cpt = 0;
             int ind = 0;
@@ -135,7 +135,7 @@ namespace Parameters
         {
             double mean = 0;
             double mean2 = 0;
-            double[] Spots = data.getAssetSpot(AssetsChange[index], DepDate.AddDays(DaysNumber), DepDate);
+            double[] Spots = data.getAssetSpot(AssetsChange[index], DepDate.AddDays(DaysNumber), DepDate,1);
             double newe, old;
             int cpt = 0;
             int ind = 0;
@@ -176,8 +176,8 @@ namespace Parameters
         {
             double meanUn = this.mean[index1];
             double meanDeux = this.mean[index2]; 
-            double[] SpotsUn = data.getAssetSpot(Assets[index1], DepDate.AddDays(DaysNumber), DepDate);
-            double[] SpotsDeux = data.getAssetSpot(Assets[index2], DepDate.AddDays(DaysNumber), DepDate);
+            double[] SpotsUn = data.getAssetSpot(Assets[index1], DepDate.AddDays(DaysNumber), DepDate,1);
+            double[] SpotsDeux = data.getAssetSpot(Assets[index2], DepDate.AddDays(DaysNumber), DepDate,1);
             double correlNum = 0;
             double correlDenomUn = 0;
             double correlDenomDeux = 0;
@@ -250,8 +250,8 @@ namespace Parameters
         {
             double meanUn = this.mean[index1];
             double meanDeux = this.mean[index2];
-            double[] SpotsUn = data.getAssetSpot(AssetsChange[index1], DepDate.AddDays(DaysNumber), DepDate);
-            double[] SpotsDeux = data.getAssetSpot(AssetsChange[index2], DepDate.AddDays(DaysNumber), DepDate);
+            double[] SpotsUn = data.getAssetSpot(AssetsChange[index1], DepDate.AddDays(DaysNumber), DepDate,1);
+            double[] SpotsDeux = data.getAssetSpot(AssetsChange[index2], DepDate.AddDays(DaysNumber), DepDate,1);
             double correlNum = 0;
             double correlDenomUn = 0;
             double correlDenomDeux = 0;

@@ -35,7 +35,7 @@
        </div>
         </div>
         <div id="Affichage"  runat="server" Height="1000px" Width="1200px" style="display:none;">
-	    <asp:Chart ID="Chart1" runat="server" Height="800px" Width="1000px" style="margin-left:20%;">
+	    <asp:Chart ID="Chart1"  runat="server" Height="800px" Width="1000px" style="margin-left:20%;">
 			<Series>
 				<asp:Series ChartType="Line" Name="1">
 				</asp:Series>

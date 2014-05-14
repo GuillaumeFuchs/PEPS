@@ -35,18 +35,10 @@
                 <asp:Menu ID="NavigationMenu" runat="server" CssClass="menu" EnableViewState="false" IncludeStyleBlock="false" Orientation="Horizontal">
                     <Items>
                         <asp:MenuItem NavigateUrl="~/Description.aspx" Text="A Propos"/>
-                        <asp:MenuItem Text="Backtesting">
-                            <asp:MenuItem Text="Modélisation" NavigateUrl="~/Model.aspx"></asp:MenuItem>
-                            <asp:MenuItem Text="Paramétrage du backtest" NavigateUrl="~/ParamBacktest.aspx"></asp:MenuItem>
-                            <asp:MenuItem Text="Tracking des indices" NavigateUrl="~/WebForm3.aspx"></asp:MenuItem>
-                            <asp:MenuItem Text="Simulation du P&L" NavigateUrl="~/test.aspx"></asp:MenuItem>
-                        </asp:MenuItem>
+                        <asp:MenuItem NavigateUrl="~/ParamBacktest.aspx" Text="Backtesting"/>
                         <asp:MenuItem Text="Vie du produit">
                             <asp:MenuItem NavigateUrl="~/WebForm4.aspx" Text="Affichage des cours"/>
-                            <asp:MenuItem NavigateUrl="~/AffichagePortCouv.aspx" Text="Affichage du portefeuille de couverture"/>
-                            <asp:MenuItem NavigateUrl="~/WebForm5.aspx" Text="Portefeuille de couverture"/>
-                            <asp:MenuItem NavigateUrl="~/Couverture.aspx" Text="Couverture sur call"/>
-                            <asp:MenuItem NavigateUrl="~/About.aspx" Text="Base de données"/>
+                            <asp:MenuItem NavigateUrl="~/Couverture.aspx" Text="Couverture du produit"/>
                         </asp:MenuItem>
                     </Items>
                 </asp:Menu>

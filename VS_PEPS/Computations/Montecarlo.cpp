@@ -170,7 +170,7 @@ void MonteCarlo::delta (
 	//Initialisation de path comme une matrice de dimension d x (N+1)
 	PnlMat *path = pnl_mat_create(size, N+1);
 	//temps: incrémentation pour chaque date de constatation
-	double dt = T/N;
+	double dt = (int)(T/N*1000)/1000.;
 	//extractPast: vecteur de taille size servant à extraire de la matrice past les colonnes pour les insérer dans path
 	PnlVect *extractPast = pnl_vect_create(size);
 	PnlMat *shift_path_plus = pnl_mat_create(size, N+1);
@@ -187,9 +187,13 @@ void MonteCarlo::delta (
 		pnl_mat_get_col(extractPast, past, 0);
 		pnl_mat_set_col(path, extractPast, 0);
 	} else {
-		double dtPast = t/H;
-		int indice = floor(dt*100000000+0.5)/floor(dtPast*100000000+0.5);
+		double dtPast = (int)(t*1000/H)/1000.;
+		int indice = floor(dt*1000+0.5)/floor(dtPast*1000+0.5);
+		if (indice == 0){
+			indice = 1;
+		}
 		taille = floor((double)H/(double)indice);
+
 		int i = 0;
 		while (i < taille+1){
 			pnl_mat_get_col(extractPast, past, i*indice);

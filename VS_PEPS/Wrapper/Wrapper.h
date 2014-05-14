@@ -27,12 +27,12 @@ namespace Wrapper {
 			ciDelta = gcnew array<double>(size);
 			summary = gcnew array<double>((2*size+5)*(H+1));
 		}
-		WrapperClass(int size, int H, double price2, array<double> ^delta2, double risk2, double riskFree2, double err2) {
+		WrapperClass(int size, int H, double price2, array<double> ^delta2, double risk2, double riskFree2) {
 			ciPrice = 0;
 			price = price2;
 			risk = risk2;
-			riskFree = riskFree;
-			err = err2;
+			riskFree = riskFree2;
+			//err = err2;
 
 			delta = gcnew array<double>(size);
 			for (int i = 0; i < size; i++){

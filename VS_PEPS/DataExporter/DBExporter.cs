@@ -150,10 +150,10 @@ namespace DataExporter
                     Eur_JPY = ChangeJPY.ToString(),
                     Eur_USD = ChangeUSD.ToString()
                 };
-                if (CloseSP != lastSP || CloseNIK != lastNIK || CloseFTSE != lastFTSE || CloseEURO != lastEURO)
-                {
+               // if (CloseSP != lastSP || CloseNIK != lastNIK || CloseFTSE != lastFTSE || CloseEURO != lastEURO)
+                //{
                     db.PepsDB.InsertOnSubmit(ord);
-                }
+                //}
                 lastEURO = CloseEURO;
                 lastFTSE = CloseFTSE;
                 lastGBP = ChangeGBP;

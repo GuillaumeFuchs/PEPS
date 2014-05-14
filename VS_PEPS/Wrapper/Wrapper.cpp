@@ -82,6 +82,8 @@ namespace Wrapper {
 		pin_ptr<double> pPast = &past[0];
 		pin_ptr<double> pDeltaAnt = &delta[0];
 
+		double k;
+
 		compute_portfolio(past_size, size, N, M, H, T, t, r, pSigma, pRho, pCoeff, pPast, pDeltaAnt, price, ci, err, risk, riskFree);
 
 		this->price = price;
