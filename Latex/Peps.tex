@@ -853,10 +853,6 @@ $$ R(t,T)=-\frac{1}{T-t}ln(P(t,T)) $$ \\
 \subsubsection{Choix du modèle}
 Si les modèles HJM ou bi-factoriels permettent d'obtenir des courbes beaucoup plus précises de taux zéro-coupon, le modèle le plus abordable serait celui de Vasicek unifactoriel. Le modèle de Black-Scholes pour la simulation des indices nécessite un taux sans risque constant, c'est pourquoi nous commencerons par calculer à partir des données observées sur les marchés, un taux sans risque constant. Dans un deuxième temps seulement, nous essaierons d'implémenter et d'intégrer le modèle de Vasicek unifactoriel dans nos modélisations des indices.
 
-\subsection{Modélisation des taux de changes}
-Le produit Playlist fait intervenir des sous-jacents qui sont cotés en devise étrangère. La couverture sur ces produits est donc soumise à l'évolution des taux de changes.
-Nos connaissances actuelles en la matière de nous permettent pas de choisir un modèle de taux de change sophistiqué. En revanche, nous savons que le modèle le plus simple, qui sera implémenté dans la première version, qui consiste à considérer le taux de change constant, n'apporte aucune valeur ajoutée à la modélisation. Nous nous bornerons donc dans un premier temps à l'approximation qui consiste à considérer que tous les sous-jacents sont exprimés en devise domestique.
-
 \newpage
 \section{Théorie de la couverture}
 Dans cette partie, nous aborderons les différentes étapes qui permette de valider théoriquement la couverture du gérant du fond. Rappelons au préalable que cette couverture se fait dans le cadre d'un modèle. Ici nous avons opté dans un premier temps pour une couverture en dite en delta neutre, dans le cas d'un modèle de Black-Scholes, avec taux sans risque et volatilité des quatre sous-jacents constante.
@@ -921,6 +917,46 @@ $$ rv(t,S_t) = \frac{\partial v}{\partial t} + \mu S  \frac{\partial v}{\partial
 Si une fonction quelconque $ v(t,S_t) $ satisfait la dernière équation, et c'est le cas de la fonction v donnée plus haut, alors le portefeuille $ X_t $ avec $ \Phi_t = \frac{\partial v(t,S_t)}{\partial S} $ et $ \Phi_{t}^0  = \frac{1}{S_{t}^0} (v(t,S_t) - \Phi_t S_t )$ d'actif sans risque est autofinancé, et réplique le produit financier payant $ h(S_T) $ à l'échéance T.  \\
 C'est ce qu'on appelle la couverture en Delta.
 
+\subsection{Couverture avec taux de changes}
+
+Le produit Playlist fait intervenir des sous-jacents qui sont cotés en devise étrangère. La couverture sur ces produits est donc soumise à l'évolution des taux de changes.
+Une couverture de type delta neutre est compatible avec un marché multi-devise, comme nous allons le voir dans cette section.
+\\
+On considère un marché dit domestique $D$ et un marché étranger $F$ (devises d et f) possédant chacun un taux sans risque $r$. On peut appliquer le raisonnement décrit dans la partie précédente : si on suppose la complétude et l'absence d'opportunité d'arbitrage sur chacun des marchés, il existe des probabilités risque neutres sur ces marchés, notées $\mathbb{Q}^{d}$ et $\mathbb{Q}^{f}$, dont les browniens associés sont, $({W^{d}}_{t})$ et $({W^{f}}_{t})$.
+D'après ce qui a été vu plus haut,  et la définition de ces probabilités par rapport à la probabilité historique, on a, notant ${\lambda^{d}}_{t}$ et ${\lambda^{f}}_{t}$ les primes de risques associées, la relation :
+$${W^{f}}_{t} = {W^{d}}_{t} +  \int_{0}^t \ ({\lambda^{f}}_{s} - {\lambda^{d}}_{s}) ds   $$
+
+On souhaite utiliser le taux de change entre les deux devises, noté $X_{t}$ qui représente le prix en unité monétaire domestique d'une unité monétaire étrangère. On suppose que ce taux suit un processus d'Itô, vérifiant  $ \sup_{t \in [0,T]} (\mathbb{E}[{X_{t}}^2]) < \infty $ et presque sûrement positif. Montrons que le taux de change a pour dynamique :
+\\$$ dX_{t} = X_{t}[({r^{d}}_{t}-{r^{f}}_{t}) dt + {\sigma^{X}}_{t} d{W^{d}}_{t} ] $$
+où $({\sigma^{X}}_{t})$ est un processus adapté.\\
+
+\\
+En effet, $(e^{\int_{0}^t{r^{f}}_{s}ds} X_{t}) $ est un actif domestique, dont le prix actualisé au taux sans risque domestique est donc martingale sous $\mathbb{Q}^{d}$. Or, d'après la formule d'Itô :
+\\$$ d(e^{\int_{0}^t({r^{f}}_{s}- {r^{d}}_{s})ds} X_{t}) = e^{\int_{0}^t({r^{f}}_{s}- {r^{d}}_{s})ds} [ dX_{t} + (r^{f}}_{t}- r^{d}}_{t})X_{t} dt ] $$ \\
+
+La propriété martingale implique qu'il existe $(H_{t})$ dans $L^{2}$, tel que :
+$$ dX_{t} = X_{t}({r^{d}}_{t}-{r^{f}}_{t}) dt +  (H_{t})d{W^{d}}_{t}$$
+Posant  ${\sigma^{X}}_{t} = \frac{H_{t}}{X_{t}}$, on a le résultat annoncé.\\
+
+\\
+
+De plus, $\sigma^{X}}_{t} =  {\lambda^{f}}_{s} - {\lambda^{d}}_{s}$ .En effet, considérons à présent un actif  étranger $Z^{f}$, de dynamique :
+\\$$ d{Z^{f}}_{t} = {Z^{f}}_{t}[{r^{f}}_{t}dt + {\sigma^{Z}}_{t} d{W^{f}}_{t} ]$$
+
+\\
+
+D'après, le même raisonnement que précédemment, $X_{t}{Z^{f}}_{t}$ est un actif domestique, dont le prix actualisé est donc martingale sous $\mathbb{Q}^{d}$.
+On applique la formule d'Itô pour exprimer sa dynamique, il vient après calcul et utilisation de la relation entre les browniens montrée plus haut :
+\\$$d(X_{t}{Z^{f}}_{t})= X_{t}{Z^{f}}_{t}[{r^{d}}_{t}dt + (\sigma^{X}}_{t} +{\sigma^{Z}}_{t}) d{W^{d}}_{t} + {\sigma^{Z}}_{t} ({\sigma^{X}}_{t} - {\lambda^{f}}_{s} - {\lambda^{d}}_{s} )dt ]$$\\
+
+Ce qui montre le résultat. De plus, d'après le caractère martingale du prix actualisé, on connaît les dynamiques de $X_{t}{Z^{f}}_{t}$ et  $X_{t}e^{\int_{0}^t{r^{f}}_{s}ds}$  :
+
+\\$$d(X_{t}{Z^{f}}_{t}) = X_{t}{Z^{f}}_{t} [{r^{d}}_{t}dt + (\sigma^{X}}_{t} +{\sigma^{Z}}_{t}) d{W^{d}}_{t}] $$
+\\$$d(X_{t}e^{\int_{0}^t {r^{f}}_{s}ds}) = X_{t}e^{\int_{0}^t{r^{f}}_{s}ds} [{r^{d}}_{t}dt + \sigma^{X}}_{t}d{W^{d}}_{t}]$$\\
+\\
+Les prix actualisés de ces deux actifs domestiques sont donc des martingales sous $\mathbb{Q}^{d}$ et correspondent aux achats de l'actif $Z^{f}$ en devise domestique et de taux sans risque étranger. Le rapport de ces deux actifs redonne l'actif $Z^{f}$. Un produit dérivé sur $Z^{f}$ peut donc utiliser ces deux actifs pour réaliser sa stratégie auto-financée, dans le cadre de la théorie vue précédemment. C'est ce que nous utilisons dans la couverture du produit Playlist.
+
+
 \subsection{Vers une modification des paramètres?}
 
 Le cadre du modèle de Black-Scholes constant est assez restrictif. Le calcul des deltas de couverture se fera dans notre application par simulation de Monte Carlo, ce qui suppose de simuler l’évolution des cours futurs des sous-jacents. Ainsi, une remarque vient alors naturellement à l'esprit : les années passant, la connaissance des paramètres, notamment la volatilité historique du sous-jacents s’améliore, pourquoi alors ne pas simuler ces mêmes trajectoires historiques avec des paramètres nouveaux, recalibrés sur une plage de temps plus récente? On collerait alors plus à la réalité de l'évolution futur du sous-jacents.\\
@@ -954,7 +990,7 @@ Il s'agit ici de faire l'inventaire des fonctionnalités indispensables que doit
 \indent \\
 \indent Le gestionnaire doit avoir la possibilité de voir la composition de son portefeuille et notamment la répartition en pourcentage ou bien en quantité de chacun de ces investissements. Il pourra ainsi avoir la valeur liquidative de chacune de ses parts. Le gestionnaire doit également avoir la possibilité de choisir le modèle d'évolution des sous jacents, que ce soit Black-Scholes ou bien le modèle de Merton, qu'il souhaite utiliser pour évaluer cette valeur. Il pourra de même choisir les différents modèles utilisés pour modéliser les taux, la volatilité ainsi que les taux de change. 
 \indent \\
-\indent Aussi, le gestionnaire doit avoir accès à une proposition de couverture, dans le cadre des modèles choisis. Plus précisément le gestionnaire ne devra pas avoir la possibilité de modifier le modèle en cours de simulation si celui ci veut regarder les différents P&L obtenus avec les modèles choisis, par soucis de cohérence. De plus le gestionnaire devra avoir la possibilité d'indiquer son nombre de dates de rebalancement.\\
+\indent Aussi, le gestionnaire doit avoir accès à une proposition de couverture, dans le cadre des modèles choisis. Plus précisément le gestionnaire ne devra pas avoir la possibilité de modifier le modèle en cours de simulation si celui ci veut regarder les différents P\&L obtenus avec les modèles choisis, par soucis de cohérence. De plus le gestionnaire devra avoir la possibilité d'indiquer son nombre de dates de rebalancement.\\
 On laissera la possibilité au gestionnaire de se couvrir différemment de ce qui est préconisé, ce qui implique que celui-ci aura la possibilité de relancer une simulation à partir de la composition de portefeuille qu'il a choisi. Il pourra donc entrer la composition de son nouveau portefeuille. Notre précision de date est telle que celui ci ne peut avoir qu'une seule composition de portefeuille par jour.\\
 \indent \\
 \indent Enfin, il aura également la possibilité d'accéder à une simulation des cours futurs et de l'erreur commise à maturité pour une trajectoire particulière en supposant qu'il ait suivi aujourd'hui, et chaque fois qu'elles lui auront été proposées, les recommendations de rebalancement. Il s'agit de le convaincre du bien fondé de ces propositions.
@@ -976,7 +1012,7 @@ On constate également la présence d'un lien entre l'interface et la base de do
 
 Si l'on rentre un peu plus dans le détails, on peut modéliser l'architecture de la façon suivante :
 
-
+\newpage
 \begin{center}
 \caption{Architecture globale}
 \end{center}
@@ -1001,16 +1037,16 @@ De façon plus précise, l'architecture précédente peut être explicité comme
 \end{center}
 
 
-
+\newpage
 On peut ainsi voir dans cette structure les différents packages présentés précédemment, nous avons de plus choisi d'utiliser de nombreuses classes abstraites, l'objectif étant de modéliser par exemple les différents modèles de taux que le gestionnaire peut choisir, les différentes évolutions du sous-jacents ou bien encore le type d'évolution de la volatilité. De plus par soucis d'efficacité et de cohérence, nous avons choisi de réaliser l'intégralité des calculs en C++, que ce soit pour obtenir les valeurs de la volatilité ou bien calculer le vecteur de couverture. De plus nous ne passons pas par cette voie pour afficher directement des données extraites de la base de données, dans ce cas particulier, la classe C\# \lstinline!AffichageBD! communiquera directement avec l'interface. La base de données associées sera la suivante :
 
 \begin{figure}[h!]
   \caption{Base de données}
   \centering
-    \includegraphics[scale=1]{BD.jpg}
+    \includegraphics[scale=0.8]{BD.jpg}
 \end{figure}
 
-La base de données ne sera en effet pas plus compliquée puisque nous aurons besoin du cours des indices à tout moment ainsi que stocker les différentes valeurs liquidatives et compositions de la couverture. Les deux tables précédentes sont donc suffisantes.
+La base de données ne sera en effet pas plus compliquée puisque nous aurons besoin du cours des indices à tout moment ainsi que stocker les différentes valeurs liquidatives et compositions de la couverture. Les trois tables précédentes sont donc suffisantes.
 
 %\begin{center}
 %\caption{Architecture Détaillée}
@@ -1107,63 +1143,92 @@ Une pop up s'affichera alors pour confirmer la bonne prise en compte de l'inform
 %Enfin le dernier bloc nous permet de choisir le modèle d'évolution des sous-jacents ce qui aura pour conséquence de modifier l'évolution des sous-jacents et ainsi la couverture proposée juste en dessous.
 %La couverture sera décrite par le nombre d'action vendue, correspondant aux nombres de parts vendues et le nombre de fois que l'on doit acheté chacun des indices. La couverture théorique donnera une composition du portefeuille précise, il sera proposé au gestionnaire une composition traitée en amont permettant de satisfaire aux parts minimales des actifs dans lesquelles il est possible d'investir. Un traitement optimisé de ces approximations pourra être ajouté en extension.  On en déduiera ainsi la valeur liquidative en dessous.
 
+\section{Amélioration : Le Gamma}
 
-\section{Annexes}
+\subsection{Qu'est ce que le Gamma}
+Le Gamma d'un portefeuille est définit comme la sensibilité du Delta de ce portefeuille à une variation de la valeur du sous-jacent S : 
+$$ \Gamma = \frac{\partial \delta }{\partial S} = \frac{\partial^2 C }{\partial S^2}   $$
+\subsection{Choix de l'utilisation du Gamma}
+Lorsque nous travaillions sur la simulation de la couverture en Delta (cf la partie du rapport "Simulation de la couverture"), nous nous sommes rendu compte que si nous souhaitions diminuer au maximum l'erreur de couverture, il fallait soit : 
+\begin{itemize}
+\item[•] diminuer au maximum le pas de discrétisation
+\item[•] diminuer le Gamma
+\end{itemize}
+\\
+En effet, nous avons montré dans cette partie qu'en notant 
+$$ P\&L_{t}^{*} = \frac{1}{\sqrt{h}} P\&L_{t} $$
+Il est possible de démontrer que le processus converge en distribution vers un autre processus : 
+$$P\&L_{t}^{*} \underset{h\rightarrow \infty}{\overset{d}{\rightarrow}} \frac{1}{\sqrt{2}}(\int_{0}^t \frac{\partial^2 C(u, S_{u})}{\partial S^{2}} \sigma^2 S_{u}^2 dW_{u}^{'})$$
 
-\subsection{Pseudo code pour la valeur du flux versé en t}
+et que $\frac{\partial^2 C(u, S_{u})}{\partial S^{2}}$ est la définition du Gamma du produit.
+Nous avons donc décidé de nous pencher sur le calcul de cette variable afin de réduire notre erreur de couverture.
+\subsection{Portefeuille Gamma-neutre}
+Afin de réduire l'erreur de couverture liée à la discrétisation, il faut diminuer le gamma du portefeuille et donc se construire un portefeuille delta-gamma neutre. Pour cela, il faut introduire dans notre portefeuille de couverture un autre actif, ou une option suffisamment liquide, dont le prix sera noté $C_0$. L'idée est que le Gamma de cet actif va compenser le Gamma du produit que l'on cherche à couvrir, tout en restant Delta-neutre. \\
+On considère donc notre portefeuille de couverture du produit C, composé
+\begin{itemize}
+\item[•] d'une quantité $\delta_t$ du sous-jacent à l'instant t
+\item[•] d'une quantité $\Gamma_t$ d'actif $C_0$
+\item[•] de cash B, investit au taux sans risque (pas obligatoire)
+\end{itemize} 
+\\
+D'où à chaque instant t on a : 
+$$ C(t,S_t) = \delta_t S_t + \Gamma_tC_0(t,S_t) - B  $$
+On cherche à éliminer le risque du portefeuille, on s'intéresse donc aux variations de sa valeur : 
+$$ dC(t, S_t) = \delta_t dS_t + \Gamma_t dC_0(t,S_t) - dB  $$
+À l'aide d'un développement de Taylor au deuxième ordre par raport au sous-jacent on trouve : 
+$$ dC(t,S_t) = \frac{\partial C}{\partial S} dS_t  + \frac{1}{2} \frac{\partial^2 C}{\partial S^2} dS_{t}^2 $$
+$$ dC_0(t,S_t) = \frac{\partial C_0}{\partial S} dS_t  + \frac{1}{2} \frac{\partial^2 C_0}{\partial S^2} dS_{t}^2 $$
+En substituant ces valeurs dans l'expression du portefeuille et en regroupant les termes, on obtient : 
+$$ (-\frac{\partial C}{\partial S} + \delta_t + \Gamma_t \frac{\partial C_0}{\partial S}) dS_t + \frac{1}{2} ( - \frac{\partial^2 C}{\partial S^2} + \Gamma_t  \frac{\partial^2 C_0}{\partial S^2})dS_{t}^2 + dB = 0   $$
+Afin de faire disparaître les facteurs de risque $dS_t$ et $dS_{t}^²$, il faut que
+$$ -\frac{\partial C}{\partial S} + \delta_t + \Gamma_t \frac{\partial C_0}{\partial S} = 0 \rightarrow \delta_t = \frac{\partial C}{\partial S} -\Gamma_t \frac{\partial C_0}{\partial S} $$
+et 
+$$- \frac{\partial^2 C}{\partial S^2} + \Gamma_t  \frac{\partial^2 C_0}{\partial S^2} = 0 \rightarrow \Gamma_t = \frac{\partial^2 C}{\partial S^2} \slash \frac{\partial^2 C_0}{\partial S^2}  $$ 
 
-\begin{verbatim}
 
-flux(var ValNom, var temps){
-   var flux = 0;
-   var performance =0 ;
-   var CountSupDix = 0;
-   var CountSupVingtEnUn=0;
-   var CountSupVingtEnDeux=0;
-   var CountSupVingtEnMin=0;
-   var borne = minimum(t,2);
-   var verse = 0;
-   Simulation des Indices
-   Si le temps vaut 1 ou 2 ou 6
-      Si le temps vaut 6
-         Pour tout les indices parmi la Liste des Indices
-            Si la performance de l'indice en 1 est supérieur à 20%
-               on incrémente CountSupVingtEnUn de 1
-            Fin SI
-            Si la performance de l'indice en 2 est supérieur à 20%
-               on incrémente CountSupVingtEnDeux de 1
-            Fin SI
-         Fin pour tout
-         Si (CountSupVingtEnUn est inférieur à 3 et CountSupVingtEnDeux est inférieur à 3 )
-            Verse passe à 1
-         Fin SI
-      Sinon si
-         Pour tout les indices parmi la Liste des Indices
-            Si la performance de l'indice en borne est supérieur à 20%
-               on incrémente CountSupVingtEnMin de 1 
-            Fin si
-         Fin pour tout
-         Si CountSupVingtEnMin est supérieur à 2
-            verse passe à 1
-         Fin si
-      Fin si
-   Fin si
-   Si verse vaut 1
-      Pour tout k entre 1 et t
-         Pour tout les indices dans la Liste des Indices
-            Si la performance de l'Indice en k est supérieur à 10%
-               on incrémente CountSupDix de 1
-            Fin si
-         Fin pour tout
-         Si CountSupDix est supérieur à 2
-            on augmente la performance de 4.5%
-         Fin si
-      Fin pour tout
-      On renvoie ValNom*(1+performance);
-   Fin si
-   On renvoie 0;
-}
-\end{verbatim}
+On obtient que le portefeuille de couverture doit contenir à chaque intant t,  $\Gamma_t$ actifs $C_0$, et $\delta_t$ sous-jacent, avec : 
+
+$$ \Gamma_t = \frac{\partial^2 C}{\partial S^2} \slash \frac{\partial^2 C_0}{\partial S^2}  $$ 
+
+$$ \delta_t = \frac{\partial C}{\partial S} - \frac{\partial C_0}{\partial S} \frac{\partial^2 C}{\partial S^2} \slash \frac{\partial^2 C_0}{\partial S^2}    $$
+\\
+On remarque qu'à chaque changemement de couverture, l'actif $C_0$ disparait du portefeuille de couverture, celui-ci n'a donc servi qu'à rendre plus précise la couverture.
+\subsection{Calcul du Gamma}
+Nos savons désormais comment utiliser le Gamma dans notre portefeuille pour réduire l'erreur de couverture. mais il nous faut tout de même être en mesure de calculer, ou d'approximer cette variable. Plusieurs méthodes existent pour calculer les grecques : 
+\subsubsection{Méthode des trajectoires}
+Cette méthode repose sur la relation entre la fonction de payoff et le paramètre étudié. Voici un exemple avec un Call européen classique sous les hypothèses du modèle de Black-Scholes. La formule de Black-Scholes nous donne que le prix d'un Call est donné par :
+$$ C(t, S_t, K, T) = S_t \mathcal{N} \left [ d_1(T-t,S_te^{r(T-t)},K) \right ] - Ke^{-r(T-t)} \mathcal{N} \left [ d_0(T-t,S_te^{r(T-t)},K) \right ]  $$
+avec 
+$$ d_0(t,x,y) = \frac{1}{\sigma \sqrt{t}} ln(\frac{x}{y}) - \frac{1}{2} \sigma \sqrt{t} $$
+$$ d_1(t,x,y) = d_0(t,x,y) + \sigma \sqrt{t} $$
+et avec $ \mathcal{N} $ la fonction de répartition de la loi normale centrée réduite. 
+En dérivant directement la formule on obtient une formule fermée pour le Gamma : 
+$$ \Gamma = \frac{\mathcal{N}'(d1)}{S_t \sigma \sqrt{T}}  $$
+\\
+Malheureusement, cette la formule du payoff de notre produit, fait que le prix  chaque instant de celui-ci (espérance actualisée sous la proba risque-neutre) ne nous permet pas d'obtenir une formule fermée pour le Gamma.
+\subsubsection{Méthode du rapport de vraisemblance}
+La méthode du rapport de vraisemblance est basée sur la relation entre la fonction de densité du prix de l'option et le paramètre étudié. Le rapport de vraisemblance est obtenu en partant de la  valeur de l'option : 
+$$ C =  e^{-rT} \mathbb{E}_{\mathbb{Q}} \left [ h(S_0 e^{ ( r - \frac{\sigma^2}{2} )T - \sigma \sqrt{T} Z }) \right ] $$
+$$ C =  e^{-rT} \int_{- \infty}^{+ \infty} h(S_0 e^{ ( r - \frac{\sigma^2}{2} )T - \sigma \sqrt{T} z }) \frac{e^{- \frac{z^²}{2}}}{\sqrt{2 \pi}} dz $$
+puis à l'aide d'un changement de variable, de mettre le prix sous la forme 
+$$ C = \int_{0}^{+\infty} h(x)e^{-rT}f(x)dx  $$
+puis de dériver à l'intérieur de l'intégrale par le paramètre dont on se sert et d'en déduire une autre exression du prix sous forme d'espérance, ce qui donnera une densité pour la variable que l'on recherche, et même un estimateur sans biais.
+De la même façon que pour la méthode des trajectoires, la méthode du maximum de vraisemblance n'est pas applicable dans notre cas.
+\subsubsection{Méthode des différences finies}
+La méthodes des différences finies est très utilisée en physique et a été appliquée à la finance par Brennan et Schwartz en 1978. Il s'agit de remplacer des dérivées partielles par des différences finies. Cela consiste à approximer à l'aide de développements de Taylor les dérivées d'une variable par cette même variable en différents points : 
+\\ On commence tout d'abord par discrétiser le temps $ 0 < t_1 < .. < t_N = T $ et on note $h_i = x_{i+1}-x_i $ 
+\\ On approxime ensuite au second ordre de la manière suivante : 
+$$ u'(x_{i}) \sim \frac{u(x_{i})-u(x_{i-1})}{h_{i-1}}  $$
+ou encore 
+$$ u''(x_{i}) \sim \frac{2}{(h_i + h_{i+1})} \left [ \frac{u(x_{i+1})-u(x_i)}{h_i} - \frac{u(x_i)-u(x_{i-1})}{h_{i-1}} \right ]   $$
+
+C'est la méthode que nous avions utilisé pour calculer le Delta, c'est pourquoi nous avons décidé de la réutiliser pour calculer cette fois-ci le Gamma.
+$$ \Gamma = \frac{C(S+ \epsilon )-2 C(S) + C(S-\epsilon)}{\epsilon^2} $$
+\subsection{Travail réalisé}
+Nous avons voulu intégrer totalement à notre produit la  couverture en Delta-Gamma neutre. \\
+\indent La première étape était d'implémenter une fonction qui calcule le Gamma avec la méthode des différences finies. Nous l'avons fait et avons testé cette méthode à l'aide d'un pricer Black-Scholes d'options européennes classique. En effet, nous pouvions vérifier nos calculs à l'aide de la formule fermée présentée plus haut. \\
+\indent Une fois que la méthode avait été implémentée et testée, nous avons voulu l'intégrer au logiciel. L'étape suivant aurait été d'intégrer la couverture en Gamma neutre mais nous n'avons pas eu le temps de le terminer totalement, et il y avait peu d'intéret à afficher uniquement le Gamma à un gestionnaire.
+
 
 \section{Simulation de la couverture}
 La répartition du \textit{P&L} (Profit and Loss, ie erreur de couverture) joue un rôle central. Un modèle est jugé sur sa bonne capacité à couvrir les produits exotiques.\\
