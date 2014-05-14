@@ -128,7 +128,7 @@ namespace AccesDB
         public double getCurrentRisk(DateTime Date)
         {
             string[] tmpRisk = (from nam in myDbdc.Component
-                                where nam.Date >= Date.AddDays(-10) && nam.Date <= DateTime.Now
+                                where nam.Date >= Date.AddDays(-32) && nam.Date <= DateTime.Now
                                     orderby nam.Date
                                      select nam.Valrisk).ToArray();
 
@@ -145,7 +145,7 @@ namespace AccesDB
         public double getCurrentValLiq(DateTime Date)
         {
             string[] tmpRisk = (from nam in myDbdc.Component
-                                where nam.Date >= Date.AddDays(-10) && nam.Date <= Date
+                                where nam.Date >= Date.AddDays(-32) && nam.Date <= Date
                                 orderby nam.Date
                                 select nam.ValLiquidative).ToArray();
 
@@ -162,7 +162,7 @@ namespace AccesDB
         public double getCurrentRiskFree(DateTime Datee)
         {
             string[] tmpRiskfree = (from nam in myDbdc.Component
-                                    where nam.Date >= Datee.AddDays(-10) && nam.Date <= DateTime.Now
+                                    where nam.Date >= Datee.AddDays(-32) && nam.Date <= DateTime.Now
                                     orderby nam.Date
                                 select nam.Valriskfree).ToArray();
 
@@ -181,7 +181,7 @@ namespace AccesDB
             double[] Delta = new double[4];
             //Delat du FTSE
             String[] tmpDeltaFTSE = (from nam in myDbdc.Component
-                                     where nam.Date >= Date.AddDays(-10) && nam.Date <= DateTime.Now
+                                     where nam.Date >= Date.AddDays(-32) && nam.Date <= DateTime.Now
                                      orderby nam.Date
                                      select nam.DeltaFTSE).ToArray();
             try
@@ -194,7 +194,7 @@ namespace AccesDB
             }
             //Delta du S&P
             String[] tmpDeltaSP = (from nam in myDbdc.Component
-                                   where nam.Date >= Date.AddDays(-10) && nam.Date <= DateTime.Now
+                                   where nam.Date >= Date.AddDays(-32) && nam.Date <= DateTime.Now
                                    orderby nam.Date
                                      select nam.DeltaS_P).ToArray();
 
@@ -208,7 +208,7 @@ namespace AccesDB
             }
             //Delta du Nikkei
             String[] tmpDeltaNikkei = (from nam in myDbdc.Component
-                                       where nam.Date >= Date.AddDays(-10) && nam.Date <= DateTime.Now
+                                       where nam.Date >= Date.AddDays(-32) && nam.Date <= DateTime.Now
                                        orderby nam.Date
                                    select nam.DeltaNikkei).ToArray();
 
@@ -222,7 +222,7 @@ namespace AccesDB
             }
             //Delta du Eurostoxx
             String[] tmpDeltaEuro = (from nam in myDbdc.Component
-                                     where nam.Date >= Date.AddDays(-10) && nam.Date <= DateTime.Now
+                                     where nam.Date >= Date.AddDays(-32) && nam.Date <= DateTime.Now
                                      orderby nam.Date
                                        select nam.DeltaEuro).ToArray();
             try
@@ -301,7 +301,7 @@ namespace AccesDB
         {
             double[] spot = new double[4];
             var val = (from nam in myDbdc.PepsDB
-                       where nam.Date > DateTime.Now.AddDays(-10)
+                       where nam.Date > DateTime.Now.AddDays(-32)
                        orderby nam.Date
                        select new { nam.FTSE, nam.S_P, nam.NIKKEI, nam.EUROSTOXX, nam.Date }).ToArray();
             spot[0] = double.Parse(val[val.Length - 1].FTSE);

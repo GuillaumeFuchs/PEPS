@@ -853,10 +853,6 @@ $$ R(t,T)=-\frac{1}{T-t}ln(P(t,T)) $$ \\
 \subsubsection{Choix du modèle}
 Si les modèles HJM ou bi-factoriels permettent d'obtenir des courbes beaucoup plus précises de taux zéro-coupon, le modèle le plus abordable serait celui de Vasicek unifactoriel. Le modèle de Black-Scholes pour la simulation des indices nécessite un taux sans risque constant, c'est pourquoi nous commencerons par calculer à partir des données observées sur les marchés, un taux sans risque constant. Dans un deuxième temps seulement, nous essaierons d'implémenter et d'intégrer le modèle de Vasicek unifactoriel dans nos modélisations des indices.
 
-\subsection{Modélisation des taux de changes}
-Le produit Playlist fait intervenir des sous-jacents qui sont cotés en devise étrangère. La couverture sur ces produits est donc soumise à l'évolution des taux de changes.
-Nos connaissances actuelles en la matière de nous permettent pas de choisir un modèle de taux de change sophistiqué. En revanche, nous savons que le modèle le plus simple, qui sera implémenté dans la première version, qui consiste à considérer le taux de change constant, n'apporte aucune valeur ajoutée à la modélisation. Nous nous bornerons donc dans un premier temps à l'approximation qui consiste à considérer que tous les sous-jacents sont exprimés en devise domestique.
-
 \newpage
 \section{Théorie de la couverture}
 Dans cette partie, nous aborderons les différentes étapes qui permette de valider théoriquement la couverture du gérant du fond. Rappelons au préalable que cette couverture se fait dans le cadre d'un modèle. Ici nous avons opté dans un premier temps pour une couverture en dite en delta neutre, dans le cas d'un modèle de Black-Scholes, avec taux sans risque et volatilité des quatre sous-jacents constante.
@@ -920,6 +916,46 @@ $$ \Phi_t = \frac{\partial v(t,S_t)}{\partial S} $$
 $$ rv(t,S_t) = \frac{\partial v}{\partial t} + \mu S  \frac{\partial v}{\partial S} +  \frac{1}{2} \sigma^2 S^2 \frac{\partial^2 v}{\partial S^2} $$ \\
 Si une fonction quelconque $ v(t,S_t) $ satisfait la dernière équation, et c'est le cas de la fonction v donnée plus haut, alors le portefeuille $ X_t $ avec $ \Phi_t = \frac{\partial v(t,S_t)}{\partial S} $ et $ \Phi_{t}^0  = \frac{1}{S_{t}^0} (v(t,S_t) - \Phi_t S_t )$ d'actif sans risque est autofinancé, et réplique le produit financier payant $ h(S_T) $ à l'échéance T.  \\
 C'est ce qu'on appelle la couverture en Delta.
+
+\subsection{Couverture avec taux de changes}
+
+Le produit Playlist fait intervenir des sous-jacents qui sont cotés en devise étrangère. La couverture sur ces produits est donc soumise à l'évolution des taux de changes.
+Une couverture de type delta neutre est compatible avec un marché multi-devise, comme nous allons le voir dans cette section.
+\\
+On considère un marché dit domestique $D$ et un marché étranger $F$ (devises d et f) possédant chacun un taux sans risque $r$. On peut appliquer le raisonnement décrit dans la partie précédente : si on suppose la complétude et l'absence d'opportunité d'arbitrage sur chacun des marchés, il existe des probabilités risque neutres sur ces marchés, notées $\mathbb{Q}^{d}$ et $\mathbb{Q}^{f}$, dont les browniens associés sont, $({W^{d}}_{t})$ et $({W^{f}}_{t})$.
+D'après ce qui a été vu plus haut,  et la définition de ces probabilités par rapport à la probabilité historique, on a, notant ${\lambda^{d}}_{t}$ et ${\lambda^{f}}_{t}$ les primes de risques associées, la relation :
+$${W^{f}}_{t} = {W^{d}}_{t} +  \int_{0}^t \ ({\lambda^{f}}_{s} - {\lambda^{d}}_{s}) ds   $$
+
+On souhaite utiliser le taux de change entre les deux devises, noté $X_{t}$ qui représente le prix en unité monétaire domestique d'une unité monétaire étrangère. On suppose que ce taux suit un processus d'Itô, vérifiant  $ \sup_{t \in [0,T]} (\mathbb{E}[{X_{t}}^2]) < \infty $ et presque sûrement positif. Montrons que le taux de change a pour dynamique :
+\\$$ dX_{t} = X_{t}[({r^{d}}_{t}-{r^{f}}_{t}) dt + {\sigma^{X}}_{t} d{W^{d}}_{t} ] $$
+où $({\sigma^{X}}_{t})$ est un processus adapté.\\
+
+\\
+En effet, $(e^{\int_{0}^t{r^{f}}_{s}ds} X_{t}) $ est un actif domestique, dont le prix actualisé au taux sans risque domestique est donc martingale sous $\mathbb{Q}^{d}$. Or, d'après la formule d'Itô :
+\\$$ d(e^{\int_{0}^t({r^{f}}_{s}- {r^{d}}_{s})ds} X_{t}) = e^{\int_{0}^t({r^{f}}_{s}- {r^{d}}_{s})ds} [ dX_{t} + (r^{f}}_{t}- r^{d}}_{t})X_{t} dt ] $$ \\
+
+La propriété martingale implique qu'il existe $(H_{t})$ dans $L^{2}$, tel que :
+$$ dX_{t} = X_{t}({r^{d}}_{t}-{r^{f}}_{t}) dt +  (H_{t})d{W^{d}}_{t}$$
+Posant  ${\sigma^{X}}_{t} = \frac{H_{t}}{X_{t}}$, on a le résultat annoncé.\\
+
+\\
+
+De plus, $\sigma^{X}}_{t} =  {\lambda^{f}}_{s} - {\lambda^{d}}_{s}$ .En effet, considérons à présent un actif  étranger $Z^{f}$, de dynamique :
+\\$$ d{Z^{f}}_{t} = {Z^{f}}_{t}[{r^{f}}_{t}dt + {\sigma^{Z}}_{t} d{W^{f}}_{t} ]$$
+
+\\
+
+D'après, le même raisonnement que précédemment, $X_{t}{Z^{f}}_{t}$ est un actif domestique, dont le prix actualisé est donc martingale sous $\mathbb{Q}^{d}$.
+On applique la formule d'Itô pour exprimer sa dynamique, il vient après calcul et utilisation de la relation entre les browniens montrée plus haut :
+\\$$d(X_{t}{Z^{f}}_{t})= X_{t}{Z^{f}}_{t}[{r^{d}}_{t}dt + (\sigma^{X}}_{t} +{\sigma^{Z}}_{t}) d{W^{d}}_{t} + {\sigma^{Z}}_{t} ({\sigma^{X}}_{t} - {\lambda^{f}}_{s} - {\lambda^{d}}_{s} )dt ]$$\\
+
+Ce qui montre le résultat. De plus, d'après le caractère martingale du prix actualisé, on connaît les dynamiques de $X_{t}{Z^{f}}_{t}$ et  $X_{t}e^{\int_{0}^t{r^{f}}_{s}ds}$  :
+
+\\$$d(X_{t}{Z^{f}}_{t}) = X_{t}{Z^{f}}_{t} [{r^{d}}_{t}dt + (\sigma^{X}}_{t} +{\sigma^{Z}}_{t}) d{W^{d}}_{t}] $$
+\\$$d(X_{t}e^{\int_{0}^t {r^{f}}_{s}ds}) = X_{t}e^{\int_{0}^t{r^{f}}_{s}ds} [{r^{d}}_{t}dt + \sigma^{X}}_{t}d{W^{d}}_{t}]$$\\
+\\
+Les prix actualisés de ces deux actifs domestiques sont donc des martingales sous $\mathbb{Q}^{d}$ et correspondent aux achats de l'actif $Z^{f}$ en devise domestique et de taux sans risque étranger. Le rapport de ces deux actifs redonne l'actif $Z^{f}$. Un produit dérivé sur $Z^{f}$ peut donc utiliser ces deux actifs pour réaliser sa stratégie auto-financée, dans le cadre de la théorie vue précédemment. C'est ce que nous utilisons dans la couverture du produit Playlist.
+
 
 \subsection{Vers une modification des paramètres?}
 
@@ -1010,7 +1046,7 @@ On peut ainsi voir dans cette structure les différents packages présentés pr�
     \includegraphics[scale=0.8]{BD.jpg}
 \end{figure}
 
-La base de données ne sera en effet pas plus compliquée puisque nous aurons besoin du cours des indices à tout moment ainsi que stocker les différentes valeurs liquidatives et compositions de la couverture. Les deux tables précédentes sont donc suffisantes.
+La base de données ne sera en effet pas plus compliquée puisque nous aurons besoin du cours des indices à tout moment ainsi que stocker les différentes valeurs liquidatives et compositions de la couverture. Les trois tables précédentes sont donc suffisantes.
 
 %\begin{center}
 %\caption{Architecture Détaillée}
