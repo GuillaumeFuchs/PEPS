@@ -30,20 +30,28 @@
 \contentsline {subsubsection}{\numberline {7.3.5}Choix du mod\IeC {\`e}le}{28}
 \contentsline {section}{\numberline {8}Th\IeC {\'e}orie de la couverture}{29}
 \contentsline {subsection}{\numberline {8.1}Le cadre de Black-Scholes constant}{29}
-\contentsline {subsection}{\numberline {8.2}Couverture avec taux de changes}{31}
-\contentsline {subsection}{\numberline {8.3}Vers une modification des param\IeC {\`e}tres?}{33}
-\contentsline {section}{\numberline {9}Analyse logicielle}{34}
-\contentsline {subsection}{\numberline {9.1}Cahier des charges}{34}
-\contentsline {subsection}{\numberline {9.2}Architecture logicielle globale}{35}
-\contentsline {subsection}{\numberline {9.3}Architecture d\IeC {\'e}taill\IeC {\'e}e}{37}
-\contentsline {subsection}{\numberline {9.4}Sp\IeC {\'e}cifications}{39}
-\contentsline {section}{\numberline {10}Am\IeC {\'e}lioration : Le Gamma}{44}
-\contentsline {subsection}{\numberline {10.1}Qu'est ce que le Gamma}{44}
-\contentsline {subsection}{\numberline {10.2}Choix de l'utilisation du Gamma}{44}
-\contentsline {subsection}{\numberline {10.3}Portefeuille Gamma-neutre}{44}
-\contentsline {subsection}{\numberline {10.4}Calcul du Gamma}{45}
-\contentsline {subsubsection}{\numberline {10.4.1}M\IeC {\'e}thode des trajectoires}{46}
-\contentsline {subsubsection}{\numberline {10.4.2}M\IeC {\'e}thode du rapport de vraisemblance}{46}
-\contentsline {subsubsection}{\numberline {10.4.3}M\IeC {\'e}thode des diff\IeC {\'e}rences finies}{47}
-\contentsline {subsection}{\numberline {10.5}Travail r\IeC {\'e}alis\IeC {\'e}}{47}
-\contentsline {section}{\numberline {11}Simulation de la couverture}{47}
+\contentsline {section}{\numberline {9}Simulation de la couverture}{31}
+\contentsline {subsection}{\numberline {9.1}Couverture avec taux de changes}{32}
+\contentsline {subsection}{\numberline {9.2}Vers une modification des param\IeC {\`e}tres?}{34}
+\contentsline {section}{\numberline {10}Analyse logicielle}{35}
+\contentsline {subsection}{\numberline {10.1}Cahier des charges}{35}
+\contentsline {subsection}{\numberline {10.2}Architecture logicielle globale}{36}
+\contentsline {subsection}{\numberline {10.3}Architecture d\IeC {\'e}taill\IeC {\'e}e}{38}
+\contentsline {subsection}{\numberline {10.4}Sp\IeC {\'e}cifications}{40}
+\contentsline {section}{\numberline {11}Moteur de calcul C++}{45}
+\contentsline {subsection}{\numberline {11.1}Motivations pratiques}{45}
+\contentsline {subsection}{\numberline {11.2}Architecture}{45}
+\contentsline {subsection}{\numberline {11.3}Mod\IeC {\`e}le de Black-Scholes}{46}
+\contentsline {subsubsection}{\numberline {11.3.1}Prix}{46}
+\contentsline {subsubsection}{\numberline {11.3.2}Delta}{47}
+\contentsline {subsubsection}{\numberline {11.3.3}Couverture}{48}
+\contentsline {subsection}{\numberline {11.4}Algorithme du payoff de \textbf {Playlist 2}}{48}
+\contentsline {section}{\numberline {12}Am\IeC {\'e}lioration : Le Gamma}{50}
+\contentsline {subsection}{\numberline {12.1}Qu'est ce que le Gamma}{50}
+\contentsline {subsection}{\numberline {12.2}Choix de l'utilisation du Gamma}{50}
+\contentsline {subsection}{\numberline {12.3}Portefeuille Gamma-neutre}{50}
+\contentsline {subsection}{\numberline {12.4}Calcul du Gamma}{51}
+\contentsline {subsubsection}{\numberline {12.4.1}M\IeC {\'e}thode des trajectoires}{51}
+\contentsline {subsubsection}{\numberline {12.4.2}M\IeC {\'e}thode du rapport de vraisemblance}{52}
+\contentsline {subsubsection}{\numberline {12.4.3}M\IeC {\'e}thode des diff\IeC {\'e}rences finies}{52}
+\contentsline {subsection}{\numberline {12.5}Travail r\IeC {\'e}alis\IeC {\'e}}{53}

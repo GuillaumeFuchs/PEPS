@@ -646,20 +646,20 @@ Le modèle de Black et Scholes permet de modéliser le cours des actions. Mais i
 \\ \\
 Dans le modèle de Black-Scholes, le cours du sous-jacent S vérifie l'équation stochastique :
 
-$$ dS = \mu Sdt + \sigma SdW $$  \\
-avec $W_{t}$ un processus de Wiener, $ W_{t} \rightarrow \mathcal{N}(0,\sqrt{t}) $ \\
+$$ dS_t = \mu S_tdt + \sigma SdW_t $$ \\
+avec $W_{t}$ un processus de Wiener \\
 
 On obtient avec Itô : \\
-$$ d(ln(S))=(\mu - \frac{\sigma^{2}}{2})dt + \sigma dW $$ \\
+$$ d(ln(S_t))=(\mu - \frac{\sigma^{2}}{2})dt + \sigma dW_t $$ \\
 Soit \\
-$$ S(t) = S_{0} * exp \left[(\mu - \frac{\sigma^{2}}{2})t + \sigma W \right] $$ \\
+$$ S(t) = S_{0} * exp \left[(\mu - \frac{\sigma^{2}}{2})t + \sigma W_t \right] $$ \\
 
 Le principal problème avec le modèle de Black-Scholes est qu'il ne présente pas une queue de distribution suffisamment lourde par rapport à la réalité : il ne prend pas en compte la possibilité de saut d'un cours boursier. Le modèle qui suit est le modèle de Merton. Celui-ci permet de prendre en compte cette possibilité.\\
 
 \subsubsection{Modèle de Merton}
 Le modèle de Merton introduit la possibilité de saut d'un cours boursier à l'aide d'un processus de Poisson :\\
 
-$$ S(t) = S_{0} exp \left[(\mu - \frac{\sigma^{2}}{2})t + \sigma dW + \sum_{k=1}^{N(t)} U(k) \right] $$ \\
+$$ S(t) = S_{0} exp \left[(\mu - \frac{\sigma^{2}}{2})t + \sigma dW_t + \sum_{k=1}^{N(t)} U(k) \right] $$ \\
 où
 \begin{itemize}
 \item[•] N est un processus de Poisson
@@ -670,11 +670,11 @@ où
 \\
 
 \subsubsection{Modèle de Heston}
-Les deux modèles précédant prennent pour hypothèse que la volatilité est constante. La réalité montre que celle-ci a une forme de smile, lorsque le prix d'exercice ou la maturité varie. Le modèle de Heston attribue donc à la volatilité une dynamique particulière : \\
-$$ dV(t) = K(\theta - V(t))dt + \sigma \sqrt{V(t)} dW_{v}(t)  $$ \\
+Les deux modèles précédant prennent pour hypothèse que la volatilité est constante. La réalité montre que celle-ci a une forme de smile, lorsque le prix d'exercice ou la maturité varie. En effet, on observe que la volatilité augmente lorsque le Strike devient soit faible, soit très fort, deuis les années 1980. Le modèle de Heston attribue à la volatilité une dynamique particulière : \\
+$$ dV(t) = K(\theta - V(t))dt + \sigma \sqrt{V(t)} dW_{v}(t) $$ \\
 et \\
 $$ \frac{dS(t)}{S(t)} = rdt + \sqrt{V(t)}dW_{s}(t) $$ \\
-Où r est le taux sans risque, V la volatilité, K un paramètre de retour à la moyenne, $\theta$ la variance long terme, $\sigma$ la volatilité de la volatilité, et  $W_{s}$ et $W_{v}$ sont deux mouvements browniens corrélés.\\
+Où r est le taux sans risque, V la volatilité, K un paramètre de retour à la moyenne, $\theta$ la variance long terme, $\sigma$ la volatilité de la volatilité, et $W_{s}$ et $W_{v}$ sont deux mouvements browniens corrélés.\\
 
 \subsubsection{Choix du modèle et validité du modèle de Black-Scholes pour les indices}
 Le modèle de Heston est reconnu comme étant le plus précis. Cependant, le nombre de paramètres étant très important, le calibrage de ces paramètres est très difficile sans des données réelles utilisables. Le modèle de Black-Scholes étant le plus simple à implémenter, l'évaluation du produit et ce qui en découle (grecques, couvertures...) sera faite à partir de ce modèle. L'implémentation du modèle de Merton pourrait représenter une bonne voie d'approfondissement. \\ \\
@@ -683,7 +683,7 @@ Un indice peut être assimilé à un portefeuille d'actions. On note :
 \begin{itemize}
 \item[•] $P_t$ la valeur de l'indice à l'instant $t$, $t \in \mathbb{R}^{+} $
 \item[•] $n$ le nombre d'actions qui composent l'indice
-\item[•] $S_{i}(t)$ le cours de l'action $i$ à l'instant $t$, $t \in  \mathbb{R}^{+} $ et $i \in [[1,n]] $
+\item[•] $S_{i}(t)$ le cours de l'action $i$ à l'instant $t$, $t \in \mathbb{R}^{+} $ et $i \in [[1,n]] $
 \item[•] $ \omega_i (t) $ la proportion du titre $i$ dans l'indice, soit la capitalisation boursière de l'action i sur la capitalisation totale
 \item[•] $N_i $ le nombre de titres respectifs, supposé constant au cours du temps\\
 \end{itemize}
@@ -694,11 +694,11 @@ On peut écrire pour chacune des actions l'égalité suivante :
 $$ N_{i}S_{i}(t) = \omega_i(t)P_t $$
 De plus, on considère un intervalle de temps infinitésimal $dt$. On a :
 $$ P_{t+dt} = \sum_{i=1}^{n}N_i(S_i(t+dt) + d_{i,t}) $$
-où $d_{i,t}$ sont les dividendes distribués par l'entreprise $i$ entre $t$ et $t+dt$. S'il n'y a pas de distribution de dividendes pendant cette période, alors $d_{i,k}=0$.
+où $d_{i,t}$ sont les dividendes distribués par l'entreprise $i$ entre $t$ et $t+dt$. S'il n'y a pas de distribution de dividendes pendant cette période, alors $d_{i,t}=0$ .
 \\
 \\
 Le rendement instantané du portefeuille s'écrit :
-$$ \frac{dP_t}{P_t} = \frac{P_{t+dt}-P_t}{P_t} = \sum_{i=1}^n\frac{N_i}{P_t}(S_i(t+dt)-S_i(t) + d_{k,t})   $$
+$$ \frac{dP_t}{P_t} = \frac{P_{t+dt}-P_t}{P_t} = \sum_{i=1}^n\frac{N_i}{P_t}(S_i(t+dt)-S_i(t) + d_{k,t}) $$
 Or, d'après la deuxième équation,
 $$ \frac{N_i}{P_t} = \frac{\omega_i(t)}{S_i(t)} $$
 Donc
@@ -708,13 +708,13 @@ On note $ dS_{i,t} = S_i(t+dt)-S_i(t)+d_{k,t} $. \\
 On peut donc écrire
 $$ \frac{dP_t}{P_t} = \sum_{i=1}^n\omega_i(t)\frac{dS_{i,t}}{S_i(t)} $$
 \\
-Notre hypothèse principale, est que chaque cours des différentes actions suit une dynamique de Black-Scholes. On a  :
-$$ \frac{dS_{i,t}}{S_i(t)} = \mu_idt + \sigma_i dW_{i,t} $$  \\
+Notre hypothèse principale, est que chaque cours des différentes actions suit une dynamique de Black-Scholes. On a :
+$$ \frac{dS_{i,t}}{S_i(t)} = \mu_idt + \sigma_i dW_{i,t} $$ \\
 avec $W_{i,t}$ un processus de Wiener, $ W_{i,t} \rightarrow \mathcal{N}(0,\sqrt{t})$.\\
 
 Le rendement instantané du portefeuille est donc :
 $$ \frac{dP_t}{P_t} = (\sum_{i=1}^n\omega_i(t)\mu_i)dt + \sum_{i=1}^n\omega_i(t)\sigma_idW_{i,t} $$ \\
-On a $ dW_{i,t} \rightarrow \mathcal{N}(0,\sqrt{dt})$, donc on peut écrire $dW_{i,t} = U_i\sqrt{dt}$ avec $U_i \rightarrow \mathcal{N}(0,1)$ de loi centrée réduite. \\
+On a  $U_i \rightarrow \mathcal{N}(0,1)$ de loi centrée réduite. \\
 On pose
 $$\mu = \sum_{i=1}^n\omega_i(t)\mu_i$$ et $$V = \sum_{i=1}^n\omega_i(t)\sigma_iU_i$$
 
@@ -723,7 +723,7 @@ $$\sigma^2 = \sum_{i=1}^n\sum_{j=1}^n\omega_i(t)\omega_j(t)\sigma_i\sigma_j\rho_
 où $\rho_{i,j}$ est le coefficient de corrélation entre $U_i$ et $U_j$. \\\\
 On peut donc écrire :
 $$ \frac{dP_t}{P_t} = \mu dt + \sigma U \sqrt{dt} $$
-En posant $dW = U \sqrt{dt}$, on a $dW \rightarrow \mathcal{N}(0,\sqrt{dt})$ est un processus de Wiener. \\ \\
+On retrouve bien un processus de Wiener. \\ \\
 \textbf{Conclusion:}\\
 On peut donc légitimement modéliser l'évolution de la valeur d'un indice boursier avec la méthode de Black-Scholes, en supposant que le cours de chacune des actions qui le composent suivent une dynamique de Black-Scholes.
 
@@ -736,18 +736,18 @@ Plusieurs modèles existent :
 \item[•] La volatilité \textbf{locale} : c'est un cas particulier de volatilité stochastique, où l'on considère que la volatilité dépend uniquement du cours de l'actif sous-jacent et du temps ($\sigma = f(S_{t},t)$)
 \end{itemize}
 \\
-Étant donné que nous nous concentrons dans un premier temps sur l'implémentation du modèle de Black-Scholes, et que celui-ci suppose que la volatilité est constante, nous allons tout d'abord nous intéresser à celle-ci.  Les deux principaux estimateurs de ce paramètre sont la volatilité historique et la volatilité implicite.
+Étant donné que nous nous concentrons dans un premier temps sur l'implémentation du modèle de Black-Scholes, et que celui-ci suppose que la volatilité est constante, nous allons tout d'abord nous intéresser à celle-ci. Les deux principaux estimateurs de ce paramètre sont la volatilité historique et la volatilité implicite.
 
 \subsubsection{Volatilité historique}
 Elle est mesurée par l'écart-type du rendement du sous-jacent, durant la période qui précède l'émission du produit structuré. En rapprochant les observations du cours du sous-jacent, on peut donc estimer la volatilité instantanée.\\
 
 On peut donc considérer la racine carrée de la variance empirique sans biais comme son estimation :\\
-$$ \widehat{\sigma^{2}} = \frac{1}{n-1} \sum_{i=1}^n (ln(\frac{S_{t}}{S_{t-1}}) - \widehat{\mu})^{2}    $$ \\
+$$ \widehat{\sigma^{2}} = \frac{1}{n-1} \sum_{i=1}^n (ln(\frac{S_{i}}{S_{i-1}}) - \widehat{\mu})^{2} $$ \\
 avec \\
-$$ \widehat{\mu} = \frac{1}{n} \sum_{i=1}^n ln(\frac{S_{t}}{S_{t-1}})  $$ \\
+$$ \widehat{\mu} = \frac{1}{n} \sum_{i=1}^n ln(\frac{S_{i}}{S_{i-1}}) $$ \\
 où $n$ est le nombre d'observations, $S_{t}$ le cours du sous-jacent à l'instant $t$. \\ \\
 Par convention, l'unité de temps pour mesurer les paramètres est l'année. Il faut donc annualiser la volatilité calculée, en supposant que le nombre de jours ouvrés est 252 jours : \\
-$$ \sigma_{an} = \widehat{\sigma} \sqrt{\frac{252}{\Delta t}}  $$ \\
+$$ \sigma_{an} = \widehat{\sigma} \sqrt{\frac{252}{\Delta t}} $$ \\
 avec $\Delta t $ l'intervalle de temps entre deux observations consécutives.\\ \\
 Concernant le nombre d'observations, d'après Hull, utiliser les données des cours les plus récents sur un durée de l'ordre de grandeur de la maturité du produit à modéliser. En effet, utiliser des observations trop éloignées va biaiser l'estimation, de même qu'avoir trop peu d'observations. Ici, il faudra donc se baser sur les données des six années précedant la mise sur le marché du produit Playlist.\\
 
@@ -785,7 +785,7 @@ $$ dr_{t} = a(b-r_{t})dt + \sigma \sqrt{r_{t}} dW_{t} $$
 avec a, b, $\sigma$,et $dW_{t}$ similaires au modèle de Vasicek.\\
 La principale remarque qu'on peut faire sur ce modèle est que le taux court n'est pas un processus gaussien, ce qui complexifie les calculs. \\ \\
 
-Le \textbf{modèle de Black-Derman-Toy}  est un modèle log-normal :
+Le \textbf{modèle de Black-Derman-Toy} est un modèle log-normal :
 $$ d(logr_{t}) = (b_{t} - a_{t} logr_{t})dt + \sigma dW_{t} $$
 
 Le problème avec les modèles log-normaux est qu'on observe des proportions trop élevées de taux importants pour des horizons lointains, par rapport à la réalité.\\ \\
@@ -801,9 +801,9 @@ Ces modèles ont la particularité d'être simples, cependant il est généralem
 \subsubsection{Modèles à deux facteurs}
 Le premier modèle bi-factoriel que nous allons présenter est le \textbf{modèle de Hull et White}. Ici on prend pour hypotèse que les coefficients varient en fonction du temps, et que les taux courts et taux longs suivent les deux dynamiques suivantes : \\
 Taux court
-$$ dr_{t} = K_{r}(l_{t} - r_{t})dt + \sigma_{r}dW_{r,t}  $$ \\
+$$ dr_{t} = K_{r}(l_{t} - r_{t})dt + \sigma_{r}dW_{r,t} $$ \\
 Taux long
-$$ dl_{t} = K_{l}(\mu_{l} - l_{t})dt + \sigma_{l}dW_{l,t}  $$ \\
+$$ dl_{t} = K_{l}(\mu_{l} - l_{t})dt + \sigma_{l}dW_{l,t} $$ \\
 avec
 \begin{itemize}
 \item[•] $K_{r}$ et $K_{l}$ les vitesses de retour à la moyenne pour les taux courts et taux longs
@@ -846,7 +846,7 @@ La quasi-totalité des modèles que nous avons présenté permettent d'obtenir l
 On suppose qu'on a la dynamique du taux court $r_{t}$. Le prix des zéro-coupon d'échéance T peut s'exprimer sous la forme \\
 $$ P(t,T)=A(t,T)e^{-B(t,T)r_{t}} $$ \\
 avec A et B qui diffèrent selon les modèles que l'on utilise. On sait de plus que \\
-$$ P(t,T)= e^{-R(t,T)(T-t)}  $$ \\
+$$ P(t,T)= e^{-R(t,T)(T-t)} $$ \\
 avec R(t,T) le taux zéro-coupon d'échéance T. On peut récupérer R(t,T) en résolvant l'équation suivante : \\
 $$ R(t,T)=-\frac{1}{T-t}ln(P(t,T)) $$ \\
 
@@ -916,6 +916,39 @@ $$ \Phi_t = \frac{\partial v(t,S_t)}{\partial S} $$
 $$ rv(t,S_t) = \frac{\partial v}{\partial t} + \mu S  \frac{\partial v}{\partial S} +  \frac{1}{2} \sigma^2 S^2 \frac{\partial^2 v}{\partial S^2} $$ \\
 Si une fonction quelconque $ v(t,S_t) $ satisfait la dernière équation, et c'est le cas de la fonction v donnée plus haut, alors le portefeuille $ X_t $ avec $ \Phi_t = \frac{\partial v(t,S_t)}{\partial S} $ et $ \Phi_{t}^0  = \frac{1}{S_{t}^0} (v(t,S_t) - \Phi_t S_t )$ d'actif sans risque est autofinancé, et réplique le produit financier payant $ h(S_T) $ à l'échéance T.  \\
 C'est ce qu'on appelle la couverture en Delta.
+
+\section{Simulation de la couverture}
+La répartition du \textit{P&L} (Profit and Loss, ie erreur de couverture) joue un rôle central. Un modèle est jugé sur sa bonne capacité à couvrir les produits exotiques.\\
+Considérons un actif dont la valeur du sous-jacent est noté $S_{t}$. Son évolution se fait sur une grille de temps \{$t_{0}$,...,$t_{N}$\} de pas $T/N$ où ${t_{0}$ = $0$, le début de l'option et ${t_{N}$ = $T$, la maturité de l'option sur le sous-jacent.\\
+La méthode \lstinline!simul_market! de la classe \lstinline!BS! renvoi une simulation du marché avec un nombre de dates $H$. On considère la grille de discrétisation de pas $T/H$ \{$\tau_{0}$,...,$\tau_{N}$\} \supset  \{$t_{0}$,...,$t_{N}$\} où $\tau_{0}$ = $0$ et $\tau_{N}$ = $T$.\\
+Le long de cette trajectoire, la construction du portefeuille de couverture se fait par le calcul du prix $p_{i}$ et du delta $\delta_{i}$ à chaque date $\tau_{i}$. L'évolution de la part investie au taux sans risque s'écrit:\\
+\begin{equation} % variante :equation*
+  \left\{%
+     \vspace{-3ex}
+        \begin{align}%
+          & V_{0} = p_{0}-\delta_{0}.S_{0} \\
+          & V_{i} = V_{i-1}*\exp^{\frac{r*T}{H}}-(\delta_{i}-\delta_{i-1}).S_{\tau_{i}}, \hspace{7 mm}  i=1,...,H 
+        \end{align}%
+ \right.
+\end{equation}
+
+L'erreur de couverture est donnée par:
+ $$P\&L = V_{H}+\delta_{H}.S_{\tau_{H}}-\lstinline!payoff!$$
+
+Il s'agit à présent de déterminer les propriétés statistiques de l'erreur de couverture. Pour cette étude, on se place dans le cadre de l'étude des actifs actualisés, ce qui revient a considérer $$r=0$$.
+D'après la formule précédente, on a :
+$$dP\&L_{t}= (\frac{\partial C(t, S_{t})}{\partial S} -\frac{\partial C(\tau_{[t/H]}, S_{\tau_{[t/H]})}}{\partial S})dS_{t}$$
+
+En notant $$ P\&L_{t}^{*} = \frac{1}{\sqrt{h}} P\&L_{t} $$ . Il est possible de démontrer que le processus converge en distribution vers un autre processus.
+$$P\&L_{t}^{*} \underset{h\rightarrow \infty}{\overset{d}{\rightarrow}}  \frac{1}{\sqrt{2}}(\int_{0}^t \frac{\partial^2 C(u, S_{u})}{\partial S^{2}} \sigma^2 S_{u}^2 dW_{u}^{'})$$
+Le mouvement brownien $W^{'}$ étant indépendant de $W$, régissant la dynamique de $S$.
+La démonstration de ce résultat se trouve dans l'article EVALUATING HEDGING ERRORS: AN ASYMPTOTIC APPROACH de Takaki Hayashi Per A. Mykland.\\
+
+On en retient plusieurs élément : \\
+L’erreur de couverture est proportionnelle à la racine du pas $T/H$, elle est également  d’autant plus grande que le gamma
+de l’option est grand. Il s'agit d'une loi gaussienne.\\
+
+Il est à présent nécessaire de confronter les résultats obtenus à partir de notre pricer.
 
 \subsection{Couverture avec taux de changes}
 
@@ -1142,6 +1175,155 @@ Une pop up s'affichera alors pour confirmer la bonne prise en compte de l'inform
 %Le bloc situé en bas à droite permettra plutôt de voir l'évolution de la performance du produit ainsi on peut choisir la date de début ainsi que la date de fin, ce qui va nous permettre de visualiser l'évolution des différents indices concernés sur cette plage. Juste à côté nous afficherons la performance du fond sur cette plage.\\
 %Enfin le dernier bloc nous permet de choisir le modèle d'évolution des sous-jacents ce qui aura pour conséquence de modifier l'évolution des sous-jacents et ainsi la couverture proposée juste en dessous.
 %La couverture sera décrite par le nombre d'action vendue, correspondant aux nombres de parts vendues et le nombre de fois que l'on doit acheté chacun des indices. La couverture théorique donnera une composition du portefeuille précise, il sera proposé au gestionnaire une composition traitée en amont permettant de satisfaire aux parts minimales des actifs dans lesquelles il est possible d'investir. Un traitement optimisé de ces approximations pourra être ajouté en extension.  On en déduiera ainsi la valeur liquidative en dessous.
+\section{Moteur de calcul C++}
+Le but de cette partie est d'expliquer la structure de l'outil permettant de calculer le prix de \textbf{Playlist 2}, le delta ainsi que le portefeuille de couverture par différente méthode de calcul et de simulation.\\
+La section 1.1 présente le problème auquel on s'intéresse et les motivations pratiques. La section 1.2 présente l'architecture du moteur de calcul de notre outil. La section 1.3 explique dans le cadre du modèle de Black Scholes les différents algorithmes utilisés pour le calcul du prix, du delta et de la couverture.
+
+\subsection{Motivations pratiques}
+Durant l'ensemble de la description  des algorithmes utilisés dans notre outils nous noterons $S = (S_{t}, t \geq 0)$ la dynamique du sous-jacent et $\mathcal{F}$ sa filtration naturelle. Pour simplifier les choses, nous allons supposer que le payoff du produit s'écrit sous la forme:
+$$\phi(S_{t_{0}},...,S_{t_{N}}) $$
+où $0 = t_{0} \leq ... \leq t_{N} = T$ est une grille de dates de constatations non-forcément équi-réparties.\\\\
+Notons $r$ le taux d'intérêt instantané que nous supposerons pour l'instant constant. Le prix à l'instant $0 \leq t \leq T$, avec $t_{i} \leq t \leq t_{i+1}$ du produit est donné par:
+$$\upsilon(t, S_{t_{0}},...,S_{t_{N}}) = e^{-r(T-t)}\mathbb{E}(\phi(S_{t_{0}},...,S_{t_{N}})\mid\mathcal{F})$$
+
+\subsection{Architecture}
+% Image de l'architecture + commentaires
+
+\begin{center}
+\includegraphics[scale=0.3]{Img/Architecture.png}
+\end{center}
+
+
+\subsection{Modèle de Black-Scholes}
+Considérons $D$ indices évoluant chacun selon le modèle de Black Scholes et corrélés entre eux. La dynamique $S$ de ces $D$ indices s'écrit:
+$$ S_{t}^{d} = S_{0}^{d}e^{(r-\frac{(\sigma^{d})^{2}}{2})t+\sigma^{d}B_{t}^{d}}, \hspace{7 mm} d=1,...D$$
+où $r$ est le taux d’intérêt, $(\sigma^{1},..., \sigma^	{d})$ sont les volatilités de chacun des indices que nous supposerons constant et $B = (B^{1},...,B^{D})^{T}$ est un vecteur de $D$ mouvements Browniens standards et réels de matrice de corrélation $Cov(B_{t},B_{t}) = \Gamma t$ définie par $Cov(B^{i}_{t} ,B^{j}_{t} ) = \Gamma_{ij}t$ avec $\Gamma_{ij} = \rho$ pour tout $i \neq j$ et $\Gamma_{ii} = 1$. Le paramètre $\rho$ doit être choisi dans $] -\frac{1}{D-1} , 1[$ de telle sorte que $\Gamma$ soit définie positive pour assurer que le marché soit complet. Attention $B$ n’est pas un mouvement Brownien standard à valeurs dans $\mathbb{R}^{D}$ car ses composantes ne sont pas indépendantes mais on peut le réécrire en utilisant un mouvement Brownien standard à valeurs dans $\mathbb{R}^{D}$, noté dans la suite $W = (W^{1}, . . . ,W^{d})^{T}$ et qui sera vu comme un vecteur colonne. Ainsi on a l’égalité en loi $(B_{t}, t \geq 0) = (LW_{t}, t \geq 0)$ pour tout $t \geq 0$ où $L$ est la factorisée de Cholesky de la matrice $\Gamma$, .i.e $\Gamma = L'L$ avec $L$ triangulaire inférieure. L’équation de la dynamique se réécrit alors:
+$$ S_{t}^{d} = S_{0}^{d}e^{(r-\frac{(\sigma^{d})^{2}}{2})t+\sigma^{d}L^{d}W_{t}}, \hspace{7 mm} d=1,...D $$
+où $L^{d}$ est la ligne $d$ de la matrice $L$. Ainsi la quantité $L^{d}W_{t}$ est bien un réel. De cette équation, on remarque facilement que l’on peut déduire:
+$$ S_{t}^{d} = S_{0}^{d}e^{(r-\frac{(\sigma^{d})^{2}}{2})t+\sigma^{d}L^{d}(W_{t_{i+1}}-W_{t_{i}})}, \hspace{7 mm} d=1,...D $$
+$$ S_{t}^{d} = S_{0}^{d}e^{(r-\frac{(\sigma^{d})^{2}}{2})t+\sigma^{d}\sqrt{(t_{i+1}-t_{i})}L^{d}G_{i+1}}, \hspace{7 mm} d=1,...D $$
+
+où la suite $(G_{i})_{i \geq 1}$ une suite i.i.d de vecteurs gaussiens centrés de matrice de covariance identité. Ainsi pour simuler le processus $S$ sur la grille $(t_{i})_{i=0,...,N}$ il suffit de savoir simuler des vecteurs gaussiens centrés de matrice de covariance identité.\\
+
+\subsubsection{Prix}
+\textbf{Prix à l'instant 0}\\
+Le prix à l'instant 0 est donné
+$$ \upsilon(0, S_{0}) = e^{-rT}\mathbb{E}(\phi(S_{t_{0}},...,S_{t_{N}})$$
+On approche $\upsilon(0, S_{0})$, grâce à une méthode de Monte Carlo, par
+$$ e^{-rT}\frac{1}{M}\sum_{j=1}^{M} \phi(S_{t_{0}}^{(j)},...,S_{t_{N}}^{(j)})$$
+où les $N$-uplets $(S_{t_{0}}^{(j)},...,S_{t_{N}}^{(j)})$ pour $j=1,...,M$ sont i.i.d selon la loi de $(S_{t_{0}},...,S_{t_{N}})$.\\
+
+\textbf{Prix à l'instant $t>0$}\\
+Pour calculer le prix à l'instant $t$, il faut calculer une espérence conditionnelle. Lorsque cela est possible, une manière de traiter le calcul de cette espérence conditionnelle est de réécrire le sous-jacent $S_{t+u}$ à l'instant $t+u$ pour $u>0$ en fonction de la valeur $S_{t}$ d’un sous–jacent à l’instant $t$ et d’une quantité indépendante de $\mathcal{F}_{t}$:
+$$ S_{t+u} = S_{t}e^{(r-\frac{\sigma^{2}}{2})u+\sigma(B_{t+u}-B_{t})} = S_{t}\tilde{S_{u}}$$
+où $\tilde{S_{u}}$ est \textbf{indépendant} de $\mathcal{F}_{t}$ ie indépendant du passé jusqu'à $t$ inclus et la dynamique de $\tilde{S}$ est donnée par
+$$ \tilde{S_{u}} = e^{(r-\frac{\sigma^{2}}{2})u+\sigma\tilde{B_{u}}}$$
+où $\tilde{B}$ est un mouvement Brownien réel standard indépendant de $\mathcal{F_{t}}$. On a donc:
+$$ S_{t_{i+1}} \stackrel{Loi}{=} S_{t_{i}}e^{(r-\frac{\sigma^{2}}{2})(t_{i+1}-t_{i})+\sigma\sqrt{t_{i+1}-t_{i}}G_{i+1}} $$
+où $(G_{i+1})_{i\geq0}$ est une suite i.i.d selon la loi normale centrée réduite.
+
+Ainsi le prix à l’instant t se réécrit
+$$\upsilon(t, S_{t_{0}},..., S_{t_{i}},S_{t}) = e^{-r(T-t)}\mathbb{E}((\phi(s_{t_{0}},...,s_{t_{i}},S_{t_{i+1}},...,S_{t_{N}}))$$
+
+Les lettres s minuscules désignent des variables déterministes. On peut alors approcher le prix
+à l’instant t par la moyenne Monte Carlo suivante:
+$$ e^{-r(T-t)}\frac{1}{M}\sum_{j=1}^{M} \phi(s_{t_{0}},...,s_{t_{i}},S_{t_{i+1}}^{(j)}...,S_{t_{N}}^{(j)})$$
+Les quantités $(s_{t_{0}},s_{t_{1}},...,s_{t_{i}},s_{t})$ représentent les valeurs réellement observées jusqu’à l’instant $t$ sur la trajectoire du sous-jacent sur laquelle on souhaite calculer le prix du produit. D’un point du vue pratique, les valeurs $(s_{t_{0}},s_{t_{1}},...,s_{t_{i}},s_{t})$ sont les cotations du sous-jacent observées sur le marché jusqu’à la date $t$.
+
+\subsubsection{Delta}
+
+Pour construire notre portefeuille de couverture, nous appliquerons une \textit{couverture en delta}. Ce portefeuille est entièrement déterminé par la quantité d'actifs risqués à posséder à chaque instant $t$ qui est donnée par la dérivée du prix par rapport à $S_{t}$, ie
+$$ \frac{\delta\upsilon(t, S_{t_{0}},.., S_{t_{i}}, S_{t})}{\delta S_{t}} $$
+Cette quantité est connue sous le nom de delta du produit et sera approché par une méthode de différence finies associé à une méthode de Monte Carlo:
+$$ \frac{e^{-r(T-t)}}{M2s_{t}h}\sum_{j=1}^{M}(\phi(s_{t_{0}},...,s_{t_{i}},(1+h)S_{t_{i+1}},...,(1+h)S_{t_{N}})-\phi(s_{t_{0}},...,s_{t_{i}},(1-h)S_{t_{i+1}},...,(1-h)S_{t_{N}}))$$
+Pour un produit faisant intervenir $D$ sous-jacents (4 dans notre cas), son portefeuille de couverture contient les $D$ actifs et la quantité d'actifs $d$ à détenir à l'instant $t$ est donnée par:
+$$ \frac{\delta\upsilon(t, S_{t_{0}}^{d},...,S_{t_{i}}^{d},S_{t}^{d})}{\delta S_{t}^{d}} $$
+
+\subsubsection{Couverture}
+
+La répartition du \textit{P\&L} (Profit and Loss, ie erreur de couverture) joue un rôle central. Un modèle est jugé sur sa bonne capacité à couvrir les produits exotiques.\\
+Considérons un actif dont la valeur du sous-jacent est noté $S_{t}$. Son évolution se fait sur une grille de temps {$t_{0}$,...,$t_{N}$} de pas $T/N$ où ${t_{0}}$ = $0$, le début de l'option et ${t_{N}}$ = $T$, la maturité de l'option sur le sous-jacent.\\
+La méthode \lstinline!simul_market! de la classe \lstinline!BS! renvoi une simulation du marché avec un nombre de dates $H$. On considère la grille de discrétisation de pas $\frac{T}{H}$ avec
+$$(\tau_{0},...,\tau_{N}) \supset (t_{0},...,t_{N})$$ 
+où
+ $\tau_{0}$ = $0$ et $\tau_{N}$ = $T$.\\
+ 
+Le long de cette trajectoire, la construction du portefeuille de couverture se fait par le calcul d'un portefeuille constitué d'actifs sans risques et d'un portefeuille d'actifs risqués.\\
+Soit le prix $p_{i}$, $\delta_{i}^{0}$ la part d'actif non risqué, $\delta_{i}^{1}$ la part d'actif risqué et $\delta_{i}$ le delta à chaque date $\tau_{i}$. \\
+La part en actifs risqué est calculée à partir de l'achat du sous-jacent de l'option. L'évolution du portefeuille d'actifs risqués s'écrit:\\
+$$
+     \vspace{-3ex}
+        \begin{aligned}
+          & \delta^{1}_{i} = \delta_{i}.S_{\tau_{i}}, \hspace{7 mm}  i=0,...,H 
+        \end{aligned}
+ $$
+\\
+La part en actifs sans risques est calculée à partir de la vente à l'instant 0 de l'option et de la composition du portefeuille d'actifs risqués. L'évolution du portefeuille d'actifs sans risques s'écrit:\\
+$$
+  \left\{%
+     \vspace{-3ex}
+        \begin{aligned}
+          & \delta_{0}^{0} = p_{0}-\delta_{0}.S_{0} \\
+          & \delta_{i}^{0} = \delta_{i-1}^{0}*\exp^{\frac{r*T}{H}}-(\delta_{i}-\delta_{i-1}).S_{\tau_{i}}, \hspace{7 mm}  i=1,...,H 
+        \end{aligned}
+ \right.
+ $$
+\\
+
+Le portefeuille de couverture est donné par la somme des deux portefeuilles:
+$$
+	\vspace{-3ex}
+        \begin{aligned}
+          & V^{hedge}_{i} = \delta^{0}_{i} + \delta^{1}_{i}, \hspace{7 mm}  i=0,...,H 
+        \end{aligned}
+$$
+\\
+L'erreur de couverture est donnée par:
+ $$P\&L = V^{risk free}_{H}+\delta_{H}.S_{\tau_{H}}-payoff$$
+
+\subsection{Algorithme du payoff de \textbf{Playlist 2}}
+Le produit \textbf{Playlist 2} permet au porteur de recevoir à l'une des Dates d'Echéances Anticipées ou à la Date d'Echéance Maximum, la Valeur Liquidative de Référence majorée d'un Gain Final compris entre 0\% et 27\%.\\
+Le Gain Final est conditionné à l'évolution des 4 Indices du Panier. Ainsi, chaque année, aux Dates de Constatations Intermédiaires et à la Date de Constatation Finale, si au moins 3 des 4 indices du Panier ont progressé de 10\% ou plus, par rapport à leur Niveau d'Origine, un Gain Annuel de 4,5\% est acquis. Le Gain Final est égale à la somme des Gains Annuels.\\
+De plus, la formule peut s'arrêter par anticipation. Si à l'un des deux premières Dates de Constatations Intermédiaires, 3 des 4 Indices du Panier ont progressé de 20\% ou plus par rapport à leur Niveau d'Origine, le porteur recevra la Valeur Liquidative de Référence majorée du Gain Final.\\
+
+\begin{verbatim}
+
+payoff(var ValNom, var temps){
+   Pour les dates t = 1 an et t = 2 ans
+      compteur_10 = 0
+      compteur_20 = 0
+   		
+      Pour chaque Indice du Panier
+         si (valeur_indice[t]/valeur_indice[0] - 1) > 10%
+            compteur_10++
+   				
+            si (Valeur_indice[t]/Valeur_indice[0] - 1) > 20%
+               compteur_20++
+   				
+               si compteur_20 > 2
+                  gain += 4,5%
+                  retourne exp(-r*t)*150*(1+gain)
+   					
+            si compteur_10 > 2
+               gain += 4,5%
+               stop boucle sur indice
+   				
+   				
+   Pour les date t = 3 an à t = 6 ans
+      compteur_10 = 0;
+   		
+      Pour chaque Indice du Panier
+         si (valeur_indice[t]/valeur_indice[0] - 1) > 10%
+            compteur_10++;
+   				
+            si compteur_10 > 2
+               gain += 4,5%
+               stop boucle sur indice
+
+   retourne exp(-r*t)*150*(1+gain)
+}
+\end{verbatim}
+
 
 \section{Amélioration : Le Gamma}
 
@@ -1228,40 +1410,6 @@ $$ \Gamma = \frac{C(S+ \epsilon )-2 C(S) + C(S-\epsilon)}{\epsilon^2} $$
 Nous avons voulu intégrer totalement à notre produit la  couverture en Delta-Gamma neutre. \\
 \indent La première étape était d'implémenter une fonction qui calcule le Gamma avec la méthode des différences finies. Nous l'avons fait et avons testé cette méthode à l'aide d'un pricer Black-Scholes d'options européennes classique. En effet, nous pouvions vérifier nos calculs à l'aide de la formule fermée présentée plus haut. \\
 \indent Une fois que la méthode avait été implémentée et testée, nous avons voulu l'intégrer au logiciel. L'étape suivant aurait été d'intégrer la couverture en Gamma neutre mais nous n'avons pas eu le temps de le terminer totalement, et il y avait peu d'intéret à afficher uniquement le Gamma à un gestionnaire.
-
-
-\section{Simulation de la couverture}
-La répartition du \textit{P&L} (Profit and Loss, ie erreur de couverture) joue un rôle central. Un modèle est jugé sur sa bonne capacité à couvrir les produits exotiques.\\
-Considérons un actif dont la valeur du sous-jacent est noté $S_{t}$. Son évolution se fait sur une grille de temps \{$t_{0}$,...,$t_{N}$\} de pas $T/N$ où ${t_{0}$ = $0$, le début de l'option et ${t_{N}$ = $T$, la maturité de l'option sur le sous-jacent.\\
-La méthode \lstinline!simul_market! de la classe \lstinline!BS! renvoi une simulation du marché avec un nombre de dates $H$. On considère la grille de discrétisation de pas $T/H$ \{$\tau_{0}$,...,$\tau_{N}$\} \supset  \{$t_{0}$,...,$t_{N}$\} où $\tau_{0}$ = $0$ et $\tau_{N}$ = $T$.\\
-Le long de cette trajectoire, la construction du portefeuille de couverture se fait par le calcul du prix $p_{i}$ et du delta $\delta_{i}$ à chaque date $\tau_{i}$. L'évolution de la part investie au taux sans risque s'écrit:\\
-\begin{equation} % variante :equation*
-  \left\{%
-     \vspace{-3ex}
-        \begin{align}%
-          & V_{0} = p_{0}-\delta_{0}.S_{0} \\
-          & V_{i} = V_{i-1}*\exp^{\frac{r*T}{H}}-(\delta_{i}-\delta_{i-1}).S_{\tau_{i}}, \hspace{7 mm}  i=1,...,H 
-        \end{align}%
- \right.
-\end{equation}
-
-L'erreur de couverture est donnée par:
- $$P\&L = V_{H}+\delta_{H}.S_{\tau_{H}}-\lstinline!payoff!$$
-
-Il s'agit à présent de déterminer les propriétés statistiques de l'erreur de couverture. Pour cette étude, on se place dans le cadre de l'étude des actifs actualisés, ce qui revient a considérer $$r=0$$.
-D'après la formule précédente, on a :
-$$dP\&L_{t}= (\frac{\partial C(t, S_{t})}{\partial S} -\frac{\partial C(\tau_{[t/H]}, S_{\tau_{[t/H]})}}{\partial S})dS_{t}$$
-
-En notant $$ P\&L_{t}^{*} = \frac{1}{\sqrt{h}} P\&L_{t} $$ . Il est possible de démontrer que le processus converge en distribution vers un autre processus.
-$$P\&L_{t}^{*} \underset{h\rightarrow \infty}{\overset{d}{\rightarrow}}  \frac{1}{\sqrt{2}}(\int_{0}^t \frac{\partial^2 C(u, S_{u})}{\partial S^{2}} \sigma^2 S_{u}^2 dW_{u}^{'})$$
-Le mouvement brownien $W^{'}$ étant indépendant de $W$, régissant la dynamique de $S$.
-La démonstration de ce résultat se trouve dans l'article EVALUATING HEDGING ERRORS: AN ASYMPTOTIC APPROACH de Takaki Hayashi Per A. Mykland.\\
-
-On en retient plusieurs élément : \\
-L’erreur de couverture est proportionnelle à la racine du pas $T/H$, elle est également  d’autant plus grande que le gamma
-de l’option est grand. Il s'agit d'une loi gaussienne.\\
-
-Il est à présent nécessaire de confronter les résultats obtenus à partir de notre pricer.
 
 
 \end{document}
