@@ -19,6 +19,10 @@
 				<td>
 					<asp:Chart ID="Chart1" runat="server" Height="600px" Width="800px" Style="margin-left: 20%;"
 						EnableViewState="true">
+                        <Titles>
+                        <asp:Title Font="Times New Roman, 12pt, style=Bold" Name="Title1" Text="Portefeuille de couverture">
+                    </asp:Title>
+                        </Titles>
 						<Series>
 							<asp:Series ChartType="Line" Name="1">
 							</asp:Series>
@@ -40,6 +44,11 @@
 			</tr>
 		</table>
         <asp:Chart ID="Chart4" runat="server" Width="400px" style="display:inline;margin-left:200px;">
+        <Titles>
+        <asp:Title Font="Times New Roman, 12pt, style=Bold" Name="Title1" 
+            Text="Investissement à réaliser en euro">
+        </asp:Title>
+        </Titles>
             <Series>
                 <asp:Series Name="Parts" XValueMember="Indices" YValueMembers="Parts" 
                     IsVisibleInLegend="true" IsValueShownAsLabel="true" ChartType="Pie" ToolTip="Pourcentage des actifs risqués #PERCENT">
@@ -62,6 +71,10 @@
             </Legends>
         </asp:Chart>
         <asp:Chart ID="Chart6" runat="server" Width="800px">
+        <Titles>
+        <asp:Title Font="Times New Roman, 12pt, style=Bold" Name="Title1" Text="Poids des actifs dans le portefeuille risqué">
+        </asp:Title>
+        </Titles>
             <Series>
                 <asp:Series Name="FTSE 100" ChartType="StackedColumn100" XValueMember="date" 
                     YValueMembers="Column1" Color="Cyan" IsVisibleInLegend="true" ToolTip="Le #VALX, le FTSE réprésentait #PERCENT{P} du portefeuille risqué" >

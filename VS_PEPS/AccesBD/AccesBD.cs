@@ -46,6 +46,7 @@ namespace AccesDB
             if (Asset.Equals("FTSE")){
                 val = (from nam in myDbdc.PepsDB
                                 where DepDate <= nam.Date && end >= nam.Date
+                                orderby nam.Date
                                 select nam.FTSE).ToArray();
 
             }
@@ -53,36 +54,42 @@ namespace AccesDB
             {
                 val = (from nam in myDbdc.PepsDB
                        where DepDate <= nam.Date && end >= nam.Date
+                       orderby nam.Date
                        select nam.S_P).ToArray();
             }
             else if (Asset.Equals("NIKKEI"))
             {
                 val = (from nam in myDbdc.PepsDB
                        where DepDate <= nam.Date && end >= nam.Date
+                       orderby nam.Date
                        select nam.NIKKEI).ToArray();
             }
             else if (Asset.Equals("EUROSTOXX"))
             {
                 val = (from nam in myDbdc.PepsDB
                        where DepDate <= nam.Date && end >= nam.Date
+                       orderby nam.Date
                        select nam.EUROSTOXX).ToArray();
             }
             else if (Asset.Equals("Eur/JPY"))
             {
                 val = (from nam in myDbdc.PepsDB
                        where DepDate <= nam.Date && end >= nam.Date
+                       orderby nam.Date
                        select nam.Eur_JPY).ToArray();
             }
             else if (Asset.Equals("Eur/USD"))
             {
                 val = (from nam in myDbdc.PepsDB
                        where DepDate <= nam.Date && end >= nam.Date
+                       orderby nam.Date
                        select nam.Eur_USD).ToArray();
             }
             else if (Asset.Equals("Eur/GBP"))
             {
                 val = (from nam in myDbdc.PepsDB
                        where DepDate <= nam.Date && end >= nam.Date
+                       orderby nam.Date
                        select nam.Eur_GBP).ToArray();
             }
             int borne;
@@ -121,7 +128,8 @@ namespace AccesDB
         public double getCurrentRisk(DateTime Date)
         {
             string[] tmpRisk = (from nam in myDbdc.Component
-                                    where nam.Date >=Date.AddDays(-10)
+                                where nam.Date >= Date.AddDays(-10) && nam.Date <= DateTime.Now
+                                    orderby nam.Date
                                      select nam.Valrisk).ToArray();
 
             try
@@ -134,10 +142,28 @@ namespace AccesDB
             }
         }
 
+        public double getCurrentValLiq(DateTime Date)
+        {
+            string[] tmpRisk = (from nam in myDbdc.Component
+                                where nam.Date >= Date.AddDays(-10) && nam.Date <= Date
+                                orderby nam.Date
+                                select nam.ValLiquidative).ToArray();
+
+            try
+            {
+                return double.Parse(tmpRisk[tmpRisk.Length - 1]);
+            }
+            catch
+            {
+                return 0;
+            }
+        }
+
         public double getCurrentRiskFree(DateTime Datee)
         {
             string[] tmpRiskfree = (from nam in myDbdc.Component
-                                    where nam.Date >= Datee.AddDays(-10)
+                                    where nam.Date >= Datee.AddDays(-10) && nam.Date <= DateTime.Now
+                                    orderby nam.Date
                                 select nam.Valriskfree).ToArray();
 
             try
@@ -155,7 +181,8 @@ namespace AccesDB
             double[] Delta = new double[4];
             //Delat du FTSE
             String[] tmpDeltaFTSE = (from nam in myDbdc.Component
-                                     where nam.Date >= Date.AddDays(-10)
+                                     where nam.Date >= Date.AddDays(-10) && nam.Date <= DateTime.Now
+                                     orderby nam.Date
                                      select nam.DeltaFTSE).ToArray();
             try
             {
@@ -167,7 +194,8 @@ namespace AccesDB
             }
             //Delta du S&P
             String[] tmpDeltaSP = (from nam in myDbdc.Component
-                                   where nam.Date >= Date.AddDays(-10)
+                                   where nam.Date >= Date.AddDays(-10) && nam.Date <= DateTime.Now
+                                   orderby nam.Date
                                      select nam.DeltaS_P).ToArray();
 
             try
@@ -180,7 +208,8 @@ namespace AccesDB
             }
             //Delta du Nikkei
             String[] tmpDeltaNikkei = (from nam in myDbdc.Component
-                                       where nam.Date >= Date.AddDays(-10)
+                                       where nam.Date >= Date.AddDays(-10) && nam.Date <= DateTime.Now
+                                       orderby nam.Date
                                    select nam.DeltaNikkei).ToArray();
 
             try
@@ -193,7 +222,8 @@ namespace AccesDB
             }
             //Delta du Eurostoxx
             String[] tmpDeltaEuro = (from nam in myDbdc.Component
-                                     where nam.Date >= Date.AddDays(-10)
+                                     where nam.Date >= Date.AddDays(-10) && nam.Date <= DateTime.Now
+                                     orderby nam.Date
                                        select nam.DeltaEuro).ToArray();
             try
             {
@@ -272,6 +302,7 @@ namespace AccesDB
             double[] spot = new double[4];
             var val = (from nam in myDbdc.PepsDB
                        where nam.Date > DateTime.Now.AddDays(-10)
+                       orderby nam.Date
                        select new { nam.FTSE, nam.S_P, nam.NIKKEI, nam.EUROSTOXX, nam.Date }).ToArray();
             spot[0] = double.Parse(val[val.Length - 1].FTSE);
             spot[1] = double.Parse(val[val.Length - 1].S_P);
@@ -458,8 +489,13 @@ namespace AccesDB
                     dic[4, cpt] = comp.PartEuro;
                     cpt++;
                 }
-                for (int i = 0; i < val2.Length/pas; i++)
+                for (int i = 0; i < val2.Length/pas+1; i++)
                 {
+                    if (i == 184)
+                    {
+                        int a;
+                    }
+
                     dic[5, i] = val2[i * pas].FTSE;
                     dic[6, i] = val2[i * pas].S_P;
                     dic[7, i] = val2[i * pas].NIKKEI;
@@ -474,6 +510,19 @@ namespace AccesDB
         {
             var val = (from nam in myDbdc.Component orderby nam.Date select nam.Date).ToArray();
             dat = val[val.Length - 1].Date;
+        }
+
+        public void getLastPepDate(ref DateTime LastDat)
+        {
+            var val = (from nam in myDbdc.PepsDB orderby nam.Date select nam.Date).ToArray();
+            if (val.Length != 0)
+            {
+                LastDat = val[val.Length - 1].AddDays(-7).Date;
+            }
+            else
+            {
+                LastDat = new DateTime(1999, 1, 4);
+            }
         }
     }
 }

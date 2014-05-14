@@ -38,13 +38,18 @@ namespace WebApp
                 //DateTime DateDeb = new DateTime(2010, 4, 29);
                 DateTime DateDeb = new DateTime(1, 1, 1);
                 acces.getLastCompoDate(ref DateDeb);
+                bool att = false;
+                if (DateDeb.CompareTo(Datee) < 0)
+                {
+                    DateDeb = Datee;
+                    att = true;
+                }
+
                 DateTime DateFin = DateTime.Now;
                 TimeSpan difference = Maturity.Date - Datee.Date;
 
                 rebalancement = double.Parse(estimate_time.Text.ToString());
                 wrap = new WrapperClass(4, 60);
-                //acces.DeleteCompo(new DateTime(2010, 4, 29), new DateTime(2016, 6, 29));
-                //acces.DeletePeps(DateTime.Now.Date.AddHours(1), new DateTime(2016, 6, 29));
 
                 //On fait l'approximation que tout les spots commençent à la même date et on ne tient pas compte des paramètres pour le moment
                 cp.param(600, DateDeb.AddDays(-600));
@@ -64,7 +69,11 @@ namespace WebApp
 
                 //Traitement du cas où la date de départ est celle de début du produit
                 int taille = ((((DateFin.Date - DateDeb.Date).Days) / pas) + 1);
-                DateDeb = DateDeb.AddDays(pas);
+                if (DateDeb.CompareTo(Datee) >= 0 && !att)
+                {
+                    DateDeb = DateDeb.AddDays(pas);
+                }
+                att = false;
                 while (DateFin.CompareTo(DateDeb) > 0)
                 {
                     past[0] = acces.getAssetSpot("FTSE", DateDeb, Datee, pas);
@@ -80,20 +89,19 @@ namespace WebApp
                         }
                     }
 
-                    //double risk = acces.getCurrentRisk(previousDate);
-                    //double riskfree = acces.getCurrentRiskFree(previousDate);
-                    //double[] tmpDelta = acces.getDelta(previousDate);
-                    Dictionary<string, string> dic = acces.getLastCouv(DateTime.Now);
-                    double[] tmpDelta = new double[4];
-                    tmpDelta[0] = double.Parse(dic["deltaFTSE"]);
-                    tmpDelta[1] = double.Parse(dic["deltaS_P"]);
-                    tmpDelta[2] = double.Parse(dic["deltaNIKKEI"]);
-                    tmpDelta[3] = double.Parse(dic["deltaEURO"]);
-                    double risk = double.Parse(dic["risk"]);
-                    double riskfree = double.Parse(dic["riskfree"]);
-                    double ValLiq = double.Parse(dic["ValLiq"]);
-                    wrap = new WrapperClass(4, 60, ValLiq, tmpDelta, risk, riskfree);
-
+                    if (DateDeb.CompareTo(Datee) > 0)
+                    {
+                        Dictionary<string, string> dic = acces.getLastCouv(DateTime.Now);
+                        double[] tmpDelta = new double[4];
+                        tmpDelta[0] = double.Parse(dic["deltaFTSE"]);
+                        tmpDelta[1] = double.Parse(dic["deltaS_P"]);
+                        tmpDelta[2] = double.Parse(dic["deltaNIKKEI"]);
+                        tmpDelta[3] = double.Parse(dic["deltaEURO"]);
+                        double risk = double.Parse(dic["risk"]);
+                        double riskfree = double.Parse(dic["riskfree"]);
+                        double ValLiq = double.Parse(dic["ValLiq"]);
+                        wrap = new WrapperClass(4, 60, ValLiq, tmpDelta, risk, riskfree);
+                    }
                     //Traitement du cas où la date de départ est celle de début du produit
                     wrap.computePortfolio(past[0].Length, 4, 30, 1000, (int)rebalancement, ((Maturity.Date - Datee.Date).Days) / 365.0, (DateDeb - Datee).Days / 365.0, 0.05, sigma, rho, coeff, realPast);
                     acces.Insert(DateDeb, wrap.getPrice(), wrap.getDelta(), wrap.getRiskFree(), wrap.getRisk());
@@ -142,15 +150,6 @@ namespace WebApp
             int taille_bis = (DateFin.Date - DateDeb.Date).Days;
             double[] futurSpot = new double[4];
             double[] PathSim = new Double[4 * (taille_bis+1)];
-            //wrap.getSimulMarket(4,taille_bis ,((Maturity.Date - DateDeb.Date).Days) / 365.0, 0.05, spot, sigma, rho, coeff, PathSim);
-            //for (int k = 0; k < taille_bis+1; ++k)
-            //{
-            //    futurSpot[0] = PathSim[k];
-            //    futurSpot[1] = PathSim[k + taille_bis+1];
-            //    futurSpot[2] = PathSim[k + 2 * (taille_bis+1)];
-            //    futurSpot[3] = PathSim[k + 3 * (taille_bis+1)];
-            //    acces.Insert(DateDeb.AddDays(k), futurSpot);
-            //}
 
             Chart1.Titles.Add("Composition du portefeuille de couverture");
             Chart1.Legends.Add(new Legend("Valeur du portefeuille"));

@@ -26,7 +26,7 @@
                     <div style="float:left;width:20%;font-weight:bold">Nombre de rebalancement:</div>
                     <div id="slider1" style="float:left;width:70%;position:relative;top:5px"></div>
                     <asp:HiddenField ID="hidden_estimate" runat="server" />
-                    <asp:TextBox ID="estimate_time" style="float:left;width: 35px;border:0; color: #f6931f; font-weight: bold; margin-left:5px;" runat="server">40</asp:TextBox>
+                    <asp:TextBox ID="estimate_time" style="float:left;width: 35px;border:0; color: #f6931f; font-weight: bold; margin-left:5px;" runat="server">300</asp:TextBox>
                 </div>
             </div>
             <div id="simulation" style="float:right;margin-right:300px;" runat="server">
