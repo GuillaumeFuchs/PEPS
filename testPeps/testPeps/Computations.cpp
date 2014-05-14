@@ -77,12 +77,7 @@ int main(){
 	//}
 	//fichier.close();
 
-	//test.compute_price_samples(10000, true, true, past);
-	//test.compute_delta_samples(10000, true, true, past);
-	//test.compute_price(3 , 1.5);	
-	//test.compute_delta(0, 0.);
-	//test.compute_couv(6, false);
-	test.compute_hedge(12);
+	test.compute_hedge(30);
 
 	/*tend = clock();
 	temps = (float)(tend-tbegin)/CLOCKS_PER_SEC;

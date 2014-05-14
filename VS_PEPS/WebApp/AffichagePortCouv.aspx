@@ -17,7 +17,7 @@
 		<table>
 			<tr>
 				<td>
-					<asp:Chart ID="Chart1" runat="server" Height="400px" Width="500px" Style="margin-left: 20%;"
+					<asp:Chart ID="Chart1" runat="server" Height="800px" Width="1000px" Style="margin-left: 20%;"
 						EnableViewState="true">
 						<Series>
 							<asp:Series ChartType="Line" Name="1">
@@ -40,7 +40,7 @@
 					</asp:Chart>
 				</td>
 				<td>
-					<asp:Chart ID="Chart2" runat="server" Height="400px" Width="500px" Style="margin-left: 20%;"
+					<asp:Chart ID="Chart2" runat="server" Height="800px" Width="1000px" Style="margin-left: 20%;"
 						EnableViewState="true">
 						<Titles>
 							<asp:Title Text="Couverture">
@@ -65,7 +65,7 @@
 			</tr>
 			<tr>
 				<td colspan="2">
-					<asp:Chart ID="Chart3" runat="server" Height="400px" Width="500px" Style="margin-left: 20%;"
+					<asp:Chart ID="Chart3" runat="server" Height="800px" Width="1000px" Style="margin-left: 20%;"
 						EnableViewState="true">
 						<Titles>
 							<asp:Title Text="Couverture">
