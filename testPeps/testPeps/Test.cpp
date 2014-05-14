@@ -347,7 +347,7 @@ void Test::compute_hedge(
 		double prix, ic;
 		mc_->price((double)(i*T)/(double)H, prix, ic, past_sub);
 
-		//printf("%f %f %f %f\n", risk_free_portion, risk_portion, risk_free_portion+risk_portion, prix);
+		printf("%f %f %f %f\n", risk_free_portion, risk_portion, risk_free_portion+risk_portion, prix);
 	}
 	double prix;
 	mc_->price(6., prix, ic, past);

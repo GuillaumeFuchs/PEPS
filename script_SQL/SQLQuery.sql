@@ -1,10 +1,6 @@
 USE [master]
 GO
 
-
-DROP TABLE dbo.InfoProd
-GO
-
 /****** Object:  Table [dbo].[Indices]    Script Date: 01/11/2014 15:22:27 ******/
 SET ANSI_NULLS ON
 GO
