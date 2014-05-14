@@ -1328,21 +1328,21 @@ payoff(var ValNom, var temps){
 \section{Amélioration : Le Gamma}
 
 \subsection{Qu'est ce que le Gamma}
-Le Gamma d'un portefeuille est définit comme la sensibilité du Delta de ce portefeuille à une variation de la valeur du sous-jacent S : 
-$$ \Gamma = \frac{\partial \delta }{\partial S} = \frac{\partial^2 C }{\partial S^2}   $$
+Le Gamma d'un portefeuille est défini comme la sensibilité du Delta de ce portefeuille à une variation de la valeur du sous-jacent S :
+$$ \Gamma = \frac{\partial \delta }{\partial S} = \frac{\partial^2 C }{\partial S^2} $$
 \subsection{Choix de l'utilisation du Gamma}
-Lorsque nous travaillions sur la simulation de la couverture en Delta (cf la partie du rapport "Simulation de la couverture"), nous nous sommes rendu compte que si nous souhaitions diminuer au maximum l'erreur de couverture, il fallait soit : 
+Lorsque nous travaillions sur la simulation de la couverture en Delta (cf la partie du rapport "Simulation de la couverture"), nous nous sommes rendu compte que si nous souhaitions diminuer au maximum l'erreur de couverture, il fallait soit :
 \begin{itemize}
 \item[•] diminuer au maximum le pas de discrétisation
 \item[•] diminuer le Gamma
 \end{itemize}
 \\
-En effet, nous avons montré dans cette partie qu'en notant 
+En effet, nous avons montré dans cette partie qu'en notant
 $$ P\&L_{t}^{*} = \frac{1}{\sqrt{h}} P\&L_{t} $$
-Il est possible de démontrer que le processus converge en distribution vers un autre processus : 
+Il est possible de démontrer que le processus converge en distribution vers un autre processus :
 $$P\&L_{t}^{*} \underset{h\rightarrow \infty}{\overset{d}{\rightarrow}} \frac{1}{\sqrt{2}}(\int_{0}^t \frac{\partial^2 C(u, S_{u})}{\partial S^{2}} \sigma^2 S_{u}^2 dW_{u}^{'})$$
 
-et que $\frac{\partial^2 C(u, S_{u})}{\partial S^{2}}$ est la définition du Gamma du produit.
+et $\frac{\partial^2 C(u, S_{u})}{\partial S^{2}}$ est la définition du Gamma du produit.
 Nous avons donc décidé de nous pencher sur le calcul de cette variable afin de réduire notre erreur de couverture.
 \subsection{Portefeuille Gamma-neutre}
 Afin de réduire l'erreur de couverture liée à la discrétisation, il faut diminuer le gamma du portefeuille et donc se construire un portefeuille delta-gamma neutre. Pour cela, il faut introduire dans notre portefeuille de couverture un autre actif, ou une option suffisamment liquide, dont le prix sera noté $C_0$. L'idée est que le Gamma de cet actif va compenser le Gamma du produit que l'on cherche à couvrir, tout en restant Delta-neutre. \\
@@ -1351,65 +1351,77 @@ On considère donc notre portefeuille de couverture du produit C, composé
 \item[•] d'une quantité $\delta_t$ du sous-jacent à l'instant t
 \item[•] d'une quantité $\Gamma_t$ d'actif $C_0$
 \item[•] de cash B, investit au taux sans risque (pas obligatoire)
-\end{itemize} 
+\end{itemize}
 \\
-D'où à chaque instant t on a : 
-$$ C(t,S_t) = \delta_t S_t + \Gamma_tC_0(t,S_t) - B  $$
-On cherche à éliminer le risque du portefeuille, on s'intéresse donc aux variations de sa valeur : 
-$$ dC(t, S_t) = \delta_t dS_t + \Gamma_t dC_0(t,S_t) - dB  $$
-À l'aide d'un développement de Taylor au deuxième ordre par raport au sous-jacent on trouve : 
-$$ dC(t,S_t) = \frac{\partial C}{\partial S} dS_t  + \frac{1}{2} \frac{\partial^2 C}{\partial S^2} dS_{t}^2 $$
-$$ dC_0(t,S_t) = \frac{\partial C_0}{\partial S} dS_t  + \frac{1}{2} \frac{\partial^2 C_0}{\partial S^2} dS_{t}^2 $$
-En substituant ces valeurs dans l'expression du portefeuille et en regroupant les termes, on obtient : 
-$$ (-\frac{\partial C}{\partial S} + \delta_t + \Gamma_t \frac{\partial C_0}{\partial S}) dS_t + \frac{1}{2} ( - \frac{\partial^2 C}{\partial S^2} + \Gamma_t  \frac{\partial^2 C_0}{\partial S^2})dS_{t}^2 + dB = 0   $$
+D'où à chaque instant t on a :
+$$ C(t,S_t) = \delta_t S_t + \Gamma_tC_0(t,S_t) - B $$
+On cherche à éliminer le risque du portefeuille, on s'intéresse donc aux variations de sa valeur :
+$$ dC(t, S_t) = \delta_t dS_t + \Gamma_t dC_0(t,S_t) - dB $$
+À l'aide d'un développement de Taylor au deuxième ordre par raport au sous-jacent on trouve :
+$$ dC(t,S_t) = \frac{\partial C}{\partial S} dS_t + \frac{1}{2} \frac{\partial^2 C}{\partial S^2} dS_{t}^2 $$
+$$ dC_0(t,S_t) = \frac{\partial C_0}{\partial S} dS_t + \frac{1}{2} \frac{\partial^2 C_0}{\partial S^2} dS_{t}^2 $$
+En substituant ces valeurs dans l'expression du portefeuille et en regroupant les termes, on obtient :
+$$ (-\frac{\partial C}{\partial S} + \delta_t + \Gamma_t \frac{\partial C_0}{\partial S}) dS_t + \frac{1}{2} ( - \frac{\partial^2 C}{\partial S^2} + \Gamma_t \frac{\partial^2 C_0}{\partial S^2})dS_{t}^2 + dB = 0 $$
 Afin de faire disparaître les facteurs de risque $dS_t$ et $dS_{t}^²$, il faut que
 $$ -\frac{\partial C}{\partial S} + \delta_t + \Gamma_t \frac{\partial C_0}{\partial S} = 0 \rightarrow \delta_t = \frac{\partial C}{\partial S} -\Gamma_t \frac{\partial C_0}{\partial S} $$
-et 
-$$- \frac{\partial^2 C}{\partial S^2} + \Gamma_t  \frac{\partial^2 C_0}{\partial S^2} = 0 \rightarrow \Gamma_t = \frac{\partial^2 C}{\partial S^2} \slash \frac{\partial^2 C_0}{\partial S^2}  $$ 
+et
+$$- \frac{\partial^2 C}{\partial S^2} + \Gamma_t \frac{\partial^2 C_0}{\partial S^2} = 0 \rightarrow \Gamma_t = \frac{\partial^2 C}{\partial S^2} \slash \frac{\partial^2 C_0}{\partial S^2} $$
 
 
-On obtient que le portefeuille de couverture doit contenir à chaque intant t,  $\Gamma_t$ actifs $C_0$, et $\delta_t$ sous-jacent, avec : 
+On obtient que le portefeuille de couverture doit contenir à chaque intant t, $\Gamma_t$ actifs $C_0$, et $\delta_t$ sous-jacent, avec :
 
-$$ \Gamma_t = \frac{\partial^2 C}{\partial S^2} \slash \frac{\partial^2 C_0}{\partial S^2}  $$ 
+$$ \Gamma_t = \frac{\partial^2 C}{\partial S^2} \slash \frac{\partial^2 C_0}{\partial S^2} $$
 
-$$ \delta_t = \frac{\partial C}{\partial S} - \frac{\partial C_0}{\partial S} \frac{\partial^2 C}{\partial S^2} \slash \frac{\partial^2 C_0}{\partial S^2}    $$
+$$ \delta_t = \frac{\partial C}{\partial S} - \frac{\partial C_0}{\partial S} \frac{\partial^2 C}{\partial S^2} \slash \frac{\partial^2 C_0}{\partial S^2} $$
 \\
 On remarque qu'à chaque changemement de couverture, l'actif $C_0$ disparait du portefeuille de couverture, celui-ci n'a donc servi qu'à rendre plus précise la couverture.
 \subsection{Calcul du Gamma}
-Nos savons désormais comment utiliser le Gamma dans notre portefeuille pour réduire l'erreur de couverture. mais il nous faut tout de même être en mesure de calculer, ou d'approximer cette variable. Plusieurs méthodes existent pour calculer les grecques : 
+Nous savons désormais comment utiliser le Gamma dans notre portefeuille pour réduire l'erreur de couverture. mais il nous faut tout de même être en mesure de calculer, ou d'approximer cette variable. Plusieurs méthodes existent pour calculer les grecques :
 \subsubsection{Méthode des trajectoires}
 Cette méthode repose sur la relation entre la fonction de payoff et le paramètre étudié. Voici un exemple avec un Call européen classique sous les hypothèses du modèle de Black-Scholes. La formule de Black-Scholes nous donne que le prix d'un Call est donné par :
-$$ C(t, S_t, K, T) = S_t \mathcal{N} \left [ d_1(T-t,S_te^{r(T-t)},K) \right ] - Ke^{-r(T-t)} \mathcal{N} \left [ d_0(T-t,S_te^{r(T-t)},K) \right ]  $$
-avec 
+$$ C(t, S_t, K, T) = S_t \mathcal{N} \left [ d_1(T-t,S_te^{r(T-t)},K) \right ] - Ke^{-r(T-t)} \mathcal{N} \left [ d_0(T-t,S_te^{r(T-t)},K) \right ] $$
+avec
 $$ d_0(t,x,y) = \frac{1}{\sigma \sqrt{t}} ln(\frac{x}{y}) - \frac{1}{2} \sigma \sqrt{t} $$
 $$ d_1(t,x,y) = d_0(t,x,y) + \sigma \sqrt{t} $$
-et avec $ \mathcal{N} $ la fonction de répartition de la loi normale centrée réduite. 
-En dérivant directement la formule on obtient une formule fermée pour le Gamma : 
-$$ \Gamma = \frac{\mathcal{N}'(d1)}{S_t \sigma \sqrt{T}}  $$
+et avec $ \mathcal{N} $ la fonction de répartition de la loi normale centrée réduite.
+En dérivant directement la formule on obtient une formule fermée pour le Gamma :
+$$ \Gamma = \frac{\mathcal{N}'(d1)}{S_t \sigma \sqrt{T}} $$
 \\
-Malheureusement, cette la formule du payoff de notre produit, fait que le prix  chaque instant de celui-ci (espérance actualisée sous la proba risque-neutre) ne nous permet pas d'obtenir une formule fermée pour le Gamma.
+Malheureusement, cette la formule du payoff de notre produit, fait que le prix chaque instant de celui-ci (espérance actualisée sous la proba risque-neutre) ne nous permet pas d'obtenir une formule fermée pour le Gamma.
 \subsubsection{Méthode du rapport de vraisemblance}
-La méthode du rapport de vraisemblance est basée sur la relation entre la fonction de densité du prix de l'option et le paramètre étudié. Le rapport de vraisemblance est obtenu en partant de la  valeur de l'option : 
-$$ C =  e^{-rT} \mathbb{E}_{\mathbb{Q}} \left [ h(S_0 e^{ ( r - \frac{\sigma^2}{2} )T - \sigma \sqrt{T} Z }) \right ] $$
-$$ C =  e^{-rT} \int_{- \infty}^{+ \infty} h(S_0 e^{ ( r - \frac{\sigma^2}{2} )T - \sigma \sqrt{T} z }) \frac{e^{- \frac{z^²}{2}}}{\sqrt{2 \pi}} dz $$
-puis à l'aide d'un changement de variable, de mettre le prix sous la forme 
-$$ C = \int_{0}^{+\infty} h(x)e^{-rT}f(x)dx  $$
+La méthode du rapport de vraisemblance est basée sur la relation entre la fonction de densité du prix de l'option et le paramètre étudié. Le rapport de vraisemblance est obtenu en partant de la valeur de l'option :
+$$ C = e^{-rT} \mathbb{E}_{\mathbb{Q}} \left [ h(S_0 e^{ ( r - \frac{\sigma^2}{2} )T - \sigma \sqrt{T} Z }) \right ] $$
+$$ C = e^{-rT} \int_{- \infty}^{+ \infty} h(S_0 e^{ ( r - \frac{\sigma^2}{2} )T - \sigma \sqrt{T} z }) \frac{e^{- \frac{z^²}{2}}}{\sqrt{2 \pi}} dz $$
+puis à l'aide d'un changement de variable, de mettre le prix sous la forme
+$$ C = \int_{0}^{+\infty} h(x)e^{-rT}f(x)dx $$
 puis de dériver à l'intérieur de l'intégrale par le paramètre dont on se sert et d'en déduire une autre exression du prix sous forme d'espérance, ce qui donnera une densité pour la variable que l'on recherche, et même un estimateur sans biais.
 De la même façon que pour la méthode des trajectoires, la méthode du maximum de vraisemblance n'est pas applicable dans notre cas.
 \subsubsection{Méthode des différences finies}
-La méthodes des différences finies est très utilisée en physique et a été appliquée à la finance par Brennan et Schwartz en 1978. Il s'agit de remplacer des dérivées partielles par des différences finies. Cela consiste à approximer à l'aide de développements de Taylor les dérivées d'une variable par cette même variable en différents points : 
-\\ On commence tout d'abord par discrétiser le temps $ 0 < t_1 < .. < t_N = T $ et on note $h_i = x_{i+1}-x_i $ 
-\\ On approxime ensuite au second ordre de la manière suivante : 
-$$ u'(x_{i}) \sim \frac{u(x_{i})-u(x_{i-1})}{h_{i-1}}  $$
-ou encore 
-$$ u''(x_{i}) \sim \frac{2}{(h_i + h_{i+1})} \left [ \frac{u(x_{i+1})-u(x_i)}{h_i} - \frac{u(x_i)-u(x_{i-1})}{h_{i-1}} \right ]   $$
+La méthodes des différences finies est très utilisée en physique et a été appliquée à la finance par Brennan et Schwartz en 1978. Il s'agit de remplacer des dérivées partielles par des différences finies. Cela consiste à approximer à l'aide de développements de Taylor les dérivées d'une variable par cette même variable en différents points :
+\\ On commence tout d'abord par discrétiser le temps $ 0 < t_1 < .. < t_N = T $ et on note $h_i = x_{i+1}-x_i $
+\\ On approxime ensuite au second ordre de la manière suivante :
+$$ u'(x_{i}) \sim \frac{u(x_{i})-u(x_{i-1})}{h_{i-1}} $$
+ou encore
+$$ u''(x_{i}) \sim \frac{2}{(h_i + h_{i+1})} \left [ \frac{u(x_{i+1})-u(x_i)}{h_i} - \frac{u(x_i)-u(x_{i-1})}{h_{i-1}} \right ] $$
 
 C'est la méthode que nous avions utilisé pour calculer le Delta, c'est pourquoi nous avons décidé de la réutiliser pour calculer cette fois-ci le Gamma.
 $$ \Gamma = \frac{C(S+ \epsilon )-2 C(S) + C(S-\epsilon)}{\epsilon^2} $$
 \subsection{Travail réalisé}
-Nous avons voulu intégrer totalement à notre produit la  couverture en Delta-Gamma neutre. \\
+Nous avons voulu intégrer totalement à notre produit la couverture en Delta-Gamma neutre. \\
 \indent La première étape était d'implémenter une fonction qui calcule le Gamma avec la méthode des différences finies. Nous l'avons fait et avons testé cette méthode à l'aide d'un pricer Black-Scholes d'options européennes classique. En effet, nous pouvions vérifier nos calculs à l'aide de la formule fermée présentée plus haut. \\
-\indent Une fois que la méthode avait été implémentée et testée, nous avons voulu l'intégrer au logiciel. L'étape suivant aurait été d'intégrer la couverture en Gamma neutre mais nous n'avons pas eu le temps de le terminer totalement, et il y avait peu d'intéret à afficher uniquement le Gamma à un gestionnaire.
+\indent Une fois que la méthode avait été implémentée et testée, nous avons voulu l'intégrer au logiciel. L'étape suivant aurait été d'intégrer la couverture en Gamma neutre mais nous n'avons pas eu le temps de le terminer totalement, et il y avait peu d'intéret à afficher uniquement le Gamma à un gestionnaire, sans avoir modifié la manière de couvrir le produit. La connaissance du Gamma ne donne que des précisions sur le nombre d'interventions à faire pour avoir un portefeuille en Delta-neutre.
+
+\subsection{Conclusion : Autres améliorations possibles}
+Par soucis de rendre dans un premier temps un logiciel fonctionnel, avec les fonctionnalités minimales demandées, nous n'avons pas pu faire de réelles améliorations. Cependant, voici les pistes sur lesquelles nous nous sommes penché, préparant la voie à une possible implémentation si le temps nous le permettait : 
+\begin{itemize}
+\item[•] Paralléliser le moteur de calcul afin d'avoir de meilleures performances
+\item[•] Utiliser un modèle un peu plus sophistiqué que le modèle de Black-Scholes, prenant mieux en compte la largeur des queues de distribution (comme le modèle de Heston)
+\item[•] Donner une dynamique aux paramètres de modélisation : choisir un modèle de taux d'intéret, utiliser une volatilité implicite ou stochastique
+\item[•] Intégrer totalement la couverture en Gamma-neutre afin de minimiser nos erreurs de couverture
+\item[•] Trouver le moyen de prendre en compte les coûts de transaction pour la couverture, afin que celle-ci soit le plus proche de la réalité
+\item[•] Prendre en compte la possibilité de rachat anticipé du produit et l'intégrer au produit
+\end{itemize}
+
 
 
 \end{document}
