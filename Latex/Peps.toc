@@ -37,6 +37,13 @@
 \contentsline {subsection}{\numberline {9.2}Architecture logicielle globale}{34}
 \contentsline {subsection}{\numberline {9.3}Architecture d\IeC {\'e}taill\IeC {\'e}e}{35}
 \contentsline {subsection}{\numberline {9.4}Sp\IeC {\'e}cifications}{37}
-\contentsline {section}{\numberline {10}Annexes}{42}
-\contentsline {subsection}{\numberline {10.1}Pseudo code pour la valeur du flux vers\IeC {\'e} en t}{42}
-\contentsline {section}{\numberline {11}Simulation de la couverture}{43}
+\contentsline {section}{\numberline {10}Am\IeC {\'e}lioration : Le Gamma}{42}
+\contentsline {subsection}{\numberline {10.1}Qu'est ce que le Gamma}{42}
+\contentsline {subsection}{\numberline {10.2}Choix de l'utilisation du Gamma}{42}
+\contentsline {subsection}{\numberline {10.3}Portefeuille Gamma-neutre}{42}
+\contentsline {subsection}{\numberline {10.4}Calcul du Gamma}{43}
+\contentsline {subsubsection}{\numberline {10.4.1}M\IeC {\'e}thode des trajectoires}{44}
+\contentsline {subsubsection}{\numberline {10.4.2}M\IeC {\'e}thode du rapport de vraisemblance}{44}
+\contentsline {subsubsection}{\numberline {10.4.3}M\IeC {\'e}thode des diff\IeC {\'e}rences finies}{45}
+\contentsline {subsection}{\numberline {10.5}Travail r\IeC {\'e}alis\IeC {\'e}}{45}
+\contentsline {section}{\numberline {11}Simulation de la couverture}{45}

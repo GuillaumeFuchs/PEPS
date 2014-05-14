@@ -514,12 +514,19 @@ namespace AccesDB
 
         public void getLastPepDate(ref DateTime LastDat)
         {
-            var val = (from nam in myDbdc.PepsDB orderby nam.Date select nam.Date).ToArray();
-            if (val.Length != 0)
+            try
             {
-                LastDat = val[val.Length - 1].AddDays(-7).Date;
+                var val = (from nam in myDbdc.PepsDB orderby nam.Date select nam.Date).ToArray();
+                if (val.Length != 0)
+                {
+                    LastDat = val[val.Length - 1].AddDays(-7).Date;
+                }
+                else
+                {
+                    LastDat = new DateTime(1999, 1, 4);
+                }
             }
-            else
+            catch
             {
                 LastDat = new DateTime(1999, 1, 4);
             }
