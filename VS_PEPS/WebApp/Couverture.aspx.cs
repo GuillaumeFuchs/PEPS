@@ -187,6 +187,8 @@ namespace WebApp
                 {
                     Chart1.Series[0].Points.AddXY(DateTime.Parse(values[2, i]), double.Parse(values[1, i]));
                     Chart1.Series[1].Points.AddXY(DateTime.Parse(values[2, i]), double.Parse(values[0, i]));
+                    Chart1.Series[0].Points[i].ToolTip = string.Format("Date = {0}, Valeur Portefeuille = {1}", values[2, i], Math.Round(double.Parse(values[1, i]), 2));
+                    Chart1.Series[1].Points[i].ToolTip = string.Format("Date = {0}, Valeur Liquidative = {1}", values[2, i], Math.Round(double.Parse(values[0, i]), 2));
                 }
             }
             else
@@ -196,6 +198,8 @@ namespace WebApp
                 {
                     Chart1.Series[0].Points.AddXY(DateTime.Parse(values[2, i]), double.Parse(values[1, i]));
                     Chart1.Series[1].Points.AddXY(DateTime.Parse(values[2, i]), double.Parse(values[0, i]));
+                    Chart1.Series[0].Points[i].ToolTip = string.Format("Date = {0}, Valeur Portefeuille = {1}", values[2, i], Math.Round(double.Parse(values[1, i]), 2));
+                    Chart1.Series[1].Points[i].ToolTip = string.Format("Date = {0}, Valeur Liquidative = {1}", values[2, i], Math.Round(double.Parse(values[0, i]), 2));
                 }
             }
             DateTime LastCov = new DateTime(1, 1, 1);
